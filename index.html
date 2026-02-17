@@ -165,16 +165,15 @@
         const LINE_ID = "@YOUR_LINE_ID"; // เปลี่ยนเป็น LINE ID ของคุณ
 
         const products = [
-            { id: 1, name: "หูฟังไร้สาย True Wireless", price: 1290, category: "product", img: "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=400" },
-            { id: 2, name: "Power Bank 20000mAh", price: 890, category: "product", img: "https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?w=400" },
-            { id: 3, name: "ลำโพงบลูทูธ พกพา", price: 550, category: "product", img: "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=400" },
-            { id: 4, name: "เมาส์ไร้สาย Ergonomic", price: 450, category: "product", img: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=400" },
-            { id: 5, name: "ขาตั้งโน๊ตบุ๊ค อลูมิเนียม", price: 390, category: "product", img: "https://images.unsplash.com/photo-1616422285623-13ff0162193c?w=400" },
-            { id: 6, name: "บริการล้างแอร์ติดผนัง", price: 600, category: "service", img: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=400" },
-            { id: 7, name: "ซ่อมคอมพิวเตอร์นอกสถานที่", price: 500, category: "service", img: "https://images.unsplash.com/photo-1597872252165-482812dc7994?w=400" },
-            { id: 8, name: "บริการทำความสะอาดห้อง", price: 450, category: "service", img: "https://images.unsplash.com/photo-1581578731117-104f2a41272c?w=400" },
-            { id: 9, name: "ลงโปรแกรม/Windows ใหม่", price: 300, category: "service", img: "https://images.unsplash.com/photo-1588611910609-0d19f6a72d4c?w=400" },
-            { id: 10, name: "ออกแบบกราฟิก/แบนเนอร์", price: 900, category: "service", img: "https://images.unsplash.com/photo-1626785774573-4b7993143d2d?w=400" }
+            { id: 1, name: "เต็มเป 150g 1 ชิ้น (ไม่รวมค่าส่ง 35บาท)", price: 30, category: "product", img: "https://down-th.img.susercontent.com/file/th-11134207-81ztl-mkchmisxx9mof2.webp" },
+            { id: 2, name: "เต็มเป 150g 3 ชิ้น (ไม่รวมค่าส่ง 35บาท)", price: 100, category: "product", img: "https://down-th.img.susercontent.com/file/th-11134207-81ztl-mkchmisxx9mof2.webp" },
+            { id: 3, name: "เต็มเป 150g 6 ชิ้น (ส่งฟรี)", price: 200, category: "product", img: "https://down-th.img.susercontent.com/file/th-11134207-81ztl-mkchmisxx9mof2.webp" },
+            { id: 4, name: "ดร.เจล Shizen 30 แคปซูล", price: 990, category: "product", img: "https://down-th.img.susercontent.com/file/50301f77ab8eeb6bb0ec57c1af6fd926.webp" },
+            { id: 5, name: "ดร.เจล HoneyMoon 1 ขวด", price: 390, category: "product", img: "https://down-th.img.susercontent.com/file/th-11134207-23030-nicqy0z9y4nvbe.webp" },
+            { id: 6, name: "เรียนทำคลิปกับสาวแว่น Basic Package", price: 999, category: "service", img: "https://scontent.fvte2-3.fna.fbcdn.net/v/t39.30808-6/557785407_808226971602744_4195778330217928308_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=sqEVyWkWMlQQ7kNvwG07eJs&_nc_oc=AdmKzz9cXZ2aQdlMTlMZUcBYbBx1qJ4t1kUXdl9POZeWyK6WmlPmsj3JrI1L4OVoGq8&_nc_zt=23&_nc_ht=scontent.fvte2-3.fna&_nc_gid=idOogCyAyOKU0UmLF_KkfA&oh=00_Afv8c5dVplFvtFYxY5zFKfMvotUe-qbhk2gi9xNq2EoAXA&oe=699A354B" },
+            { id: 7, name: "เรียนทำคลิปกับสาวแว่น Standard Package", price: 3490, category: "service", img: "https://scontent.fvte2-3.fna.fbcdn.net/v/t39.30808-6/557785407_808226971602744_4195778330217928308_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=sqEVyWkWMlQQ7kNvwG07eJs&_nc_oc=AdmKzz9cXZ2aQdlMTlMZUcBYbBx1qJ4t1kUXdl9POZeWyK6WmlPmsj3JrI1L4OVoGq8&_nc_zt=23&_nc_ht=scontent.fvte2-3.fna&_nc_gid=idOogCyAyOKU0UmLF_KkfA&oh=00_Afv8c5dVplFvtFYxY5zFKfMvotUe-qbhk2gi9xNq2EoAXA&oe=699A354B" },
+            { id: 8, name: "เรียนทำคลิปกับสาวแว่น Premium Package", price: 6490, category: "service", img: "https://scontent.fvte2-3.fna.fbcdn.net/v/t39.30808-6/557785407_808226971602744_4195778330217928308_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=sqEVyWkWMlQQ7kNvwG07eJs&_nc_oc=AdmKzz9cXZ2aQdlMTlMZUcBYbBx1qJ4t1kUXdl9POZeWyK6WmlPmsj3JrI1L4OVoGq8&_nc_zt=23&_nc_ht=scontent.fvte2-3.fna&_nc_gid=idOogCyAyOKU0UmLF_KkfA&oh=00_Afv8c5dVplFvtFYxY5zFKfMvotUe-qbhk2gi9xNq2EoAXA&oe=699A354B" },
+            
         ];
 
         let cart = {};
