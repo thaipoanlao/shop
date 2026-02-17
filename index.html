@@ -28,6 +28,71 @@
                 }
             }
         }
+                // --- ส่วนที่เพิ่มระบบค้นหา ---
+        
+        let searchTerm = ""; // เก็บค่าที่พิมพ์ในช่องค้นหา
+        
+        // ฟังก์ชันกรองและแสดงผลสินค้า (ปรับปรุงใหม่)
+        function renderProducts() {
+            const list = document.getElementById('product-list');
+            list.innerHTML = '';
+            
+            // กรองตามหมวดหมู่ (currentFilter) และ คำค้นหา (searchTerm)
+            const filtered = products.filter(p => {
+                const matchCategory = p.category === currentFilter;
+                const matchSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase());
+                return matchCategory && matchSearch;
+            });
+        
+            if (filtered.length === 0) {
+                list.innerHTML = `<div class="col-span-2 text-center py-10 text-gray-400">ไม่พบสินค้าที่ตรงกับ "${searchTerm}"</div>`;
+                return;
+            }
+        
+            filtered.forEach(p => {
+                const card = document.createElement('div');
+                card.className = "bg-white rounded-md shadow-sm overflow-hidden flex flex-col animate-fade-in";
+                card.innerHTML = `
+                    <div class="relative pt-[100%] bg-gray-100">
+                        <img src="${p.img}" class="absolute top-0 left-0 w-full h-full object-cover">
+                    </div>
+                    <div class="p-2 flex flex-col flex-1">
+                        <h3 class="text-sm font-medium text-gray-800 line-clamp-2 mb-1 min-h-[2.5em]">${p.name}</h3>
+                        <div class="mt-auto flex justify-between items-center">
+                            <span class="text-shopee-primary font-semibold">฿${p.price.toLocaleString()}</span>
+                            <button onclick="addToCart(${p.id})" class="w-8 h-8 rounded-full border border-shopee-primary text-shopee-primary flex items-center justify-center hover:bg-shopee-primary hover:text-white transition">
+                                <i class="fas fa-plus text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                list.appendChild(card);
+            });
+        }
+        
+        // ผูกเหตุการณ์การพิมพ์ในช่อง Search
+        // ให้หา tag <input> ในส่วน Header แล้วเพิ่ม id="search-input" เข้าไป
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.querySelector('header input'); // หาช่อง input ใน header
+            searchInput.addEventListener('input', (e) => {
+                searchTerm = e.target.value; // เก็บค่าที่พิมพ์
+                renderProducts(); // สั่งวาดหน้าจอใหม่ทันที
+            });
+        });
+        
+        // ปรับฟังก์ชันเปลี่ยนหมวดหมู่เล็กน้อย
+        function filterCategory(category) {
+            currentFilter = category; // เก็บหมวดหมู่ปัจจุบัน
+            document.querySelectorAll('nav button').forEach(btn => {
+                btn.classList.remove('text-shopee-primary', 'border-b-2', 'border-shopee-primary');
+                btn.classList.add('text-gray-500');
+            });
+            const activeTab = document.getElementById(`tab-${category}`);
+            activeTab.classList.remove('text-gray-500');
+            activeTab.classList.add('text-shopee-primary', 'border-b-2', 'border-shopee-primary');
+            
+            renderProducts(); // วาดหน้าจอใหม่โดยใช้ตัวกรองที่เลือก
+        }
     </script>
 
     <style>
