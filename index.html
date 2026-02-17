@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ShopDee | ช้อปดี มีครบ จบในที่เดียว</title>
+    <title>ShopDee | สินค้าและบริการ</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,12 +17,10 @@
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: {
-                        sans: ['Kanit', 'sans-serif'],
-                    },
+                    fontFamily: { sans: ['Kanit', 'sans-serif'] },
                     colors: {
                         shopee: {
-                            primary: '#ee4d2d', // สีส้ม Shopee
+                            primary: '#ee4d2d',
                             light: '#ff7337',
                             bg: '#f5f5f5'
                         }
@@ -34,10 +32,6 @@
 
     <style>
         body { background-color: #f5f5f5; }
-        /* ซ่อน Scrollbar แต่ยังเลื่อนได้ */
-        .hide-scroll::-webkit-scrollbar { display: none; }
-        .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
-        
         .line-clamp-2 {
             display: -webkit-box;
             -webkit-line-clamp: 2;
@@ -49,80 +43,53 @@
 <body class="pb-24">
 
     <header class="fixed top-0 left-0 w-full bg-gradient-to-b from-[#f53d2d] to-[#f63] text-white z-50 shadow-md">
-        <div class="container mx-auto px-4 py-3 max-w-lg">
-            <div class="flex items-center gap-4">
-                <div class="flex-1 bg-white rounded-sm flex items-center px-3 py-1.5">
-                    <i class="fas fa-search text-gray-400"></i>
-                    <input type="text" placeholder="ค้นหาสินค้าและบริการ..." class="w-full ml-2 text-gray-700 outline-none text-sm placeholder-gray-400">
-                </div>
-                <div class="relative cursor-pointer" onclick="toggleCart()">
-                    <i class="fas fa-shopping-cart text-2xl"></i>
-                    <span id="cart-badge" class="absolute -top-2 -right-2 bg-white text-shopee-primary text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full border border-shopee-primary hidden">0</span>
-                </div>
+        <div class="container mx-auto px-4 py-3 max-w-lg flex items-center gap-4">
+            <div class="flex-1 bg-white rounded-sm flex items-center px-3 py-1.5">
+                <i class="fas fa-search text-gray-400"></i>
+                <input type="text" placeholder="ค้นหา..." class="w-full ml-2 text-gray-700 outline-none text-sm">
+            </div>
+            <div class="relative cursor-pointer" onclick="toggleCart()">
+                <i class="fas fa-shopping-cart text-2xl"></i>
+                <span id="cart-badge" class="absolute -top-2 -right-2 bg-white text-shopee-primary text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full border border-shopee-primary hidden">0</span>
             </div>
         </div>
     </header>
 
     <nav class="fixed top-[60px] left-0 w-full bg-white z-40 shadow-sm border-b border-gray-100">
-        <div class="container mx-auto max-w-lg">
-            <div class="flex text-sm font-medium text-gray-500">
-                <button onclick="filterCategory('all')" class="flex-1 py-3 text-center hover:text-shopee-primary focus:text-shopee-primary focus:border-b-2 focus:border-shopee-primary transition active-tab text-shopee-primary border-b-2 border-shopee-primary" id="tab-all">
-                    ทั้งหมด
-                </button>
-                <button onclick="filterCategory('product')" class="flex-1 py-3 text-center hover:text-shopee-primary focus:text-shopee-primary focus:border-b-2 focus:border-shopee-primary transition" id="tab-product">
-                    สินค้า
-                </button>
-                <button onclick="filterCategory('service')" class="flex-1 py-3 text-center hover:text-shopee-primary focus:text-shopee-primary focus:border-b-2 focus:border-shopee-primary transition" id="tab-service">
-                    บริการ
-                </button>
-            </div>
+        <div class="container mx-auto max-w-lg flex text-sm font-medium">
+            <button id="tab-product" onclick="filterCategory('product')" class="flex-1 py-3 text-center transition border-b-2 border-shopee-primary text-shopee-primary">
+                สินค้า
+            </button>
+            <button id="tab-service" onclick="filterCategory('service')" class="flex-1 py-3 text-center text-gray-500 transition">
+                บริการ
+            </button>
         </div>
     </nav>
 
-    <div class="mt-32 container mx-auto max-w-lg px-2">
-        <div class="bg-gray-200 rounded-lg aspect-[3/1] overflow-hidden relative">
-            <img src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover">
-            <div class="absolute inset-0 bg-black/20 flex items-center justify-center text-white font-bold text-xl drop-shadow-md">
-                FLASH SALE ลดกระหน่ำ
-            </div>
-        </div>
-    </div>
-
-    <main class="container mx-auto max-w-lg px-2 py-4">
+    <main class="container mx-auto max-w-lg px-2 py-4 mt-28">
         <div id="product-list" class="grid grid-cols-2 gap-2">
             </div>
     </main>
 
     <div id="cart-modal" class="fixed inset-0 z-[60] hidden">
-        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity" onclick="toggleCart()"></div>
-        
-        <div class="absolute bottom-0 left-0 w-full bg-white rounded-t-2xl shadow-2xl transform transition-transform duration-300 max-h-[85vh] flex flex-col max-w-lg mx-auto right-0">
-            
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="toggleCart()"></div>
+        <div class="absolute bottom-0 left-0 w-full bg-white rounded-t-2xl shadow-2xl max-h-[85vh] flex flex-col max-w-lg mx-auto right-0">
             <div class="p-4 border-b flex justify-between items-center bg-gray-50 rounded-t-2xl">
-                <h2 class="text-lg font-bold text-gray-800"><i class="fas fa-shopping-basket mr-2"></i>ตะกร้าสินค้า</h2>
-                <button onclick="toggleCart()" class="text-gray-400 hover:text-gray-600"><i class="fas fa-times text-xl"></i></button>
+                <h2 class="text-lg font-bold text-gray-800">ตะกร้าสินค้า</h2>
+                <button onclick="toggleCart()" class="text-gray-400"><i class="fas fa-times text-xl"></i></button>
             </div>
-
-            <div id="cart-items" class="p-4 overflow-y-auto flex-1 space-y-4">
-                <p class="text-center text-gray-400 py-10">ไม่มีสินค้าในตะกร้า</p>
-            </div>
-
+            <div id="cart-items" class="p-4 overflow-y-auto flex-1 space-y-4"></div>
             <div class="p-4 bg-white border-t space-y-3">
                 <div class="flex justify-between items-end mb-2">
-                    <span class="text-gray-600">ยอดรวมทั้งหมด</span>
+                    <span class="text-gray-600">ยอดรวม</span>
                     <span id="cart-total" class="text-2xl font-bold text-shopee-primary">฿0</span>
                 </div>
-                
-                <hr class="border-dashed">
-
-                <div class="space-y-2 pt-2">
-                    <p class="text-xs text-gray-500 font-medium">ข้อมูลจัดส่ง (เพื่อส่งเข้า Line)</p>
-                    <input type="text" id="customer-name" placeholder="ชื่อผู้รับ" class="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-shopee-primary">
-                    <input type="tel" id="customer-phone" placeholder="เบอร์โทรศัพท์" class="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-shopee-primary">
-                    <textarea id="customer-address" rows="2" placeholder="ที่อยู่จัดส่ง / รายละเอียดเพิ่มเติม" class="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-shopee-primary resize-none"></textarea>
+                <div class="space-y-2">
+                    <input type="text" id="customer-name" placeholder="ชื่อผู้รับ" class="w-full border rounded-lg px-3 py-2 text-sm focus:border-shopee-primary outline-none">
+                    <input type="tel" id="customer-phone" placeholder="เบอร์โทร" class="w-full border rounded-lg px-3 py-2 text-sm focus:border-shopee-primary outline-none">
+                    <textarea id="customer-address" rows="2" placeholder="ที่อยู่จัดส่ง" class="w-full border rounded-lg px-3 py-2 text-sm focus:border-shopee-primary outline-none resize-none"></textarea>
                 </div>
-
-                <button onclick="checkoutViaLine()" class="w-full bg-[#06c755] hover:bg-[#05b34c] text-white font-bold py-3 rounded-lg shadow-lg flex justify-center items-center gap-2 transition transform active:scale-95">
+                <button onclick="checkoutViaLine()" class="w-full bg-[#06c755] text-white font-bold py-3 rounded-lg flex justify-center items-center gap-2">
                     <i class="fab fa-line text-xl"></i> สั่งซื้อผ่าน LINE
                 </button>
             </div>
@@ -130,49 +97,35 @@
     </div>
 
     <script>
-        // --- 1. CONFIGURATION ---
-        const LINE_ID = "@YOUR_LINE_ID"; // ** แก้ไขเป็น LINE ID ของคุณ (ต้องมี @) **
-        
-        // --- 2. DATA (10 Items) ---
-        const products = [
-            // หมวดสินค้า (Products)
-            { id: 1, name: "หูฟังไร้สาย True Wireless ตัดเสียงรบกวน", price: 1290, category: "product", img: "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" },
-            { id: 2, name: "Power Bank 20000mAh ชาร์จเร็ว", price: 890, category: "product", img: "https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" },
-            { id: 3, name: "ลำโพงบลูทูธ พกพา เสียงดีเบสแน่น", price: 550, category: "product", img: "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" },
-            { id: 4, name: "เมาส์ไร้สาย Ergonomic เพื่อสุขภาพ", price: 450, category: "product", img: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" },
-            { id: 5, name: "ขาตั้งโน๊ตบุ๊ค อลูมิเนียม ปรับระดับได้", price: 390, category: "product", img: "https://images.unsplash.com/photo-1616422285623-13ff0162193c?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" },
+        const LINE_ID = "@YOUR_LINE_ID"; // เปลี่ยนเป็น LINE ID ของคุณ
 
-            // หมวดบริการ (Services)
-            { id: 6, name: "บริการล้างแอร์ติดผนัง (9000-18000 BTU)", price: 600, category: "service", img: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" },
-            { id: 7, name: "ซ่อมคอมพิวเตอร์นอกสถานที่ (ไม่รวมอะไหล่)", price: 500, category: "service", img: "https://images.unsplash.com/photo-1597872252165-482812dc7994?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" },
-            { id: 8, name: "บริการทำความสะอาดห้องคอนโด (2 ชม.)", price: 450, category: "service", img: "https://images.unsplash.com/photo-1581578731117-104f2a41272c?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" },
-            { id: 9, name: "ลงโปรแกรม/Windows ใหม่ พร้อมไดร์เวอร์", price: 300, category: "service", img: "https://images.unsplash.com/photo-1588611910609-0d19f6a72d4c?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" },
-            { id: 10, name: "ออกแบบกราฟิก/แบนเนอร์โฆษณา (1 ชิ้น)", price: 900, category: "service", img: "https://images.unsplash.com/photo-1626785774573-4b7993143d2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" },
+        const products = [
+            { id: 1, name: "หูฟังไร้สาย True Wireless", price: 1290, category: "product", img: "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=400" },
+            { id: 2, name: "Power Bank 20000mAh", price: 890, category: "product", img: "https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?w=400" },
+            { id: 3, name: "ลำโพงบลูทูธ พกพา", price: 550, category: "product", img: "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=400" },
+            { id: 4, name: "เมาส์ไร้สาย Ergonomic", price: 450, category: "product", img: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=400" },
+            { id: 5, name: "ขาตั้งโน๊ตบุ๊ค อลูมิเนียม", price: 390, category: "product", img: "https://images.unsplash.com/photo-1616422285623-13ff0162193c?w=400" },
+            { id: 6, name: "บริการล้างแอร์ติดผนัง", price: 600, category: "service", img: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=400" },
+            { id: 7, name: "ซ่อมคอมพิวเตอร์นอกสถานที่", price: 500, category: "service", img: "https://images.unsplash.com/photo-1597872252165-482812dc7994?w=400" },
+            { id: 8, name: "บริการทำความสะอาดห้อง", price: 450, category: "service", img: "https://images.unsplash.com/photo-1581578731117-104f2a41272c?w=400" },
+            { id: 9, name: "ลงโปรแกรม/Windows ใหม่", price: 300, category: "service", img: "https://images.unsplash.com/photo-1588611910609-0d19f6a72d4c?w=400" },
+            { id: 10, name: "ออกแบบกราฟิก/แบนเนอร์", price: 900, category: "service", img: "https://images.unsplash.com/photo-1626785774573-4b7993143d2d?w=400" }
         ];
 
-        // --- 3. STATE ---
-        let cart = {}; // { id: quantity }
-        let currentFilter = 'all';
+        let cart = {};
 
-        // --- 4. FUNCTIONS ---
-
-        // Render Products
-        function renderProducts(filter = 'all') {
+        function renderProducts(filter) {
             const list = document.getElementById('product-list');
             list.innerHTML = '';
-
-            const filteredProducts = products.filter(p => filter === 'all' || p.category === filter);
-
-            filteredProducts.forEach(p => {
+            products.filter(p => p.category === filter).forEach(p => {
                 const card = document.createElement('div');
-                card.className = "bg-white rounded-md shadow-sm hover:shadow-md transition-shadow overflow-hidden flex flex-col";
+                card.className = "bg-white rounded-md shadow-sm overflow-hidden flex flex-col";
                 card.innerHTML = `
                     <div class="relative pt-[100%] bg-gray-100">
                         <img src="${p.img}" class="absolute top-0 left-0 w-full h-full object-cover">
-                        ${p.category === 'service' ? '<span class="absolute top-2 left-2 bg-blue-600 text-white text-[10px] px-2 py-0.5 rounded">บริการ</span>' : ''}
                     </div>
                     <div class="p-2 flex flex-col flex-1">
-                        <h3 class="text-sm font-medium text-gray-800 line-clamp-2 mb-1 leading-snug min-h-[2.5em]">${p.name}</h3>
+                        <h3 class="text-sm font-medium text-gray-800 line-clamp-2 mb-1 min-h-[2.5em]">${p.name}</h3>
                         <div class="mt-auto flex justify-between items-center">
                             <span class="text-shopee-primary font-semibold">฿${p.price.toLocaleString()}</span>
                             <button onclick="addToCart(${p.id})" class="w-8 h-8 rounded-full border border-shopee-primary text-shopee-primary flex items-center justify-center hover:bg-shopee-primary hover:text-white transition">
@@ -185,11 +138,7 @@
             });
         }
 
-        // Filter Function
         function filterCategory(category) {
-            currentFilter = category;
-            
-            // Update Tab Style
             document.querySelectorAll('nav button').forEach(btn => {
                 btn.classList.remove('text-shopee-primary', 'border-b-2', 'border-shopee-primary');
                 btn.classList.add('text-gray-500');
@@ -197,142 +146,67 @@
             const activeTab = document.getElementById(`tab-${category}`);
             activeTab.classList.remove('text-gray-500');
             activeTab.classList.add('text-shopee-primary', 'border-b-2', 'border-shopee-primary');
-
             renderProducts(category);
         }
 
-        // Add to Cart
         function addToCart(id) {
-            if (cart[id]) {
-                cart[id]++;
-            } else {
-                cart[id] = 1;
-            }
+            cart[id] = (cart[id] || 0) + 1;
             updateCartUI();
-            
-            // Effect: Cart Badge Bounce
-            const badge = document.getElementById('cart-badge');
-            badge.classList.add('scale-125');
-            setTimeout(() => badge.classList.remove('scale-125'), 200);
         }
 
-        // Remove from Cart
         function removeFromCart(id) {
-            if (cart[id]) {
-                delete cart[id];
-            }
+            delete cart[id];
             updateCartUI();
         }
 
-        // Update Cart UI (Badge & Modal List)
         function updateCartUI() {
             const badge = document.getElementById('cart-badge');
             const cartItemsContainer = document.getElementById('cart-items');
             const totalEl = document.getElementById('cart-total');
-            
-            let totalCount = 0;
-            let totalPrice = 0;
-            let html = '';
+            let totalCount = 0, totalPrice = 0, html = '';
 
             for (const [id, qty] of Object.entries(cart)) {
-                const product = products.find(p => p.id == id);
-                if (product) {
+                const p = products.find(prod => prod.id == id);
+                if (p) {
                     totalCount += qty;
-                    totalPrice += product.price * qty;
+                    totalPrice += p.price * qty;
                     html += `
-                        <div class="flex items-center gap-3 bg-white p-2 rounded border border-gray-100">
-                            <img src="${product.img}" class="w-16 h-16 object-cover rounded bg-gray-100">
-                            <div class="flex-1">
-                                <h4 class="text-sm font-medium text-gray-800 line-clamp-1">${product.name}</h4>
-                                <div class="text-shopee-primary text-sm font-semibold">฿${product.price.toLocaleString()}</div>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <span class="text-sm text-gray-500">x${qty}</span>
-                                <button onclick="removeFromCart(${id})" class="text-gray-400 hover:text-red-500 p-1">
-                                    <i class="fas fa-trash-alt"></i>
-                                </button>
-                            </div>
+                        <div class="flex items-center gap-3 bg-white p-2 border-b border-gray-50">
+                            <img src="${p.img}" class="w-12 h-12 object-cover rounded">
+                            <div class="flex-1 text-sm font-medium text-gray-800">${p.name}</div>
+                            <div class="text-shopee-primary text-sm font-semibold">x${qty}</div>
+                            <button onclick="removeFromCart(${id})" class="text-gray-300 ml-2"><i class="fas fa-trash"></i></button>
                         </div>
                     `;
                 }
             }
-
-            // Update Badge
             badge.innerText = totalCount;
             badge.classList.toggle('hidden', totalCount === 0);
-
-            // Update Modal Content
-            if (totalCount === 0) {
-                cartItemsContainer.innerHTML = '<div class="flex flex-col items-center justify-center h-full text-gray-300 gap-2"><i class="fas fa-shopping-basket text-4xl"></i><p>ยังไม่มีสินค้า</p></div>';
-            } else {
-                cartItemsContainer.innerHTML = html;
-            }
-
-            // Update Total
+            cartItemsContainer.innerHTML = html || '<p class="text-center text-gray-400 py-10">ตะกร้าว่างเปล่า</p>';
             totalEl.innerText = '฿' + totalPrice.toLocaleString();
         }
 
-        // Toggle Cart Modal
-        function toggleCart() {
-            const modal = document.getElementById('cart-modal');
-            modal.classList.toggle('hidden');
-        }
+        function toggleCart() { document.getElementById('cart-modal').classList.toggle('hidden'); }
 
-        // Checkout to LINE
         function checkoutViaLine() {
-            if (Object.keys(cart).length === 0) {
-                alert('กรุณาเลือกสินค้าก่อนสั่งซื้อ');
-                return;
-            }
-
             const name = document.getElementById('customer-name').value;
             const phone = document.getElementById('customer-phone').value;
             const address = document.getElementById('customer-address').value;
+            if (Object.keys(cart).length === 0 || !name || !phone) return alert('กรุณากรอกข้อมูลให้ครบถ้วน');
 
-            if (!name || !phone) {
-                alert('กรุณากรอกชื่อและเบอร์โทรศัพท์');
-                return;
-            }
-
-            // Construct Message
-            let message = `🛒 *ออเดอร์ใหม่จากเว็บไซต์*\n`;
-            message += `----------------------------\n`;
-            let totalPrice = 0;
-
+            let message = `🛒 *สั่งซื้อสินค้า*\n----------------\n`;
+            let total = 0;
             for (const [id, qty] of Object.entries(cart)) {
-                const product = products.find(p => p.id == id);
-                if (product) {
-                    message += `▪️ ${product.name} (x${qty})\n`;
-                    totalPrice += product.price * qty;
-                }
+                const p = products.find(prod => prod.id == id);
+                message += `- ${p.name} (x${qty})\n`;
+                total += p.price * qty;
             }
-
-            message += `----------------------------\n`;
-            message += `💰 *ยอดรวม: ${totalPrice.toLocaleString()} บาท*\n`;
-            message += `----------------------------\n`;
-            message += `👤 ชื่อ: ${name}\n`;
-            message += `📞 โทร: ${phone}\n`;
-            if (address) message += `📍 ที่อยู่: ${address}`;
-
-            // Encode for URL
-            const encodedMessage = encodeURIComponent(message);
-            
-            // Open Line URL
-            // ใช้ URL Scheme สำหรับเปิดห้องแชทพร้อมข้อความ (ถ้าทำได้) หรือเปิดห้องแชทเพื่อให้ลูกค้ากดวาง
-            // หมายเหตุ: line.me/R/oaMessage/@id/?text ใช้ได้กับบางบัญชี หากไม่ได้ ให้ใช้การ Copy แล้วเปิด Line
-            
-            // วิธีที่ 1: ลองใช้ oaMessage (ดีที่สุดถ้า Account รองรับ)
-             const lineUrl = `https://line.me/R/oaMessage/${LINE_ID}/?${encodedMessage}`;
-            
-            // วิธีที่ 2 (สำรอง): ถ้าวิธีแรกไม่เวิร์ค ให้ใช้แบบเปิดแชทธรรมดา
-            // const lineUrl = `https://line.me/R/ti/p/${LINE_ID}`;
-            
-            window.location.href = lineUrl;
+            message += `----------------\n💰 รวม: ${total.toLocaleString()} บาท\n👤 ${name}\n📞 ${phone}\n📍 ${address}`;
+            window.location.href = `https://line.me/R/oaMessage/${LINE_ID}/?${encodeURIComponent(message)}`;
         }
 
-        // --- 5. INITIALIZE ---
-        renderProducts();
-
+        // เริ่มต้นที่หมวด "สินค้า"
+        renderProducts('product');
     </script>
 </body>
 </html>
