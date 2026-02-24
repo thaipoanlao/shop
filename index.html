@@ -21,49 +21,77 @@
             }
         }
 
-        async function checkoutWithBeam() {
-    // ... ดึงข้อมูลสินค้า (เหมือนเดิม) ...
+    async function checkoutWithBeam() {
+    const name = document.getElementById('customer-name').value;
+    const phone = document.getElementById('customer-phone').value;
+    const address = document.getElementById('customer-address').value;
 
-    // คำนวณยอดรวมเป็นหน่วย "สตางค์" (Smallest unit)
+    // 1. ตรวจสอบข้อมูลผู้ซื้อ
+    if (Object.keys(cart).length === 0) return alert('กรุณาเลือกสินค้าก่อนครับ');
+    if (!name || !phone) return alert('กรุณากรอกชื่อและเบอร์โทรสำหรับจัดส่ง');
+
+    // 2. เตรียมรายการสินค้าสำหรับส่งให้ Beam
+    const items = Object.entries(cart).map(([id, qty]) => {
+        const p = products.find(prod => prod.id == id);
+        return {
+            name: p.name,
+            quantity: qty,
+            price: p.price * 100 // แปลงเป็นหน่วยสตางค์ตามข้อกำหนดของ Beam
+        };
+    });
+
+    // 3. คำนวณยอดรวมสุทธิ (หน่วยสตางค์)
     const totalAmountInSatang = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
     try {
+        // 4. ส่งข้อมูลไปที่ Backend Proxy (api/checkout.js)
         const response = await fetch('/api/checkout', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                amount: totalAmountInSatang, // ส่งค่าเป็นหน่วยสตางค์
+                amount: totalAmountInSatang,
                 currency: "THB",
                 paymentMethod: {
                     qrPromptPay: {
-                        // กำหนดเวลาหมดอายุ (Optional) ตามรูปแบบ ISO 8601
-                        expiryTime: new Date(Date.now() + 3600000).toISOString() 
+                        expiryTime: new Date(Date.now() + 3600000).toISOString() // หมดอายุใน 1 ชม.
                     },
-                    paymentMethodType: "QR_PROMPT_PAY" // ต้องระบุประเภทให้ถูกต้อง
+                    paymentMethodType: "QR_PROMPT_PAY"
                 },
-                referenceId: "ORDER-" + Date.now(), // เลขอ้างอิงออเดอร์
-                returnUrl: window.location.origin + "/success.html", // URL เมื่อจ่ายสำเร็จ
-                skip3dsFlow: false
+                referenceId: "ORDER-" + Date.now(),
+                returnUrl: window.location.origin + "/success.html",
+                items: items // แนบรายการสินค้าไปด้วย
             })
         });
 
         const result = await response.json();
 
-        // ตรวจสอบการตอบกลับ (Handling Response)
+        // 5. จัดการผลลัพธ์ตามประเภทการชำระเงิน
         if (result.actionRequired === "REDIRECT") {
-            // กรณีเป็นบัตรหรือช่องทางที่ต้องเปลี่ยนหน้า
+            // สำหรับบัตรเครดิต หรือช่องทางที่ต้องเปลี่ยนหน้า
             window.location.href = result.redirect.redirectUrl;
         } else if (result.actionRequired === "ENCODED_IMAGE") {
-            // กรณี QR PromptPay จะได้รูปภาพ Base64 มาแสดงผล
-            alert("กรุณาสแกน QR Code เพื่อชำระเงิน (ระบบกำลังพัฒนาส่วนแสดงรูปภาพ)");
-            console.log("Base64 Image Data:", result.encodedImage.imageBase64Encoded);
-            // คุณสามารถนำค่านี้ไปใส่ใน <img src="data:image/png;base64,..."> ได้
+            // สำหรับ QR PromptPay: แสดงรูปภาพ QR Code จาก Base64
+            displayQRCode(result.encodedImage.imageBase64Encoded);
         } else {
             alert("เกิดข้อผิดพลาด: " + (result.message || "โปรดลองใหม่"));
         }
     } catch (error) {
+        console.error(error);
         alert("ไม่สามารถเชื่อมต่อระบบชำระเงินได้");
     }
+}
+
+// ฟังก์ชันช่วยแสดงผล QR Code
+function displayQRCode(base64Data) {
+    const qrWindow = window.open("", "ชำระเงิน", "width=400,height=500");
+    qrWindow.document.write(`
+        <div style="text-align:center; font-family: sans-serif; padding: 20px;">
+            <h3>สแกนเพื่อชำระเงิน</h3>
+            <img src="data:image/png;base64,${base64Data}" style="width:100%; max-width:300px;">
+            <p>กรุณาชำระเงินภายในเวลาที่กำหนด</p>
+            <button onclick="window.close()" style="padding:10px 20px;">ปิดหน้าต่าง</button>
+        </div>
+    `);
 }
     </script>
 
