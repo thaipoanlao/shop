@@ -1,20 +1,33 @@
 // api/webhook.js
 export default async function handler(req, res) {
-    console.log("ได้รับข้อมูลจาก Beam:", JSON.stringify(req.body));
-
     const event = req.body;
 
     if (event.type === 'charge.succeeded') {
         const charge = event.data.object;
-        const amount = charge.amount / 100;
+        const amount = charge.amount / 100; // แปลงหน่วยสตางค์เป็นบาท
         const refId = charge.referenceId;
 
-        const messageText = `💰 ยอดเข้าใหม่! ✅\n------------------\nออเดอร์: ${refId}\nจำนวนเงิน: ${amount.toLocaleString()} บาท\nสถานะ: ชำระเงินเรียบร้อย`;
+        // สร้างเวลาปัจจุบันรูปแบบไทย
+        const paymentTime = new Intl.DateTimeFormat('th-TH', {
+            dateStyle: 'medium',
+            timeStyle: 'medium',
+            timeZone: 'Asia/Bangkok'
+        }).format(new Date());
+
+        // ข้อความแจ้งเตือนฉบับปรับปรุงตามคำขอ
+        const messageText = `🏪 ร้านค้า: shop.thpl.me
+💰 แจ้งเตือนยอดเข้า! ✅
+--------------------------
+ออเดอร์: ${refId}
+จำนวนเงิน: ${amount.toLocaleString()} บาท
+เวลา: ${paymentTime}
+สถานะ: ชำระเงินสำเร็จแล้ว
+--------------------------
+เช็ครายละเอียดเพิ่มเติมได้ที่:
+https://lighthouse.beamcheckout.com/merchant/porbaanfmly/dashboard`;
 
         try {
-            console.log("กำลังส่งหา LINE User ID:", process.env.LINE_USER_ID);
-            
-            const lineResponse = await fetch('https://api.line.me/v2/bot/message/push', {
+            await fetch('https://api.line.me/v2/bot/message/push', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -25,16 +38,8 @@ export default async function handler(req, res) {
                     messages: [{ type: "text", text: messageText }]
                 })
             });
-
-            const responseData = await lineResponse.json();
-            console.log("LINE Response Status:", lineResponse.status);
-            console.log("LINE Response Body:", JSON.stringify(responseData));
-
-            if (lineResponse.status === 200) {
-                console.log("ส่งเข้า LINE สำเร็จแล้ว!");
-            }
         } catch (error) {
-            console.error("เกิดข้อผิดพลาดขณะส่งหา LINE:", error);
+            console.error("LINE Messaging Error:", error);
         }
     }
 
