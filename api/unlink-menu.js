@@ -1,19 +1,35 @@
 // api/unlink-menu.js
 export default async function handler(req, res) {
-    const token = process.env.LINE_CHANNEL_ACCESS_TOKEN;
-    const userId = process.env.LINE_USER_ID; // รหัส U... ของคุณ
+    const token = process.env.LINE_CHANNEL_ACCESS_TOKEN; // ใช้ Token ใหม่ที่คุณเพิ่งเปลี่ยน
 
     try {
-        // เปลี่ยนบรรทัด fetch ใน api/unlink-menu.js เป็นตัวนี้ครับ
-        const response = await fetch(`https://api.line.me/v2/bot/richmenu/default`, {
-            method: 'DELETE',
+        // 1. ดึงรายการ Rich Menu ทั้งหมดที่มีอยู่ใน Channel นี้
+        const listResponse = await fetch('https://api.line.me/v2/bot/richmenu/list', {
+            method: 'GET',
             headers: { 'Authorization': `Bearer ${token}` }
         });
+        const listData = await listResponse.json();
+        const richmenus = listData.richmenus || [];
 
-        return res.status(200).json({ 
-            status: response.status, 
-            message: "สั่งปลดเมนูริชสำเร็จแล้ว กรุณาเช็คในมือถือ" 
+        if (richmenus.length === 0) {
+            return res.status(200).json({ message: "ไม่พบ Rich Menu ค้างอยู่ในระบบแล้ว" });
+        }
+
+        // 2. ไล่ลบทิ้งทีละอันตาม ID
+        const results = [];
+        for (const menu of richmenus) {
+            const deleteRes = await fetch(`https://api.line.me/v2/bot/richmenu/${menu.richMenuId}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            results.push({ id: menu.richMenuId, status: deleteRes.status });
+        }
+
+        return res.status(200).json({
+            message: `ลบเมนูริชออกไปทั้งหมด ${richmenus.length} รายการแล้ว`,
+            details: results
         });
+
     } catch (error) {
         return res.status(500).json({ error: error.message });
     }
