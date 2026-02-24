@@ -20,6 +20,45 @@
                 }
             }
         }
+
+        async function checkoutWithBeam() {
+    if (Object.keys(cart).length === 0) return alert('ตะกร้าว่างเปล่า');
+
+    // เตรียมข้อมูลสินค้าตามที่ Beam ต้องการ
+    const items = Object.entries(cart).map(([id, qty]) => {
+        const p = products.find(prod => prod.id == id);
+        return {
+            name: p.name,
+            quantity: qty,
+            price: p.price * 100, // Beam ใช้หน่วยสตางค์ (100 บาท = 10000)
+            image_url: p.images[0]
+        };
+    });
+
+    try {
+        // ส่งข้อมูลไปที่ Backend Proxy ที่เราสร้างไว้ในโฟลเดอร์ api
+        const response = await fetch('/api/checkout', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                items: items,
+                currency: 'THB',
+                success_url: window.location.origin,
+                cancel_url: window.location.href
+            })
+        });
+
+        const result = await response.json();
+
+        if (result.checkout_url) {
+            window.location.href = result.checkout_url; // ส่งลูกค้าไปหน้าจ่ายเงินของ Beam
+        } else {
+            alert('ไม่สามารถสร้างรายการชำระเงินได้ กรุณาลองใหม่');
+        }
+    } catch (error) {
+        alert('เกิดข้อผิดพลาดในการเชื่อมต่อระบบชำระเงิน');
+    }
+}
     </script>
 
     <style>
