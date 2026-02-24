@@ -3,29 +3,33 @@ export default async function handler(req, res) {
     if (req.method !== 'POST') return res.status(405).json({ message: 'Method Not Allowed' });
 
     try {
-        const SECRET_KEY = process.env.BEAM_SECRET_KEY;
-        
-        // ส่งข้อมูลไป Beam
-        const response = await fetch('https://api.beamcheckout.com/v1/checkouts', {
+        const merchantId = process.env.MERCHANT_ID;
+        const apiKey = process.env.BEAM_SECRET_KEY;
+
+        // การทำ Basic Auth: รวม ID และ Key เข้าด้วยกันแล้วแปลงเป็น Base64
+        const auth = Buffer.from(`${merchantId}:${apiKey}`).toString('base64');
+
+        const response = await fetch('https://api.beamcheckout.com/api/v1/charges', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${SECRET_KEY}`
+                'Authorization': `Basic ${auth}` // เปลี่ยนเป็น Basic Auth ตามเอกสาร
             },
-            body: JSON.stringify(req.body) 
+            body: JSON.stringify(req.body)
         });
 
-        const text = await response.text(); // อ่านผลลัพธ์เป็นข้อความก่อน
+        const text = await response.text();
         
-        try {
-            const data = JSON.parse(text); // ลองแปลงเป็น JSON
-            return res.status(response.status).json(data);
-        } catch (e) {
-            // ถ้า Beam ส่ง HTML มา (Error) ให้ Log ดูว่าคืออะไร
-            console.error('Beam Error Response:', text);
-            return res.status(500).json({ error: "Beam API Error - Check your Secret Key" });
+        // ลองส่งค่ากลับไปเช็คดู
+        if (response.ok) {
+            return res.status(200).json(JSON.parse(text));
+        } else {
+            console.error('Beam API Error:', text);
+            return res.status(response.status).send(text);
         }
+
     } catch (error) {
+        console.error('Proxy Error:', error);
         return res.status(500).json({ error: error.message });
     }
 }
