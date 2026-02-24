@@ -1,35 +1,35 @@
 // api/checkout.js
 export default async function handler(req, res) {
-    if (req.method !== 'POST') return res.status(405).json({ message: 'Method Not Allowed' });
+    // 1. รับเฉพาะคำสั่งแบบ POST
+    if (req.method !== 'POST') {
+        return res.status(405).json({ message: 'Method Not Allowed' });
+    }
 
     try {
-        const merchantId = process.env.MERCHANT_ID;
-        const apiKey = process.env.BEAM_SECRET_KEY;
+        // 2. ดึงค่าจาก Environment Variables ใน Vercel
+        const merchantId = process.env.MERCHANT_ID; // ต้องไปเพิ่มตัวแปรนี้ใน Vercel
+        const apiKey = process.env.BEAM_SECRET_KEY; // คือ Merchant API Key (รหัส aVKab...)
 
-        // การทำ Basic Auth: รวม ID และ Key เข้าด้วยกันแล้วแปลงเป็น Base64
+        // 3. ทำ Authentication แบบ Basic Auth (Base64 encoding) ตามเอกสาร Beam
         const auth = Buffer.from(`${merchantId}:${apiKey}`).toString('base64');
 
+        // 4. ส่งข้อมูลไปยัง Endpoint /api/v1/charges
         const response = await fetch('https://api.beamcheckout.com/api/v1/charges', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Basic ${auth}` // เปลี่ยนเป็น Basic Auth ตามเอกสาร
+                'Authorization': `Basic ${auth}`
             },
-            body: JSON.stringify(req.body)
+            body: JSON.stringify(req.body) // ข้อมูลทั้งหมดจะถูกส่งมาจากหน้า index.html
         });
 
-        const text = await response.text();
+        const data = await response.json();
         
-        // ลองส่งค่ากลับไปเช็คดู
-        if (response.ok) {
-            return res.status(200).json(JSON.parse(text));
-        } else {
-            console.error('Beam API Error:', text);
-            return res.status(response.status).send(text);
-        }
+        // 5. ส่งผลลัพธ์กลับไปที่หน้าเว็บ
+        return res.status(response.status).json(data);
 
     } catch (error) {
         console.error('Proxy Error:', error);
-        return res.status(500).json({ error: error.message });
+        return res.status(500).json({ error: 'Internal Server Error' });
     }
 }
