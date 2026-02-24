@@ -4,8 +4,8 @@ export default async function handler(req, res) {
     const userId = process.env.LINE_USER_ID; // รหัส U... ของคุณ
 
     try {
-        // คำสั่งปลดการเชื่อมต่อ Rich Menu ออกจาก User ID เฉพาะคน
-        const response = await fetch(`https://api.line.me/v2/bot/user/${userId}/richmenu`, {
+        // เปลี่ยนบรรทัด fetch ใน api/unlink-menu.js เป็นตัวนี้ครับ
+        const response = await fetch(`https://api.line.me/v2/bot/richmenu/default`, {
             method: 'DELETE',
             headers: { 'Authorization': `Bearer ${token}` }
         });
