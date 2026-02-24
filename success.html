@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สั่งซื้อสำเร็จ - ShopDee</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Kanit', 'sans-serif'] },
+                    colors: { shopee: { primary: '#ee4d2d' } }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        @keyframes scaleIn {
+            0% { transform: scale(0); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .animate-scale { animation: scaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    </style>
+</head>
+<body class="bg-gray-50 flex items-center justify-center min-h-screen p-4">
+
+    <div class="max-w-md w-full bg-white rounded-3xl shadow-xl p-8 text-center animate-scale">
+        <div class="w-20 h-20 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
+            <i class="fas fa-check text-4xl"></i>
+        </div>
+
+        <h1 class="text-2xl font-bold text-gray-800 mb-2">สั่งซื้อสำเร็จ!</h1>
+        <p class="text-gray-500 mb-8">ขอบคุณสำหรับการสั่งซื้อของคุณ <br> ระบบได้รับข้อมูลการชำระเงินเรียบร้อยแล้ว</p>
+
+        <div class="bg-gray-50 rounded-2xl p-4 mb-8 border border-gray-100 text-left">
+            <div class="flex justify-between text-sm mb-2">
+                <span class="text-gray-400">สถานะการชำระเงิน</span>
+                <span class="text-green-600 font-medium">สำเร็จ</span>
+            </div>
+            <div class="flex justify-between text-sm">
+                <span class="text-gray-400">ช่องทาง</span>
+                <span class="text-gray-700">Online Payment / QR</span>
+            </div>
+        </div>
+
+        <div class="space-y-3">
+            <a href="/" class="block w-full bg-shopee-primary text-white font-bold py-3 rounded-xl shadow-lg shadow-orange-200 active:scale-95 transition">
+                กลับสู่หน้าร้านค้า
+            </a>
+            <a href="https://line.me/ti/p/@888fsncq" class="block w-full bg-white text-gray-600 font-medium py-3 border border-gray-200 rounded-xl hover:bg-gray-50 transition">
+                <i class="fab fa-line text-green-500 mr-2"></i> ติดต่อสอบถามเพิ่มเติม
+            </a>
+        </div>
+
+        <p class="text-[10px] text-gray-400 mt-8 uppercase tracking-widest">Powered by Beam Checkout</p>
+    </div>
+
+</body>
+</html>
