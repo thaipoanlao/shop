@@ -22,41 +22,47 @@
         }
 
         async function checkoutWithBeam() {
-    if (Object.keys(cart).length === 0) return alert('ตะกร้าว่างเปล่า');
+    // ... ดึงข้อมูลสินค้า (เหมือนเดิม) ...
 
-    // เตรียมข้อมูลสินค้าตามที่ Beam ต้องการ
-    const items = Object.entries(cart).map(([id, qty]) => {
-        const p = products.find(prod => prod.id == id);
-        return {
-            name: p.name,
-            quantity: qty,
-            price: p.price * 100, // Beam ใช้หน่วยสตางค์ (100 บาท = 10000)
-            image_url: p.images[0]
-        };
-    });
+    // คำนวณยอดรวมเป็นหน่วย "สตางค์" (Smallest unit)
+    const totalAmountInSatang = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
     try {
-        // ส่งข้อมูลไปที่ Backend Proxy ที่เราสร้างไว้ในโฟลเดอร์ api
         const response = await fetch('/api/checkout', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                items: items,
-                currency: 'THB',
-                success_url: window.location.origin,
-                cancel_url: window.location.href
+                amount: totalAmountInSatang, // ส่งค่าเป็นหน่วยสตางค์
+                currency: "THB",
+                paymentMethod: {
+                    qrPromptPay: {
+                        // กำหนดเวลาหมดอายุ (Optional) ตามรูปแบบ ISO 8601
+                        expiryTime: new Date(Date.now() + 3600000).toISOString() 
+                    },
+                    paymentMethodType: "QR_PROMPT_PAY" // ต้องระบุประเภทให้ถูกต้อง
+                },
+                referenceId: "ORDER-" + Date.now(), // เลขอ้างอิงออเดอร์
+                returnUrl: window.location.origin + "/success.html", // URL เมื่อจ่ายสำเร็จ
+                skip3dsFlow: false
             })
         });
 
         const result = await response.json();
 
-        if (result.checkout_url) {
-            window.location.href = result.checkout_url; // ส่งลูกค้าไปหน้าจ่ายเงินของ Beam
+        // ตรวจสอบการตอบกลับ (Handling Response)
+        if (result.actionRequired === "REDIRECT") {
+            // กรณีเป็นบัตรหรือช่องทางที่ต้องเปลี่ยนหน้า
+            window.location.href = result.redirect.redirectUrl;
+        } else if (result.actionRequired === "ENCODED_IMAGE") {
+            // กรณี QR PromptPay จะได้รูปภาพ Base64 มาแสดงผล
+            alert("กรุณาสแกน QR Code เพื่อชำระเงิน (ระบบกำลังพัฒนาส่วนแสดงรูปภาพ)");
+            console.log("Base64 Image Data:", result.encodedImage.imageBase64Encoded);
+            // คุณสามารถนำค่านี้ไปใส่ใน <img src="data:image/png;base64,..."> ได้
         } else {
-            alert('ไม่สามารถสร้างรายการชำระเงินได้ กรุณาลองใหม่');
+            alert("เกิดข้อผิดพลาด: " + (result.message || "โปรดลองใหม่"));
         }
     } catch (error) {
-        alert('เกิดข้อผิดพลาดในการเชื่อมต่อระบบชำระเงิน');
+        alert("ไม่สามารถเชื่อมต่อระบบชำระเงินได้");
     }
 }
     </script>
