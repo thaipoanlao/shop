@@ -1,14 +1,11 @@
 // api/checkout.js
 export default async function handler(req, res) {
-    // กำหนดให้รองรับเฉพาะการส่งข้อมูลแบบ POST
-    if (req.method !== 'POST') {
-        return res.status(405).json({ message: 'Method Not Allowed' });
-    }
+    if (req.method !== 'POST') return res.status(405).json({ message: 'Method Not Allowed' });
 
     try {
-        const SECRET_KEY = process.env.BEAM_SECRET_KEY; // ดึงรหัสลับจาก Environment Variable
-
-        // ส่งข้อมูลไปยัง Beam Checkout API
+        const SECRET_KEY = process.env.BEAM_SECRET_KEY;
+        
+        // ส่งข้อมูลไป Beam
         const response = await fetch('https://api.beamcheckout.com/v1/checkouts', {
             method: 'POST',
             headers: {
@@ -18,12 +15,17 @@ export default async function handler(req, res) {
             body: JSON.stringify(req.body) 
         });
 
-        const data = await response.json();
-
-        // ส่งผลลัพธ์กลับไปให้หน้าเว็บ (Frontend)
-        return res.status(response.status).json(data);
+        const text = await response.text(); // อ่านผลลัพธ์เป็นข้อความก่อน
+        
+        try {
+            const data = JSON.parse(text); // ลองแปลงเป็น JSON
+            return res.status(response.status).json(data);
+        } catch (e) {
+            // ถ้า Beam ส่ง HTML มา (Error) ให้ Log ดูว่าคืออะไร
+            console.error('Beam Error Response:', text);
+            return res.status(500).json({ error: "Beam API Error - Check your Secret Key" });
+        }
     } catch (error) {
-        console.error('Beam Proxy Error:', error);
-        return res.status(500).json({ message: 'Internal Server Error' });
+        return res.status(500).json({ error: error.message });
     }
 }
