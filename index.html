@@ -83,15 +83,10 @@
 
 // ฟังก์ชันช่วยแสดงผล QR Code
 function displayQRCode(base64Data) {
-    const qrWindow = window.open("", "ชำระเงิน", "width=400,height=500");
-    qrWindow.document.write(`
-        <div style="text-align:center; font-family: sans-serif; padding: 20px;">
-            <h3>สแกนเพื่อชำระเงิน</h3>
-            <img src="data:image/png;base64,${base64Data}" style="width:100%; max-width:300px;">
-            <p>กรุณาชำระเงินภายในเวลาที่กำหนด</p>
-            <button onclick="window.close()" style="padding:10px 20px;">ปิดหน้าต่าง</button>
-        </div>
-    `);
+    const modal = document.getElementById('qr-modal');
+    const img = document.getElementById('qr-image');
+    img.src = "data:image/png;base64," + base64Data; // นำข้อมูล Base64 มาแสดงเป็นรูป
+    modal.classList.remove('hidden');
 }
     </script>
 
@@ -155,6 +150,20 @@ function displayQRCode(base64Data) {
         </div>
     </div>
 
+    <div id="qr-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm"></div>
+        <div class="bg-white rounded-3xl p-8 max-w-xs w-full relative z-[110] text-center shadow-2xl">
+            <h3 class="text-xl font-bold text-gray-800 mb-4">สแกนชำระเงิน</h3>
+            <div class="bg-gray-100 p-2 rounded-2xl mb-4">
+                <img id="qr-image" src="" alt="PromptPay QR" class="w-full">
+            </div>
+            <p class="text-sm text-gray-500 mb-6">กรุณาแคปหน้าจอเพื่อนำไปสแกนในแอปธนาคาร</p>
+            <button onclick="document.getElementById('qr-modal').classList.add('hidden')" class="w-full py-3 bg-gray-200 text-gray-700 font-bold rounded-xl active:scale-95 transition">
+                ปิดหน้าต่าง
+            </button>
+        </div>
+    </div>
+    
     <div id="cart-modal" class="fixed inset-0 z-[60] hidden">
         <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="toggleCart()"></div>
         
