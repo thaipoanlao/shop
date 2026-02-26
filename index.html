@@ -119,12 +119,35 @@ function displayQRCode(base64Data) {
     </header>
 
     <nav class="fixed top-[60px] left-0 w-full bg-white z-40 shadow-sm border-b border-gray-100">
-        <div class="container mx-auto max-w-lg flex text-sm font-medium">
-            <button id="tab-product" onclick="filterCategory('product')" class="flex-1 py-3 text-center transition border-b-2 border-shopee-primary text-shopee-primary">สินค้า</button>
-            <button id="tab-service" onclick="filterCategory('service')" class="flex-1 py-3 text-center text-gray-500 transition">บริการ</button>
-        </div>
-    </nav>
+    <div class="container mx-auto max-w-lg flex text-sm font-medium">
+        <button id="tab-product" onclick="filterMainCategory('product')" class="flex-1 py-3 text-center transition border-b-2 border-shopee-primary text-shopee-primary">สินค้า</button>
+        <button id="tab-service" onclick="filterMainCategory('service')" class="flex-1 py-3 text-center text-gray-500 transition">บริการ</button>
+    </div>
+</nav>
 
+<div id="sub-nav" class="fixed top-[105px] left-0 w-full bg-gray-50 z-30 shadow-sm transition-all duration-300">
+    <div class="container mx-auto max-w-lg flex overflow-x-auto hide-scroll p-2 gap-2 text-xs">
+        <button onclick="filterSubCategory('all')" class="sub-tab-btn whitespace-nowrap px-4 py-2 rounded-full bg-shopee-primary text-white shadow-sm">ทั้งหมด</button>
+        <button onclick="filterSubCategory('tempeh')" class="sub-tab-btn whitespace-nowrap px-4 py-2 rounded-full bg-white text-gray-600 border border-gray-200">เต็มเป</button>
+        <button onclick="filterSubCategory('supplement')" class="sub-tab-btn whitespace-nowrap px-4 py-2 rounded-full bg-white text-gray-600 border border-gray-200">อาหารเสริม</button>
+        <button onclick="filterSubCategory('cosmetic')" class="sub-tab-btn whitespace-nowrap px-4 py-2 rounded-full bg-white text-gray-600 border border-gray-200">เครื่องสำอาง</button>
+    </div>
+</div><nav class="fixed top-[60px] left-0 w-full bg-white z-40 shadow-sm border-b border-gray-100">
+    <div class="container mx-auto max-w-lg flex text-sm font-medium">
+        <button id="tab-product" onclick="filterMainCategory('product')" class="flex-1 py-3 text-center transition border-b-2 border-shopee-primary text-shopee-primary">สินค้า</button>
+        <button id="tab-service" onclick="filterMainCategory('service')" class="flex-1 py-3 text-center text-gray-500 transition">บริการ</button>
+    </div>
+</nav>
+
+<div id="sub-nav" class="fixed top-[105px] left-0 w-full bg-gray-50 z-30 shadow-sm transition-all duration-300">
+    <div class="container mx-auto max-w-lg flex overflow-x-auto hide-scroll p-2 gap-2 text-xs">
+        <button onclick="filterSubCategory('all')" class="sub-tab-btn whitespace-nowrap px-4 py-2 rounded-full bg-shopee-primary text-white shadow-sm">ทั้งหมด</button>
+        <button onclick="filterSubCategory('tempeh')" class="sub-tab-btn whitespace-nowrap px-4 py-2 rounded-full bg-white text-gray-600 border border-gray-200">เต็มเป</button>
+        <button onclick="filterSubCategory('supplement')" class="sub-tab-btn whitespace-nowrap px-4 py-2 rounded-full bg-white text-gray-600 border border-gray-200">อาหารเสริม</button>
+        <button onclick="filterSubCategory('cosmetic')" class="sub-tab-btn whitespace-nowrap px-4 py-2 rounded-full bg-white text-gray-600 border border-gray-200">เครื่องสำอาง</button>
+    </div>
+</div>
+    
     <main class="container mx-auto max-w-lg px-2 py-4 mt-28">
         <div id="product-list" class="grid grid-cols-2 gap-2"></div>
     </main>
@@ -216,6 +239,7 @@ function displayQRCode(base64Data) {
                 name: "เต็มเป 150g 1 ชิ้น (ไม่รวมค่าส่ง 35บาท)", 
                 price: 30, 
                 category: "product", 
+                subCategory: "tempeh",
                 desc: "เต็มเปสด คุณภาพดี โปรตีนสูง\n- ขนาด 150 กรัม\n- ผลิตสดใหม่ทุกรอบ\n- เหมาะสำหรับคนรักสุขภาพ",
                 images: [
                     "https://down-th.img.susercontent.com/file/th-11134207-81ztl-mkchmisxx9mof2.webp",
@@ -234,6 +258,7 @@ function displayQRCode(base64Data) {
                 name: "เต็มเป 150g 3 ชิ้น (ไม่รวมค่าส่ง 35บาท)", 
                 price: 100, 
                 category: "product", 
+                subCategory: "tempeh",
                 desc: "ชุดสุดคุ้ม! เต็มเป 3 ชิ้น\n- ไม่รวมค่าส่ง 35 บาท\n- เก็บในตู้เย็นได้นาน 7-10 วัน\n- ทานง่าย ได้ประโยชน์เต็มคำ",
                 images: [
                     "https://down-th.img.susercontent.com/file/th-11134207-81ztl-mkchmisxx9mof2.webp",
@@ -252,6 +277,7 @@ function displayQRCode(base64Data) {
                 name: "(ส่งฟรี) เต็มเป 150g 6 ชิ้น", 
                 price: 200, 
                 category: "product", 
+                subCategory: "tempeh",
                 desc: "ชุดสุดคุ้ม! เต็มเป 6 ชิ้น\n- ฟรีค่าจัดส่งทั่วประเทศ\n- เก็บในตู้เย็นได้นาน 7-10 วัน\n- ทานง่าย ได้ประโยชน์เต็มคำ",
                 images: [
                     "https://down-th.img.susercontent.com/file/th-11134207-81ztl-mkchmisxx9mof2.webp",
@@ -270,6 +296,7 @@ function displayQRCode(base64Data) {
                 name: "ดร.เจล Shizen (ส่งฟรี)", 
                 price: 990, 
                 category: "product", 
+                subCategory: "supplement",
                 desc: "เสริมภูมิคุ้มกันให้กับร่างกาย\n- ฟรีค่าจัดส่งทั่วประเทศ\n✅ คนที่มีปัญหาแพ้อากาศเรื้อรัง หรือไซนัสอักเสบ\n✅ คนที่ป่วยบ่อย อ่อนเพลียง่าย",
                 images: [
                     "https://down-th.img.susercontent.com/file/50301f77ab8eeb6bb0ec57c1af6fd926.webp",
@@ -284,6 +311,7 @@ function displayQRCode(base64Data) {
                 name: "ดร.เจล HoneyMoon (ส่งฟรี)", 
                 price: 390, 
                 category: "product", 
+                subCategory: "cosmetic",
                 desc: "อ่อนโยนต่อผิวแพ้ง่าย\n- ขึ้นเครื่องบินได้\n- เจลล้างหน้า Honeymoon สูตรล้างออก\n- ถูกและดีระดับตีแบรนด์แพง",
                 images: [
                     "https://down-th.img.susercontent.com/file/th-11134207-23030-nicqy0z9y4nvbe.webp",
@@ -299,6 +327,7 @@ function displayQRCode(base64Data) {
                 name: "เรียนทำคลิปกับสาวแว่น Basic Package", 
                 price: 999, 
                 category: "service", 
+                subCategory: "saowaen",
                 desc: "คอร์สเรียนตัดต่อเบื้องต้น\n- สอนการใช้ CapCut\n- การวางโครงเรื่องคลิปสั้น\n- เทคนิคการพากย์เสียง",
                 images: [
                     "https://scontent.fvte2-3.fna.fbcdn.net/v/t39.30808-6/557785407_808226971602744_4195778330217928308_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=sqEVyWkWMlQQ7kNvwG07eJs&_nc_oc=AdmKzz9cXZ2aQdlMTlMZUcBYbBx1qJ4t1kUXdl9POZeWyK6WmlPmsj3JrI1L4OVoGq8&_nc_zt=23&_nc_ht=scontent.fvte2-3.fna&_nc_gid=4S0_metwrwRu_c7l7tOXSg&oh=00_Afs9FUNEa--_HOHMFTK0RjUVsT5iOGD5Ad5mcLl-3SQ0iQ&oe=699A6D8B",
@@ -312,6 +341,7 @@ function displayQRCode(base64Data) {
                 name: "เรียนทำคลิปกับสาวแว่น Standard Package", 
                 price: 3490, 
                 category: "service", 
+                subCategory: "saowaen",
                 desc: "ทุกอย่างใน Basic Package\n- ตอบคำถามส่วนตัวทาง LineOA\n- เมื่อรายได้ครบ 80$ ให้คำปรึกษากรอกข้อมูลภาษี",
                 images: [
                     "https://scontent.fvte2-3.fna.fbcdn.net/v/t39.30808-6/557785407_808226971602744_4195778330217928308_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=sqEVyWkWMlQQ7kNvwG07eJs&_nc_oc=AdmKzz9cXZ2aQdlMTlMZUcBYbBx1qJ4t1kUXdl9POZeWyK6WmlPmsj3JrI1L4OVoGq8&_nc_zt=23&_nc_ht=scontent.fvte2-3.fna&_nc_gid=4S0_metwrwRu_c7l7tOXSg&oh=00_Afs9FUNEa--_HOHMFTK0RjUVsT5iOGD5Ad5mcLl-3SQ0iQ&oe=699A6D8B",
@@ -325,6 +355,7 @@ function displayQRCode(base64Data) {
                 name: "เรียนทำคลิปกับสาวแว่น Premium Package", 
                 price: 6490, 
                 category: "service", 
+                subCategory: "saowaen",
                 desc: "ทุกอย่างใน Standard Package\n- ตอบคำถามส่วนตัวทางโทรศัพท์\n- เรียนส่วนตัว 1 ครั้งไม่เกิน ครึ่งวัน",
                 images: [
                     "https://scontent.fvte2-3.fna.fbcdn.net/v/t39.30808-6/557785407_808226971602744_4195778330217928308_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=sqEVyWkWMlQQ7kNvwG07eJs&_nc_oc=AdmKzz9cXZ2aQdlMTlMZUcBYbBx1qJ4t1kUXdl9POZeWyK6WmlPmsj3JrI1L4OVoGq8&_nc_zt=23&_nc_ht=scontent.fvte2-3.fna&_nc_gid=4S0_metwrwRu_c7l7tOXSg&oh=00_Afs9FUNEa--_HOHMFTK0RjUVsT5iOGD5Ad5mcLl-3SQ0iQ&oe=699A6D8B",
@@ -410,17 +441,81 @@ function displayQRCode(base64Data) {
             document.body.style.overflow = 'auto';
         }
 
-        function filterCategory(category) {
-            currentFilter = category;
-            document.querySelectorAll('nav button').forEach(btn => {
-                btn.classList.remove('text-shopee-primary', 'border-b-2', 'border-shopee-primary');
-                btn.classList.add('text-gray-500');
-            });
-            const activeTab = document.getElementById(`tab-${category}`);
-            activeTab.classList.remove('text-gray-500');
-            activeTab.classList.add('text-shopee-primary', 'border-b-2', 'border-shopee-primary');
-            renderProducts();
+        let currentMainTab = 'product';
+let currentSubTab = 'all';
+
+// ฟังก์ชันกรองหมวดหมู่หลัก (สินค้า / บริการ)
+function filterMainCategory(category) {
+    currentMainTab = category;
+    currentSubTab = 'all'; // รีเซ็ตหมวดหมู่ย่อยทุกครั้งที่เปลี่ยนแท็บหลัก
+
+    const subNav = document.getElementById('sub-nav');
+    const mainList = document.querySelector('main');
+
+    // จัดการ UI ของแท็บหลัก
+    document.querySelectorAll('nav button').forEach(btn => {
+        btn.classList.remove('text-shopee-primary', 'border-b-2', 'border-shopee-primary');
+        btn.classList.add('text-gray-500');
+    });
+    document.getElementById(`tab-${category}`).classList.add('text-shopee-primary', 'border-b-2', 'border-shopee-primary');
+
+    // โชว์/ซ่อน แถบหมวดหมู่ย่อย และปรับระยะห่างของรายการสินค้า
+    if (category === 'product') {
+        subNav.style.display = 'block';
+        mainList.style.marginTop = '155px'; // เว้นที่ให้ Sub-nav
+    } else {
+        subNav.style.display = 'none';
+        mainList.style.marginTop = '110px'; // ระยะห่างปกติ
+    }
+
+    resetSubTabUI();
+    renderProducts();
+}
+
+// ฟังก์ชันกรองหมวดหมู่ย่อย (เต็มเป / อาหารเสริม / เครื่องสำอาง)
+function filterSubCategory(sub) {
+    currentSubTab = sub;
+    resetSubTabUI();
+    renderProducts();
+}
+
+// ฟังก์ชันรีเซ็ตสีปุ่ม Sub-tab
+function resetSubTabUI() {
+    const btns = document.querySelectorAll('.sub-tab-btn');
+    const labels = ['ทั้งหมด', 'เต็มเป', 'อาหารเสริม', 'เครื่องสำอาง'];
+    const values = ['all', 'tempeh', 'supplement', 'cosmetic'];
+
+    btns.forEach((btn, idx) => {
+        if (values[idx] === currentSubTab) {
+            btn.className = "sub-tab-btn whitespace-nowrap px-4 py-2 rounded-full bg-shopee-primary text-white shadow-sm";
+        } else {
+            btn.className = "sub-tab-btn whitespace-nowrap px-4 py-2 rounded-full bg-white text-gray-600 border border-gray-200";
         }
+    });
+}
+
+// ปรับปรุงฟังก์ชัน renderProducts ให้กรองได้ทั้ง 2 ชั้น
+function renderProducts() {
+    const list = document.getElementById('product-list');
+    list.innerHTML = '';
+    
+    const filtered = products.filter(p => {
+        const matchMain = p.category === currentMainTab;
+        const matchSub = currentSubTab === 'all' || p.subCategory === currentSubTab;
+        const matchSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase());
+        
+        // ถ้าเป็นแท็บบริการ ไม่ต้องตรวจ SubCategory
+        if (currentMainTab === 'service') return matchMain && matchSearch;
+        return matchMain && matchSub && matchSearch;
+    });
+
+    // ... (ส่วนการสร้าง Card สินค้าคงเดิม) ...
+    if (filtered.length === 0) {
+        list.innerHTML = `<div class="col-span-2 text-center py-20 text-gray-400">ไม่พบข้อมูล</div>`;
+        return;
+    }
+    // (loop สร้าง card ด้านล่างเหมือนโค้ดเดิมของคุณได้เลย)
+}
 
         function addToCart(id) {
             cart[id] = (cart[id] || 0) + 1;
