@@ -4,13 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ShopDee | สินค้าและบริการ</title>
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
-
     <script>
         tailwind.config = {
             theme: {
@@ -21,7 +19,6 @@
             }
         }
     </script>
-
     <style>
         body { background-color: #f5f5f5; }
         .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
@@ -53,16 +50,12 @@
         </div>
     </nav>
 
-    <div id="sub-nav" class="fixed top-[105px] left-0 w-full bg-gray-50 z-30 shadow-sm">
-        <div class="container mx-auto max-w-lg flex overflow-x-auto hide-scroll p-2 gap-2 text-xs">
-            <button onclick="filterSubCategory('all')" class="sub-tab-btn whitespace-nowrap px-4 py-2 rounded-full bg-shopee-primary text-white">ทั้งหมด</button>
-            <button onclick="filterSubCategory('tempeh')" class="sub-tab-btn whitespace-nowrap px-4 py-2 rounded-full bg-white text-gray-600 border border-gray-200">เต็มเป</button>
-            <button onclick="filterSubCategory('supplement')" class="sub-tab-btn whitespace-nowrap px-4 py-2 rounded-full bg-white text-gray-600 border border-gray-200">อาหารเสริม</button>
-            <button onclick="filterSubCategory('cosmetic')" class="sub-tab-btn whitespace-nowrap px-4 py-2 rounded-full bg-white text-gray-600 border border-gray-200">เครื่องสำอาง</button>
-        </div>
+    <div id="sub-nav" class="fixed top-[105px] left-0 w-full bg-gray-50 z-30 shadow-sm overflow-hidden">
+        <div id="sub-category-container" class="container mx-auto max-w-lg flex overflow-x-auto hide-scroll p-2 gap-2 text-xs">
+            </div>
     </div>
 
-    <main id="main-content" class="container mx-auto max-w-lg px-2 py-4 mt-[155px]">
+    <main class="container mx-auto max-w-lg px-2 py-4 mt-[155px]">
         <div id="product-list" class="grid grid-cols-2 gap-2"></div>
     </main>
 
@@ -71,21 +64,14 @@
         <div class="absolute bottom-0 left-0 w-full bg-white rounded-t-3xl max-h-[90vh] flex flex-col max-w-lg mx-auto right-0 overflow-hidden">
             <button onclick="closeDetail()" class="absolute top-4 right-4 z-[80] bg-black/20 text-white w-8 h-8 rounded-full"><i class="fas fa-times"></i></button>
             <div class="overflow-y-auto hide-scroll flex-1">
-                <div class="relative">
-                    <div id="detail-slider" class="slider-container hide-scroll"></div>
-                    <div id="slider-dots" class="absolute bottom-4 w-full flex justify-center gap-1.5"></div>
-                </div>
+                <div id="detail-slider" class="slider-container hide-scroll"></div>
                 <div class="p-6">
                     <div id="detail-price" class="text-3xl font-bold text-shopee-primary mb-2"></div>
                     <h2 id="detail-name" class="text-xl font-semibold text-gray-800 mb-4"></h2>
-                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-100">
-                        <p id="detail-desc" class="text-gray-600 leading-relaxed whitespace-pre-line text-sm"></p>
-                    </div>
+                    <div class="bg-gray-50 p-4 rounded-xl"><p id="detail-desc" class="text-gray-600 text-sm whitespace-pre-line"></p></div>
                 </div>
             </div>
-            <div class="p-4 border-t bg-white">
-                <button id="detail-add-btn" class="w-full bg-shopee-primary text-white font-bold py-4 rounded-xl shadow-lg active:scale-95 transition">เพิ่มลงตะกร้า</button>
-            </div>
+            <div class="p-4 border-t bg-white"><button id="detail-add-btn" class="w-full bg-shopee-primary text-white font-bold py-4 rounded-xl shadow-lg active:scale-95 transition">เพิ่มลงตะกร้า</button></div>
         </div>
     </div>
 
@@ -93,8 +79,7 @@
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm"></div>
         <div class="bg-white rounded-3xl p-8 max-w-xs w-full relative z-[110] text-center shadow-2xl">
             <h3 class="text-xl font-bold text-gray-800 mb-4">สแกนชำระเงิน</h3>
-            <div class="bg-gray-100 p-2 rounded-2xl mb-4"><img id="qr-image" src="" alt="PromptPay QR" class="w-full"></div>
-            <p class="text-sm text-gray-500 mb-6">กรุณาแคปหน้าจอเพื่อนำไปสแกนในแอปธนาคาร</p>
+            <div class="bg-gray-100 p-2 rounded-2xl mb-4"><img id="qr-image" src="" class="w-full"></div>
             <button onclick="document.getElementById('qr-modal').classList.add('hidden')" class="w-full py-3 bg-gray-200 text-gray-700 font-bold rounded-xl">ปิดหน้าต่าง</button>
         </div>
     </div>
@@ -102,16 +87,10 @@
     <div id="cart-modal" class="fixed inset-0 z-[60] hidden">
         <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="toggleCart()"></div>
         <div class="absolute bottom-0 left-0 w-full bg-white rounded-t-2xl shadow-2xl max-h-[85vh] flex flex-col max-w-lg mx-auto right-0">
-            <div class="p-4 border-b flex justify-between items-center bg-gray-50 rounded-t-2xl">
-                <h2 class="text-lg font-bold text-gray-800">ตะกร้าสินค้า</h2>
-                <button onclick="toggleCart()" class="text-gray-400"><i class="fas fa-times text-xl"></i></button>
-            </div>
+            <div class="p-4 border-b flex justify-between items-center bg-gray-50 rounded-t-2xl"><h2 class="text-lg font-bold text-gray-800">ตะกร้าสินค้า</h2><button onclick="toggleCart()" class="text-gray-400"><i class="fas fa-times text-xl"></i></button></div>
             <div id="cart-items" class="p-4 overflow-y-auto flex-1 space-y-4"></div>
             <div class="p-4 bg-white border-t space-y-3">
-                <div class="flex justify-between items-end mb-2 text-gray-800">
-                    <span class="font-medium">ยอดรวม</span>
-                    <span id="cart-total" class="text-2xl font-bold text-shopee-primary">฿0</span>
-                </div>
+                <div class="flex justify-between items-end mb-2 text-gray-800"><span class="font-medium">ยอดรวม</span><span id="cart-total" class="text-2xl font-bold text-shopee-primary">฿0</span></div>
                 <div class="space-y-2">
                     <input type="text" id="customer-name" placeholder="ชื่อผู้รับ" class="w-full border rounded-lg px-3 py-2 text-sm outline-none">
                     <input type="tel" id="customer-phone" placeholder="เบอร์โทร" class="w-full border rounded-lg px-3 py-2 text-sm outline-none">
@@ -132,12 +111,26 @@
         let searchTerm = '';
         let cart = {};
 
+        // หมวดหมู่ย่อยสำหรับแต่ละแท็บหลัก
+        const subCategories = {
+            product: [
+                { id: 'all', name: 'ทั้งหมด' },
+                { id: 'tempeh', name: 'เต็มเป' },
+                { id: 'supplement', name: 'อาหารเสริม' },
+                { id: 'cosmetic', name: 'เครื่องสำอาง' }
+            ],
+            service: [
+                { id: 'all', name: 'ทั้งหมด' },
+                { id: 'saowaen', name: 'สาวแว่น' }
+            ]
+        };
+
         const products = [
             { id: 1, name: "เต็มเป 150g 1 ชิ้น (ไม่รวมค่าส่ง 35บาท)", price: 30, category: "product", subCategory: "tempeh", desc: "เต็มเปสด คุณภาพดี โปรตีนสูง...", images: ["https://down-th.img.susercontent.com/file/th-11134207-81ztl-mkchmisxx9mof2.webp"] },
             { id: 2, name: "เต็มเป 150g 3 ชิ้น (ไม่รวมค่าส่ง 35บาท)", price: 100, category: "product", subCategory: "tempeh", desc: "ชุดสุดคุ้ม! เต็มเป 3 ชิ้น...", images: ["https://down-th.img.susercontent.com/file/th-11134207-81ztl-mkchmisxx9mof2.webp"] },
             { id: 3, name: "(ส่งฟรี) เต็มเป 150g 6 ชิ้น", price: 200, category: "product", subCategory: "tempeh", desc: "ชุดสุดคุ้ม! เต็มเป 6 ชิ้น...", images: ["https://down-th.img.susercontent.com/file/th-11134207-81ztl-mkchmisxx9mof2.webp"] },
-            { id: 4, name: "ดร.เจล Shizen (ส่งฟรี)", price: 990, category: "product", subCategory: "supplement", desc: "เสริมภูมิคุ้มกันให้กับร่างกาย...", images: ["https://down-th.img.susercontent.com/file/50301f77ab8eeb6bb0ec57c1af6fd926.webp"] },
-            { id: 5, name: "ดร.เจล HoneyMoon (ส่งฟรี)", price: 390, category: "product", subCategory: "cosmetic", desc: "อ่อนโยนต่อผิวแพ้ง่าย...", images: ["https://down-th.img.susercontent.com/file/th-11134207-23030-nicqy0z9y4nvbe.webp"] },
+            { id: 4, name: "ดร.เจล Shizen (ส่งฟรี)", price: 990, category: "product", subCategory: "supplement", desc: "เสริมภูมิคุ้มกัน...", images: ["https://down-th.img.susercontent.com/file/50301f77ab8eeb6bb0ec57c1af6fd926.webp"] },
+            { id: 5, name: "ดร.เจล HoneyMoon (ส่งฟรี)", price: 390, category: "product", subCategory: "cosmetic", desc: "อ่อนโยนต่อผิว...", images: ["https://down-th.img.susercontent.com/file/th-11134207-23030-nicqy0z9y4nvbe.webp"] },
             { id: 6, name: "เรียนทำคลิป Basic Package", price: 999, category: "service", subCategory: "saowaen", desc: "คอร์สเรียนตัดต่อเบื้องต้น...", images: ["https://raw.githubusercontent.com/thaipoanlao/shop/refs/heads/main/photo/waen.jpg"] },
             { id: 7, name: "เรียนทำคลิป Standard Package", price: 3490, category: "service", subCategory: "saowaen", desc: "คอร์สเรียนตัดต่อมาตรฐาน...", images: ["https://raw.githubusercontent.com/thaipoanlao/shop/refs/heads/main/photo/waen.jpg"] },
             { id: 8, name: "เรียนทำคลิป Premium Package", price: 6490, category: "service", subCategory: "saowaen", desc: "คอร์สเรียนตัดต่อพรีเมียม...", images: ["https://raw.githubusercontent.com/thaipoanlao/shop/refs/heads/main/photo/waen.jpg"] }
@@ -146,49 +139,35 @@
         function filterMainCategory(category) {
             currentMainTab = category;
             currentSubTab = 'all';
-            const subNav = document.getElementById('sub-nav');
-            const mainContent = document.getElementById('main-content');
-
             document.querySelectorAll('nav button').forEach(btn => btn.className = "flex-1 py-3 text-center text-gray-500");
             document.getElementById(`tab-${category}`).className = "flex-1 py-3 text-center border-b-2 border-shopee-primary text-shopee-primary";
-
-            if (category === 'product') {
-                subNav.classList.remove('hidden');
-                mainContent.style.marginTop = '155px';
-            } else {
-                subNav.classList.add('hidden');
-                mainContent.style.marginTop = '110px';
-            }
-            resetSubTabUI();
+            renderSubNav();
             renderProducts();
+        }
+
+        function renderSubNav() {
+            const container = document.getElementById('sub-category-container');
+            container.innerHTML = '';
+            subCategories[currentMainTab].forEach(sub => {
+                const activeClass = sub.id === currentSubTab ? "bg-shopee-primary text-white" : "bg-white text-gray-600 border border-gray-200";
+                container.innerHTML += `<button onclick="filterSubCategory('${sub.id}')" class="sub-tab-btn whitespace-nowrap px-4 py-2 rounded-full shadow-sm transition ${activeClass}">${sub.name}</button>`;
+            });
         }
 
         function filterSubCategory(sub) {
             currentSubTab = sub;
-            resetSubTabUI();
+            renderSubNav();
             renderProducts();
-        }
-
-        function resetSubTabUI() {
-            const values = ['all', 'tempeh', 'supplement', 'cosmetic'];
-            document.querySelectorAll('.sub-tab-btn').forEach((btn, idx) => {
-                if (values[idx] === currentSubTab) {
-                    btn.className = "sub-tab-btn whitespace-nowrap px-4 py-2 rounded-full bg-shopee-primary text-white shadow-sm";
-                } else {
-                    btn.className = "sub-tab-btn whitespace-nowrap px-4 py-2 rounded-full bg-white text-gray-600 border border-gray-200";
-                }
-            });
         }
 
         function renderProducts() {
             const list = document.getElementById('product-list');
             list.innerHTML = '';
-            const filtered = products.filter(p => {
-                const matchMain = p.category === currentMainTab;
-                const matchSub = currentSubTab === 'all' || p.subCategory === currentSubTab;
-                const matchSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase());
-                return currentMainTab === 'service' ? (matchMain && matchSearch) : (matchMain && matchSub && matchSearch);
-            });
+            const filtered = products.filter(p => 
+                p.category === currentMainTab && 
+                (currentSubTab === 'all' || p.subCategory === currentSubTab) &&
+                p.name.toLowerCase().includes(searchTerm.toLowerCase())
+            );
 
             if (filtered.length === 0) {
                 list.innerHTML = `<div class="col-span-2 text-center py-20 text-gray-400">ไม่พบข้อมูล</div>`;
@@ -196,19 +175,17 @@
             }
 
             filtered.forEach(p => {
-                const card = document.createElement('div');
-                card.className = "bg-white rounded-lg shadow-sm overflow-hidden flex flex-col cursor-pointer active:scale-95 transition-transform";
-                card.onclick = () => openDetail(p.id);
-                card.innerHTML = `
-                    <div class="relative pt-[100%] bg-gray-100"><img src="${p.images[0]}" class="absolute top-0 left-0 w-full h-full object-cover"></div>
-                    <div class="p-2 flex flex-col flex-1">
-                        <h3 class="text-xs font-medium text-gray-800 line-clamp-2 mb-1 min-h-[2.5em]">${p.name}</h3>
-                        <div class="mt-auto flex justify-between items-center">
-                            <span class="text-shopee-primary font-bold text-sm">฿${p.price.toLocaleString()}</span>
-                            <div class="w-6 h-6 rounded-full border border-shopee-primary text-shopee-primary flex items-center justify-center text-[10px]"><i class="fas fa-plus"></i></div>
+                list.innerHTML += `
+                    <div class="bg-white rounded-lg shadow-sm overflow-hidden flex flex-col cursor-pointer active:scale-95 transition-transform" onclick="openDetail(${p.id})">
+                        <div class="relative pt-[100%] bg-gray-100"><img src="${p.images[0]}" class="absolute top-0 left-0 w-full h-full object-cover"></div>
+                        <div class="p-2 flex flex-col flex-1">
+                            <h3 class="text-xs font-medium text-gray-800 line-clamp-2 mb-1 min-h-[2.5em]">${p.name}</h3>
+                            <div class="mt-auto flex justify-between items-center">
+                                <span class="text-shopee-primary font-bold text-sm">฿${p.price.toLocaleString()}</span>
+                                <div class="w-6 h-6 rounded-full border border-shopee-primary text-shopee-primary flex items-center justify-center text-[10px]"><i class="fas fa-plus"></i></div>
+                            </div>
                         </div>
                     </div>`;
-                list.appendChild(card);
             });
         }
 
@@ -226,31 +203,18 @@
                     if (id == 1) tempehPieces += (qty * 1);
                     if (id == 2) tempehPieces += (qty * 3);
                     if (id == 3) tempehPieces += (qty * 6);
-                    html += `<div class="flex items-center gap-3 bg-white p-2 border-b border-gray-50">
-                        <img src="${p.images[0]}" class="w-12 h-12 object-cover rounded">
-                        <div class="flex-1 text-xs font-medium text-gray-800">${p.name}</div>
-                        <div class="text-shopee-primary text-xs font-bold">x${qty}</div>
-                        <button onclick="removeFromCart(${id})" class="text-gray-300 ml-2"><i class="fas fa-trash"></i></button>
-                    </div>`;
+                    html += `<div class="flex items-center gap-3 p-2 border-b"><img src="${p.images[0]}" class="w-10 h-10 object-cover rounded"><div class="flex-1 text-xs">${p.name}</div><div class="text-shopee-primary font-bold">x${qty}</div><button onclick="removeFromCart(${id})" class="text-gray-300"><i class="fas fa-trash"></i></button></div>`;
                 }
             }
-
             let shippingFee = (tempehPieces > 0 && tempehPieces < 6) ? 35 : 0;
-            if (shippingFee > 0) {
-                html += `<div class="flex items-center gap-3 bg-orange-50 p-2 border-b border-orange-100">
-                    <div class="w-12 h-12 flex items-center justify-center text-orange-500"><i class="fas fa-truck"></i></div>
-                    <div class="flex-1 text-xs font-medium text-gray-600">ค่าส่ง (เต็มเปต่ำกว่า 6 ชิ้น)</div>
-                    <div class="text-gray-600 text-xs font-bold">฿${shippingFee}</div>
-                </div>`;
-            }
-
+            if (shippingFee > 0) html += `<div class="p-2 text-xs text-orange-500 bg-orange-50 flex justify-between"><span>ค่าส่ง (ยอดเต็มเป < 6 ชิ้น)</span><span>฿35</span></div>`;
+            
             badge.innerText = totalCount;
             badge.classList.toggle('hidden', totalCount === 0);
-            container.innerHTML = html || '<p class="text-center text-gray-400 py-10 text-sm">ตะกร้าว่างเปล่า</p>';
+            container.innerHTML = html || '<p class="text-center text-gray-400 py-10">ตะกร้าว่างเปล่า</p>';
             totalEl.innerText = '฿' + (totalPrice + shippingFee).toLocaleString();
         }
 
-        // --- ส่วนที่เหลือ (addToCart, Beam, LINE) ดึงจากโค้ดเดิมที่ปรับปรุงค่าส่งแล้ว ---
         function addToCart(id) { cart[id] = (cart[id] || 0) + 1; updateCartUI(); }
         function removeFromCart(id) { delete cart[id]; updateCartUI(); }
         function toggleCart() { document.getElementById('cart-modal').classList.toggle('hidden'); }
@@ -259,7 +223,6 @@
             const name = document.getElementById('customer-name').value;
             const phone = document.getElementById('customer-phone').value;
             if (!name || !phone) return alert('กรุณากรอกข้อมูลให้ครบ');
-            
             let tempehPieces = 0;
             const items = Object.entries(cart).map(([id, qty]) => {
                 const p = products.find(prod => prod.id == id);
@@ -268,45 +231,32 @@
                 if (id == 3) tempehPieces += (qty * 6);
                 return { name: p.name, quantity: qty, price: p.price * 100 };
             });
-
             let shippingFee = (tempehPieces > 0 && tempehPieces < 6) ? 35 : 0;
-            if (shippingFee > 0) items.push({ name: "ค่าจัดส่ง", quantity: 1, price: shippingFee * 100 });
-
-            const totalAmount = items.reduce((sum, i) => sum + (i.price * i.quantity), 0);
+            if (shippingFee > 0) items.push({ name: "ค่าส่ง", quantity: 1, price: 3500 });
+            const total = items.reduce((sum, i) => sum + (i.price * i.quantity), 0);
             try {
-                const response = await fetch('/api/checkout', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        amount: totalAmount,
-                        currency: "THB",
-                        paymentMethod: { qrPromptPay: { expiryTime: new Date(Date.now() + 3600000).toISOString() }, paymentMethodType: "QR_PROMPT_PAY" },
-                        referenceId: "ORDER-" + Date.now(),
-                        returnUrl: window.location.origin + "/success.html",
-                        items: items
-                    })
-                });
-                const result = await response.json();
-                if (result.actionRequired === "ENCODED_IMAGE") displayQRCode(result.encodedImage.imageBase64Encoded);
-            } catch (e) { alert("เชื่อมต่อไม่ได้"); }
+                const res = await fetch('/api/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ amount: total, currency: "THB", referenceId: "ORD-"+Date.now(), items: items, paymentMethod: { paymentMethodType: "QR_PROMPT_PAY", qrPromptPay: { expiryTime: new Date(Date.now()+3600000).toISOString() } } }) });
+                const result = await res.json();
+                if (result.actionRequired === "ENCODED_IMAGE") {
+                    const img = document.getElementById('qr-image');
+                    img.src = "data:image/png;base64," + result.encodedImage.imageBase64Encoded;
+                    document.getElementById('qr-modal').classList.remove('hidden');
+                }
+            } catch (e) { alert("เชื่อมต่อผิดพลาด"); }
         }
 
         function checkoutViaLine() {
-            const name = document.getElementById('customer-name').value;
-            const phone = document.getElementById('customer-phone').value;
-            const address = document.getElementById('customer-address').value;
-            let message = `🛒 *สั่งซื้อ*\n`, subTotal = 0, tempehPieces = 0;
+            const name = document.getElementById('customer-name').value, phone = document.getElementById('customer-phone').value, address = document.getElementById('customer-address').value;
+            let msg = `🛒 *สั่งซื้อ*\n`, total = 0, tempeh = 0;
             for (const [id, qty] of Object.entries(cart)) {
                 const p = products.find(prod => prod.id == id);
-                message += `- ${p.name} (x${qty})\n`;
-                subTotal += p.price * qty;
-                if (id == 1) tempehPieces += (qty * 1);
-                if (id == 2) tempehPieces += (qty * 3);
-                if (id == 3) tempehPieces += (qty * 6);
+                msg += `- ${p.name} (x${qty})\n`;
+                total += p.price * qty;
+                if (id == 1) tempeh += (qty * 1); if (id == 2) tempeh += (qty * 3); if (id == 3) tempeh += (qty * 6);
             }
-            let shippingFee = (tempehPieces > 0 && tempehPieces < 6) ? 35 : 0;
-            message += `📦 ค่าส่ง: ${shippingFee}\n💰 รวม: ${(subTotal + shippingFee).toLocaleString()}\n👤 ${name}\n📞 ${phone}\n📍 ${address}`;
-            window.location.href = `https://line.me/R/oaMessage/${LINE_ID}/?${encodeURIComponent(message)}`;
+            let ship = (tempeh > 0 && tempeh < 6) ? 35 : 0;
+            msg += `📦 ค่าส่ง: ${ship}\n💰 รวม: ${(total+ship).toLocaleString()}\n👤 ${name}\n📞 ${phone}\n📍 ${address}`;
+            window.location.href = `https://line.me/R/oaMessage/${LINE_ID}/?${encodeURIComponent(msg)}`;
         }
 
         function openDetail(id) {
@@ -314,15 +264,16 @@
             document.getElementById('detail-name').innerText = p.name;
             document.getElementById('detail-price').innerText = `฿${p.price.toLocaleString()}`;
             document.getElementById('detail-desc').innerText = p.desc;
-            const slider = document.getElementById('detail-slider');
-            slider.innerHTML = `<div class="slide-item"><img src="${p.images[0]}" class="w-full h-full object-cover"></div>`;
+            document.getElementById('detail-slider').innerHTML = `<div class="slide-item"><img src="${p.images[0]}" class="w-full h-full object-cover"></div>`;
             document.getElementById('detail-add-btn').onclick = () => { addToCart(p.id); closeDetail(); };
             document.getElementById('detail-modal').classList.remove('hidden');
         }
 
         function closeDetail() { document.getElementById('detail-modal').classList.add('hidden'); }
-
         document.getElementById('search-input').addEventListener('input', (e) => { searchTerm = e.target.value; renderProducts(); });
+
+        // เริ่มต้นระบบ
+        renderSubNav();
         renderProducts();
     </script>
 </body>
