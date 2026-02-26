@@ -26,25 +26,37 @@
     const phone = document.getElementById('customer-phone').value;
     const address = document.getElementById('customer-address').value;
 
-    // 1. ตรวจสอบข้อมูลผู้ซื้อ
     if (Object.keys(cart).length === 0) return alert('กรุณาเลือกสินค้าก่อนครับ');
     if (!name || !phone) return alert('กรุณากรอกชื่อและเบอร์โทรสำหรับจัดส่ง');
 
-    // 2. เตรียมรายการสินค้าสำหรับส่งให้ Beam
+    let tempehPieces = 0;
     const items = Object.entries(cart).map(([id, qty]) => {
         const p = products.find(prod => prod.id == id);
+        // นับชิ้นสำหรับค่าส่ง
+        if (id == 1) tempehPieces += (qty * 1);
+        if (id == 2) tempehPieces += (qty * 3);
+        if (id == 3) tempehPieces += (qty * 6);
+
         return {
             name: p.name,
             quantity: qty,
-            price: p.price * 100 // แปลงเป็นหน่วยสตางค์ตามข้อกำหนดของ Beam
+            price: p.price * 100
         };
     });
 
-    // 3. คำนวณยอดรวมสุทธิ (หน่วยสตางค์)
+    // คำนวณค่าส่ง
+    let shippingFee = (tempehPieces > 0 && tempehPieces < 6) ? 35 : 0;
+    if (shippingFee > 0) {
+        items.push({
+            name: "ค่าจัดส่งสินค้า (Shipping Fee)",
+            quantity: 1,
+            price: shippingFee * 100
+        });
+    }
+
     const totalAmountInSatang = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
     try {
-        // 4. ส่งข้อมูลไปที่ Backend Proxy (api/checkout.js)
         const response = await fetch('/api/checkout', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -52,31 +64,22 @@
                 amount: totalAmountInSatang,
                 currency: "THB",
                 paymentMethod: {
-                    qrPromptPay: {
-                        expiryTime: new Date(Date.now() + 3600000).toISOString() // หมดอายุใน 1 ชม.
-                    },
+                    qrPromptPay: { expiryTime: new Date(Date.now() + 3600000).toISOString() },
                     paymentMethodType: "QR_PROMPT_PAY"
                 },
                 referenceId: "ORDER-" + Date.now(),
                 returnUrl: window.location.origin + "/success.html",
-                items: items // แนบรายการสินค้าไปด้วย
+                items: items 
             })
         });
 
         const result = await response.json();
-
-        // 5. จัดการผลลัพธ์ตามประเภทการชำระเงิน
         if (result.actionRequired === "REDIRECT") {
-            // สำหรับบัตรเครดิต หรือช่องทางที่ต้องเปลี่ยนหน้า
             window.location.href = result.redirect.redirectUrl;
         } else if (result.actionRequired === "ENCODED_IMAGE") {
-            // สำหรับ QR PromptPay: แสดงรูปภาพ QR Code จาก Base64
             displayQRCode(result.encodedImage.imageBase64Encoded);
-        } else {
-            alert("เกิดข้อผิดพลาด: " + (result.message || "โปรดลองใหม่"));
         }
     } catch (error) {
-        console.error(error);
         alert("ไม่สามารถเชื่อมต่อระบบชำระเงินได้");
     }
 }
@@ -430,50 +433,89 @@ function displayQRCode(base64Data) {
         }
 
         function updateCartUI() {
-            const badge = document.getElementById('cart-badge');
-            const cartItemsContainer = document.getElementById('cart-items');
-            const totalEl = document.getElementById('cart-total');
-            let totalCount = 0, totalPrice = 0, html = '';
+    const badge = document.getElementById('cart-badge');
+    const cartItemsContainer = document.getElementById('cart-items');
+    const totalEl = document.getElementById('cart-total');
+    let totalCount = 0, totalPrice = 0, html = '';
+    
+    // ตัวแปรนับจำนวนชิ้นเต็มเปรวมกัน
+    let tempehPieces = 0;
 
-            for (const [id, qty] of Object.entries(cart)) {
-                const p = products.find(prod => prod.id == id);
-                if (p) {
-                    totalCount += qty;
-                    totalPrice += p.price * qty;
-                    html += `
-                        <div class="flex items-center gap-3 bg-white p-2 border-b border-gray-50">
-                            <img src="${p.images[0]}" class="w-12 h-12 object-cover rounded">
-                            <div class="flex-1 text-xs font-medium text-gray-800">${p.name}</div>
-                            <div class="text-shopee-primary text-xs font-bold">x${qty}</div>
-                            <button onclick="removeFromCart(${id})" class="text-gray-300 ml-2"><i class="fas fa-trash"></i></button>
-                        </div>
-                    `;
-                }
-            }
-            badge.innerText = totalCount;
-            badge.classList.toggle('hidden', totalCount === 0);
-            cartItemsContainer.innerHTML = html || '<p class="text-center text-gray-400 py-10 text-sm">ตะกร้าว่างเปล่า</p>';
-            totalEl.innerText = '฿' + totalPrice.toLocaleString();
+    for (const [id, qty] of Object.entries(cart)) {
+        const p = products.find(prod => prod.id == id);
+        if (p) {
+            totalCount += qty;
+            totalPrice += p.price * qty;
+
+            // Logic นับจำนวนชิ้นเต็มเป: ID 1=1ชิ้น, 2=3ชิ้น, 3=6ชิ้น
+            if (id == 1) tempehPieces += (qty * 1);
+            if (id == 2) tempehPieces += (qty * 3);
+            if (id == 3) tempehPieces += (qty * 6);
+
+            html += `
+                <div class="flex items-center gap-3 bg-white p-2 border-b border-gray-50">
+                    <img src="${p.images[0]}" class="w-12 h-12 object-cover rounded">
+                    <div class="flex-1 text-xs font-medium text-gray-800">${p.name}</div>
+                    <div class="text-shopee-primary text-xs font-bold">x${qty}</div>
+                    <button onclick="removeFromCart(${id})" class="text-gray-300 ml-2"><i class="fas fa-trash"></i></button>
+                </div>
+            `;
         }
+    }
+
+    // คำนวณค่าส่ง: ถ้ามีเต็มเป และรวมกันน้อยกว่า 6 ชิ้น ให้บวก 35 บาท
+    let shippingFee = (tempehPieces > 0 && tempehPieces < 6) ? 35 : 0;
+    
+    // แสดงรายการค่าส่งในตะกร้า (ถ้ามี)
+    if (shippingFee > 0) {
+        html += `
+            <div class="flex items-center gap-3 bg-orange-50 p-2 border-b border-orange-100">
+                <div class="w-12 h-12 flex items-center justify-center text-orange-500"><i class="fas fa-truck"></i></div>
+                <div class="flex-1 text-xs font-medium text-gray-600">ค่าจัดส่งทั่วไทย (ยอดเต็มเปต่ำกว่า 6 ชิ้น)</div>
+                <div class="text-gray-600 text-xs font-bold">฿${shippingFee}</div>
+            </div>
+        `;
+    }
+
+    badge.innerText = totalCount;
+    badge.classList.toggle('hidden', totalCount === 0);
+    cartItemsContainer.innerHTML = html || '<p class="text-center text-gray-400 py-10 text-sm">ตะกร้าว่างเปล่า</p>';
+    
+    // ยอดรวมสุทธิ = ราคาสินค้า + ค่าส่ง
+    totalEl.innerText = '฿' + (totalPrice + shippingFee).toLocaleString();
+}
 
         function toggleCart() { document.getElementById('cart-modal').classList.toggle('hidden'); }
 
         function checkoutViaLine() {
-            const name = document.getElementById('customer-name').value;
-            const phone = document.getElementById('customer-phone').value;
-            const address = document.getElementById('customer-address').value;
-            if (Object.keys(cart).length === 0 || !name || !phone) return alert('กรุณากรอกข้อมูลให้ครบถ้วน');
+    const name = document.getElementById('customer-name').value;
+    const phone = document.getElementById('customer-phone').value;
+    const address = document.getElementById('customer-address').value;
+    if (Object.keys(cart).length === 0 || !name || !phone) return alert('กรุณากรอกข้อมูลให้ครบถ้วน');
 
-            let message = `🛒 *สั่งซื้อสินค้า*\n----------------\n`;
-            let total = 0;
-            for (const [id, qty] of Object.entries(cart)) {
-                const p = products.find(prod => prod.id == id);
-                message += `- ${p.name} (x${qty})\n`;
-                total += p.price * qty;
-            }
-            message += `----------------\n💰 รวม: ${total.toLocaleString()} บาท\n👤 ${name}\n📞 ${phone}\n📍 ${address}`;
-            window.location.href = `https://line.me/R/oaMessage/${LINE_ID}/?${encodeURIComponent(message)}`;
-        }
+    let message = `🛒 *สั่งซื้อสินค้า*\n----------------\n`;
+    let subTotal = 0;
+    let tempehPieces = 0;
+
+    for (const [id, qty] of Object.entries(cart)) {
+        const p = products.find(prod => prod.id == id);
+        message += `- ${p.name} (x${qty})\n`;
+        subTotal += p.price * qty;
+        
+        if (id == 1) tempehPieces += (qty * 1);
+        if (id == 2) tempehPieces += (qty * 3);
+        if (id == 3) tempehPieces += (qty * 6);
+    }
+
+    let shippingFee = (tempehPieces > 0 && tempehPieces < 6) ? 35 : 0;
+    
+    message += `----------------\n`;
+    message += `📦 ค่าส่ง: ${shippingFee} บาท\n`;
+    message += `💰 รวมสุทธิ: ${(subTotal + shippingFee).toLocaleString()} บาท\n`;
+    message += `👤 ${name}\n📞 ${phone}\n📍 ${address}`;
+    
+    window.location.href = `https://line.me/R/oaMessage/${LINE_ID}/?${encodeURIComponent(message)}`;
+}
 
         // ระบบค้นหา
         document.getElementById('search-input').addEventListener('input', (e) => {
