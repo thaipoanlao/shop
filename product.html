@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>รายละเอียดสินค้า</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root { --sat: env(safe-area-inset-top); --sab: env(safe-area-inset-bottom); }
+        body { background-color: #ffffff; padding-top: var(--sat); }
+        .slider-container { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; }
+        .slide-item { flex: 0 0 100%; scroll-snap-align: start; aspect-ratio: 1/1; }
+        .hide-scroll::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="pb-24">
+    <div class="fixed top-0 left-0 w-full bg-white/80 backdrop-blur-md z-50 flex items-center px-4 border-b" style="height: calc(50px + var(--sat)); padding-top: var(--sat);">
+        <button onclick="history.back()" class="w-10 h-10 flex items-center justify-center text-gray-700 bg-gray-100 rounded-full">
+            <i class="fas fa-chevron-left text-lg"></i>
+        </button>
+        <span class="ml-4 font-bold text-gray-800">รายละเอียดสินค้า</span>
+    </div>
+
+    <div id="product-detail" class="mt-[calc(60px+var(--sat))]">
+        <div class="flex justify-center items-center h-64"><i class="fas fa-spinner fa-spin text-shopee-primary text-3xl"></i></div>
+    </div>
+
+    <div class="fixed bottom-0 left-0 w-full bg-white border-t p-4 z-50 shadow-lg" style="padding-bottom: calc(16px + var(--sab));">
+        <div class="max-w-lg mx-auto">
+            <button id="add-btn" class="w-full bg-[#ee4d2d] text-white font-bold py-4 rounded-xl shadow-lg active:scale-95 transition">
+                เพิ่มลงตะกร้า
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRa5jSPp8xIyhJfaq_rwMEWzPCUpjDnUfOnk476Ce80gfcUUdxCVVIsW3YYmFZe4hsKsB6PdCyNESBq/pub?output=csv";
+        const urlParams = new URLSearchParams(window.location.search);
+        const productId = urlParams.get('id');
+
+        async function loadProduct() {
+            const res = await fetch(SHEET_URL);
+            const data = await res.text();
+            const rows = data.split(/\r?\n/).slice(1);
+            const products = rows.filter(r => r.trim() !== "").map(r => {
+                const parts = r.match(/(".*?"|[^,]+)(?=\s*,|\s*$)/g);
+                const clean = parts.map(p => p.replace(/^"|"$/g, '').trim());
+                return { id: parseInt(clean[0]), name: clean[1], price: parseFloat(clean[2]), desc: clean[5], images: clean[6].split("|") };
+            });
+
+            const p = products.find(prod => prod.id == productId);
+            if (!p) return location.href = 'index.html';
+
+            document.title = p.name;
+            const container = document.getElementById('product-detail');
+            
+            let sliderHTML = `<div class="relative"><div id="slider" class="slider-container hide-scroll">`;
+            p.images.forEach(img => { sliderHTML += `<div class="slide-item"><img src="${img}" class="w-full h-full object-cover"></div>`; });
+            sliderHTML += `</div><div id="dots" class="absolute bottom-4 w-full flex justify-center gap-1.5"></div></div>`;
+
+            container.innerHTML = `
+                ${sliderHTML}
+                <div class="p-6">
+                    <div class="text-3xl font-bold text-[#ee4d2d] mb-2">฿${p.price.toLocaleString()}</div>
+                    <h1 class="text-xl font-semibold text-gray-800 mb-6">${p.name}</h1>
+                    <div class="bg-gray-50 p-4 rounded-2xl border border-gray-100">
+                        <p class="text-gray-600 leading-relaxed whitespace-pre-line text-sm">${p.desc.replace(/\\n/g, '\n')}</p>
+                    </div>
+                </div>
+            `;
+
+            // Setup Dots
+            const slider = document.getElementById('slider');
+            const dots = document.getElementById('dots');
+            p.images.forEach((_, i) => { dots.innerHTML += `<div class="w-1.5 h-1.5 rounded-full bg-gray-300"></div>`; });
+            slider.onscroll = () => {
+                const idx = Math.round(slider.scrollLeft / slider.offsetWidth);
+                dots.querySelectorAll('div').forEach((dot, i) => dot.className = i === idx ? "w-4 h-1.5 rounded-full bg-[#ee4d2d] transition-all" : "w-1.5 h-1.5 rounded-full bg-gray-300");
+            };
+
+            document.getElementById('add-btn').onclick = () => {
+                let cart = JSON.parse(localStorage.getItem('cart') || '{}');
+                cart[p.id] = (cart[p.id] || 0) + 1;
+                localStorage.setItem('cart', JSON.stringify(cart));
+                alert('เพิ่มลงตะกร้าแล้ว!');
+            };
+        }
+        loadProduct();
+    </script>
+</body>
+</html>
