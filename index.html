@@ -32,23 +32,22 @@
         .hide-scroll::-webkit-scrollbar { display: none; }
         .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
         
-        /* Layout Adjustments for Safari / Notch */
+        /* Safari Notch Support */
         header { 
             padding-top: calc(12px + var(--sat)) !important; 
-            height: calc(60px + var(--sat)) !important;
+            height: calc(64px + var(--sat)) !important;
         }
-        nav.main-nav { top: calc(60px + var(--sat)) !important; }
-        #sub-nav { top: calc(105px + var(--sat)) !important; }
-        main { margin-top: calc(155px + var(--sat)) !important; }
+        nav.main-nav { top: calc(64px + var(--sat)) !important; }
+        #sub-nav { top: calc(109px + var(--sat)) !important; }
+        main { margin-top: calc(160px + var(--sat)) !important; }
 
-        /* Slider Styles */
         .slider-container { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; }
         .slide-item { flex: 0 0 100%; scroll-snap-align: start; aspect-ratio: 1 / 1; }
     </style>
 </head>
 <body>
 
-    <header class="fixed top-0 left-0 w-full bg-gradient-to-b from-[#f53d2d] to-[#f63] text-white z-50 shadow-md">
+    <header class="fixed top-0 left-0 w-full bg-gradient-to-b from-[#f53d2d] to-[#f63] text-white z-[60] shadow-md">
         <div class="container mx-auto px-4 max-w-lg flex items-center gap-4 h-full">
             <div class="flex-1 bg-white rounded-sm flex items-center px-3 py-1.5">
                 <i class="fas fa-search text-gray-400"></i>
@@ -61,26 +60,29 @@
         </div>
     </header>
 
-    <nav class="main-nav fixed left-0 w-full bg-white z-40 shadow-sm border-b border-gray-100">
+    <nav class="main-nav fixed left-0 w-full bg-white z-[55] shadow-sm border-b border-gray-100">
         <div class="container mx-auto max-w-lg flex text-sm font-medium">
-            <button id="tab-product" onclick="filterMainCategory('product')" class="flex-1 py-3 text-center border-b-2 border-shopee-primary text-shopee-primary transition">สินค้า</button>
-            <button id="tab-service" onclick="filterMainCategory('service')" class="flex-1 py-3 text-center text-gray-500 transition">บริการ</button>
+            <button id="tab-product" onclick="filterMainCategory('product')" class="flex-1 py-3 text-center border-b-2 border-shopee-primary text-shopee-primary">สินค้า</button>
+            <button id="tab-service" onclick="filterMainCategory('service')" class="flex-1 py-3 text-center text-gray-500">บริการ</button>
         </div>
     </nav>
 
-    <div id="sub-nav" class="fixed left-0 w-full bg-gray-50 z-30 shadow-sm transition-all">
-        <div id="sub-category-container" class="container mx-auto max-w-lg flex overflow-x-auto hide-scroll p-2 gap-2 text-xs">
-            </div>
+    <div id="sub-nav" class="fixed left-0 w-full bg-gray-50 z-[50] shadow-sm">
+        <div id="sub-category-container" class="container mx-auto max-w-lg flex overflow-x-auto hide-scroll p-2 gap-2 text-xs"></div>
     </div>
 
     <main class="container mx-auto max-w-lg px-2 py-4">
         <div id="product-list" class="grid grid-cols-2 gap-2"></div>
     </main>
 
-    <div id="detail-modal" class="fixed inset-0 z-[70] hidden">
+    <div id="detail-modal" class="fixed inset-0 z-[100] hidden">
         <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" onclick="closeDetail()"></div>
-        <div class="absolute bottom-0 left-0 w-full bg-white rounded-t-3xl max-h-[90vh] flex flex-col max-w-lg mx-auto right-0 overflow-hidden pb-[var(--sab)]">
-            <button onclick="closeDetail()" class="absolute top-4 right-4 z-[80] bg-black/20 text-white w-8 h-8 rounded-full"><i class="fas fa-times"></i></button>
+        <div class="absolute bottom-0 left-0 w-full bg-white rounded-t-3xl max-h-[92vh] flex flex-col max-w-lg mx-auto right-0 overflow-hidden pb-[var(--sab)]">
+            
+            <button onclick="closeDetail()" class="absolute top-4 right-4 z-[110] bg-black/40 text-white w-11 h-11 rounded-full flex items-center justify-center shadow-lg active:scale-90 transition-all">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+
             <div class="overflow-y-auto hide-scroll flex-1">
                 <div class="relative">
                     <div id="detail-slider" class="slider-container hide-scroll"></div>
@@ -100,17 +102,16 @@
         </div>
     </div>
 
-    <div id="qr-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4">
+    <div id="qr-modal" class="fixed inset-0 z-[200] hidden flex items-center justify-center p-4">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm"></div>
-        <div class="bg-white rounded-3xl p-8 max-w-xs w-full relative z-[110] text-center shadow-2xl">
+        <div class="bg-white rounded-3xl p-8 max-w-xs w-full relative z-[210] text-center shadow-2xl">
             <h3 class="text-xl font-bold text-gray-800 mb-4">สแกนชำระเงิน</h3>
             <div class="bg-gray-100 p-2 rounded-2xl mb-4"><img id="qr-image" src="" class="w-full"></div>
-            <p class="text-xs text-gray-500 mb-6">กรุณาสแกนหรืออัปโหลดรูปภาพเพื่อชำระเงิน</p>
-            <button onclick="document.getElementById('qr-modal').classList.add('hidden')" class="w-full py-3 bg-gray-200 text-gray-700 font-bold rounded-xl active:scale-95">ปิดหน้าต่าง</button>
+            <button onclick="document.getElementById('qr-modal').classList.add('hidden')" class="w-full py-3 bg-gray-200 text-gray-700 font-bold rounded-xl">ปิดหน้าต่าง</button>
         </div>
     </div>
 
-    <div id="cart-modal" class="fixed inset-0 z-[60] hidden">
+    <div id="cart-modal" class="fixed inset-0 z-[150] hidden">
         <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="toggleCart()"></div>
         <div class="absolute bottom-0 left-0 w-full bg-white rounded-t-2xl shadow-2xl max-h-[85vh] flex flex-col max-w-lg mx-auto right-0 pb-[var(--sab)]">
             <div class="p-4 border-b flex justify-between items-center bg-gray-50 rounded-t-2xl">
@@ -126,7 +127,7 @@
                     <textarea id="customer-address" rows="2" placeholder="ที่อยู่จัดส่ง" class="w-full border rounded-lg px-3 py-2 text-sm outline-none focus:border-shopee-primary resize-none"></textarea>
                 </div>
                 <div class="flex flex-col gap-2 pt-2">
-                    <button onclick="checkoutWithBeam()" class="w-full bg-blue-600 text-white font-bold py-4 rounded-xl shadow-lg flex justify-center items-center gap-2 active:scale-95"><i class="fas fa-credit-card"></i> ชำระเงินออนไลน์</button>
+                    <button onclick="checkoutWithBeam()" class="w-full bg-blue-600 text-white font-bold py-4 rounded-xl flex justify-center items-center gap-2 shadow-lg"><i class="fas fa-credit-card"></i> ชำระเงินออนไลน์</button>
                     <button onclick="checkoutViaLine()" class="w-full bg-white text-gray-500 font-medium py-2 rounded-lg text-sm border border-gray-100 flex justify-center items-center gap-2"><i class="fab fa-line text-green-500"></i> สั่งซื้อผ่าน LINE</button>
                 </div>
             </div>
@@ -135,140 +136,77 @@
 
     <script>
         const LINE_ID = "@888fsncq";
-        let currentMainTab = 'product';
-        let currentSubTab = 'all';
-        let searchTerm = '';
-        let cart = {};
-        let products = []; 
+        let currentMainTab = 'product', currentSubTab = 'all', searchTerm = '', cart = {}, products = []; 
 
         const subCategories = {
-            product: [
-                { id: 'all', name: 'ทั้งหมด' },
-                { id: 'tempeh', name: 'เต็มเป' },
-                { id: 'supplement', name: 'อาหารเสริม' },
-                { id: 'cosmetic', name: 'เครื่องสำอาง' }
-            ],
-            service: [
-                { id: 'all', name: 'ทั้งหมด' },
-                { id: 'saowaen', name: 'สาวแว่น' }
-            ]
+            product: [{ id: 'all', name: 'ทั้งหมด' }, { id: 'tempeh', name: 'เต็มเป' }, { id: 'supplement', name: 'อาหารเสริม' }, { id: 'cosmetic', name: 'เครื่องสำอาง' }],
+            service: [{ id: 'all', name: 'ทั้งหมด' }, { id: 'saowaen', name: 'สาวแว่น' }]
         };
 
         const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRa5jSPp8xIyhJfaq_rwMEWzPCUpjDnUfOnk476Ce80gfcUUdxCVVIsW3YYmFZe4hsKsB6PdCyNESBq/pub?output=csv";
 
         async function loadProductsFromSheet() {
             try {
-                const response = await fetch(SHEET_URL);
-                if (!response.ok) throw new Error("Load Fail");
-                const data = await response.text();
+                const res = await fetch(SHEET_URL);
+                const data = await res.text();
                 const rows = data.split(/\r?\n/).slice(1); 
-                
-                products = rows.filter(row => row.trim() !== "").map(row => {
-                    const regex = /(".*?"|[^,]+)(?=\s*,|\s*$)/g;
-                    const parts = row.match(regex);
+                products = rows.filter(r => r.trim() !== "").map(r => {
+                    const parts = r.match(/(".*?"|[^,]+)(?=\s*,|\s*$)/g);
                     if (!parts || parts.length < 7) return null;
-
                     const clean = parts.map(p => p.replace(/^"|"$/g, '').trim());
-                    return {
-                        id: parseInt(clean[0]),
-                        name: clean[1],
-                        price: parseFloat(clean[2]),
-                        category: clean[3],
-                        subCategory: clean[4],
-                        desc: clean[5].replace(/\\n/g, '\n'), 
-                        images: clean[6].split("|") 
-                    };
+                    return { id: parseInt(clean[0]), name: clean[1], price: parseFloat(clean[2]), category: clean[3], subCategory: clean[4], desc: clean[5].replace(/\\n/g, '\n'), images: clean[6].split("|") };
                 }).filter(p => p !== null && !isNaN(p.id));
-
-                renderSubNav();
-                renderProducts();
-            } catch (error) {
-                console.error(error);
-            }
+                renderSubNav(); renderProducts();
+            } catch (e) { console.error(e); }
         }
 
-        function filterMainCategory(category) {
-            currentMainTab = category;
-            currentSubTab = 'all';
-            document.querySelectorAll('nav button').forEach(btn => btn.className = "flex-1 py-3 text-center text-gray-500");
-            document.getElementById(`tab-${category}`).className = "flex-1 py-3 text-center border-b-2 border-shopee-primary text-shopee-primary";
-            renderSubNav();
-            renderProducts();
+        function filterMainCategory(c) {
+            currentMainTab = c; currentSubTab = 'all';
+            document.querySelectorAll('nav.main-nav button').forEach(b => b.className = "flex-1 py-3 text-center text-gray-500");
+            document.getElementById(`tab-${c}`).className = "flex-1 py-3 text-center border-b-2 border-shopee-primary text-shopee-primary";
+            renderSubNav(); renderProducts();
         }
 
         function renderSubNav() {
             const container = document.getElementById('sub-category-container');
             container.innerHTML = '';
             subCategories[currentMainTab].forEach(sub => {
-                const activeClass = sub.id === currentSubTab ? "bg-shopee-primary text-white" : "bg-white text-gray-600 border border-gray-200";
-                container.innerHTML += `<button onclick="filterSubCategory('${sub.id}')" class="sub-tab-btn whitespace-nowrap px-4 py-2 rounded-full shadow-sm transition-all ${activeClass}">${sub.name}</button>`;
+                const active = sub.id === currentSubTab ? "bg-shopee-primary text-white" : "bg-white text-gray-600 border border-gray-200";
+                container.innerHTML += `<button onclick="filterSubCategory('${sub.id}')" class="sub-tab-btn whitespace-nowrap px-4 py-2 rounded-full shadow-sm transition-all ${active}">${sub.name}</button>`;
             });
         }
 
-        function filterSubCategory(sub) {
-            currentSubTab = sub;
-            renderSubNav();
-            renderProducts();
-        }
+        function filterSubCategory(s) { currentSubTab = s; renderSubNav(); renderProducts(); }
 
         function renderProducts() {
             const list = document.getElementById('product-list');
             list.innerHTML = '';
-            const filtered = products.filter(p => 
-                p.category === currentMainTab && 
-                (currentSubTab === 'all' || p.subCategory === currentSubTab) &&
-                p.name.toLowerCase().includes(searchTerm.toLowerCase())
-            );
-
-            if (filtered.length === 0) {
-                list.innerHTML = `<div class="col-span-2 text-center py-20 text-gray-400 text-sm">ไม่พบข้อมูลสินค้า</div>`;
-                return;
-            }
-
+            const filtered = products.filter(p => p.category === currentMainTab && (currentSubTab === 'all' || p.subCategory === currentSubTab) && p.name.toLowerCase().includes(searchTerm.toLowerCase()));
+            if (filtered.length === 0) { list.innerHTML = `<div class="col-span-2 text-center py-20 text-gray-400 text-sm">ไม่พบสินค้า</div>`; return; }
             filtered.forEach(p => {
-                list.innerHTML += `
-                    <div class="bg-white rounded-lg shadow-sm overflow-hidden flex flex-col cursor-pointer active:scale-95 transition-transform" onclick="openDetail(${p.id})">
-                        <div class="relative pt-[100%] bg-gray-100"><img src="${p.images[0]}" class="absolute top-0 left-0 w-full h-full object-cover"></div>
-                        <div class="p-2 flex flex-col flex-1">
-                            <h3 class="text-xs font-medium text-gray-800 line-clamp-2 mb-1 min-h-[2.5em]">${p.name}</h3>
-                            <div class="mt-auto flex justify-between items-center">
-                                <span class="text-shopee-primary font-bold text-sm">฿${p.price.toLocaleString()}</span>
-                                <div class="w-6 h-6 rounded-full border border-shopee-primary text-shopee-primary flex items-center justify-center text-[10px]"><i class="fas fa-plus"></i></div>
-                            </div>
-                        </div>
-                    </div>`;
+                list.innerHTML += `<div class="bg-white rounded-lg shadow-sm overflow-hidden flex flex-col cursor-pointer active:scale-95 transition-transform" onclick="openDetail(${p.id})">
+                    <div class="relative pt-[100%] bg-gray-100"><img src="${p.images[0]}" class="absolute top-0 left-0 w-full h-full object-cover"></div>
+                    <div class="p-2 flex-1">
+                        <h3 class="text-xs font-medium text-gray-800 line-clamp-2 min-h-[2.5em]">${p.name}</h3>
+                        <div class="mt-2 flex justify-between items-center"><span class="text-shopee-primary font-bold text-sm">฿${p.price.toLocaleString()}</span><div class="w-6 h-6 rounded-full border border-shopee-primary text-shopee-primary flex items-center justify-center text-[10px]"><i class="fas fa-plus"></i></div></div>
+                    </div></div>`;
             });
         }
 
         function updateCartUI() {
-            const badge = document.getElementById('cart-badge');
-            const container = document.getElementById('cart-items');
-            const totalEl = document.getElementById('cart-total');
+            const badge = document.getElementById('cart-badge'), container = document.getElementById('cart-items'), totalEl = document.getElementById('cart-total');
             let totalCount = 0, totalPrice = 0, tempehPieces = 0, html = '';
-
             for (const [id, qty] of Object.entries(cart)) {
                 const p = products.find(prod => prod.id == id);
                 if (p) {
-                    totalCount += qty;
-                    totalPrice += p.price * qty;
-                    if (id == 1) tempehPieces += (qty * 1);
-                    if (id == 2) tempehPieces += (qty * 3);
-                    if (id == 3) tempehPieces += (qty * 6);
-                    html += `<div class="flex items-center gap-3 bg-white p-2 border-b border-gray-50">
-                        <img src="${p.images[0]}" class="w-12 h-12 object-cover rounded">
-                        <div class="flex-1 text-xs font-medium text-gray-800">${p.name}</div>
-                        <div class="text-shopee-primary text-xs font-bold">x${qty}</div>
-                        <button onclick="removeFromCart(${id})" class="text-gray-300 ml-2"><i class="fas fa-trash"></i></button>
-                    </div>`;
+                    totalCount += qty; totalPrice += p.price * qty;
+                    if (id == 1) tempehPieces += (qty * 1); if (id == 2) tempehPieces += (qty * 3); if (id == 3) tempehPieces += (qty * 6);
+                    html += `<div class="flex items-center gap-3 p-2 border-b"><img src="${p.images[0]}" class="w-12 h-12 object-cover rounded"><div class="flex-1 text-xs">${p.name}</div><div class="text-shopee-primary font-bold">x${qty}</div><button onclick="removeFromCart(${id})" class="text-gray-300"><i class="fas fa-trash"></i></button></div>`;
                 }
             }
-            let shippingFee = (tempehPieces > 0 && tempehPieces < 6) ? 35 : 0;
-            if (shippingFee > 0) html += `<div class="p-2 text-xs text-orange-600 bg-orange-50 flex justify-between rounded"><span>🚚 ค่าจัดส่ง (เต็มเปต่ำกว่า 6 ชิ้น)</span><span>฿35</span></div>`;
-            
-            badge.innerText = totalCount;
-            badge.classList.toggle('hidden', totalCount === 0);
-            container.innerHTML = html || '<p class="text-center text-gray-400 py-10 text-sm">ตะกร้าว่างเปล่า</p>';
-            totalEl.innerText = '฿' + (totalPrice + shippingFee).toLocaleString();
+            let sf = (tempehPieces > 0 && tempehPieces < 6) ? 35 : 0;
+            if (sf > 0) html += `<div class="p-2 text-xs text-orange-600 bg-orange-50 flex justify-between"><span>🚚 ค่าส่ง (ยอดเต็มเป < 6 ชิ้น)</span><span>฿35</span></div>`;
+            badge.innerText = totalCount; badge.classList.toggle('hidden', totalCount === 0); container.innerHTML = html || '<p class="text-center text-gray-400 py-10">ตะกร้าว่าง</p>'; totalEl.innerText = '฿' + (totalPrice + sf).toLocaleString();
         }
 
         function addToCart(id) { cart[id] = (cart[id] || 0) + 1; updateCartUI(); }
@@ -276,28 +214,20 @@
         function toggleCart() { document.getElementById('cart-modal').classList.toggle('hidden'); }
 
         async function checkoutWithBeam() {
-            const name = document.getElementById('customer-name').value;
-            const phone = document.getElementById('customer-phone').value;
+            const name = document.getElementById('customer-name').value, phone = document.getElementById('customer-phone').value;
             if (!name || !phone) return alert('กรุณากรอกข้อมูลให้ครบ');
-            let tempehPieces = 0;
-            const items = Object.entries(cart).map(([id, qty]) => {
+            let tp = 0; const items = Object.entries(cart).map(([id, qty]) => {
                 const p = products.find(prod => prod.id == id);
-                if (id == 1) tempehPieces += (qty * 1);
-                if (id == 2) tempehPieces += (qty * 3);
-                if (id == 3) tempehPieces += (qty * 6);
+                if (id == 1) tp += (qty * 1); if (id == 2) tp += (qty * 3); if (id == 3) tp += (qty * 6);
                 return { name: p.name, quantity: qty, price: p.price * 100 };
             });
-            let shippingFee = (tempehPieces > 0 && tempehPieces < 6) ? 35 : 0;
-            if (shippingFee > 0) items.push({ name: "ค่าส่งสินค้า", quantity: 1, price: 3500 });
+            let sf = (tp > 0 && tp < 6) ? 35 : 0; if (sf > 0) items.push({ name: "ค่าส่ง", quantity: 1, price: 3500 });
             const total = items.reduce((sum, i) => sum + (i.price * i.quantity), 0);
             try {
                 const res = await fetch('/api/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ amount: total, currency: "THB", referenceId: "ORD-"+Date.now(), items: items, paymentMethod: { paymentMethodType: "QR_PROMPT_PAY", qrPromptPay: { expiryTime: new Date(Date.now()+3600000).toISOString() } } }) });
                 const result = await res.json();
-                if (result.actionRequired === "ENCODED_IMAGE") {
-                    document.getElementById('qr-image').src = "data:image/png;base64," + result.encodedImage.imageBase64Encoded;
-                    document.getElementById('qr-modal').classList.remove('hidden');
-                }
-            } catch (e) { alert("Error connecting to payment."); }
+                if (result.actionRequired === "ENCODED_IMAGE") { document.getElementById('qr-image').src = "data:image/png;base64," + result.encodedImage.imageBase64Encoded; document.getElementById('qr-modal').classList.remove('hidden'); }
+            } catch (e) { alert("เชื่อมต่อผิดพลาด"); }
         }
 
         function checkoutViaLine() {
@@ -305,23 +235,19 @@
             let msg = `🛒 *สั่งซื้อสินค้า*\n`, sub = 0, tp = 0;
             for (const [id, qty] of Object.entries(cart)) {
                 const p = products.find(prod => prod.id == id);
-                msg += `- ${p.name} (x${qty})\n`;
-                sub += p.price * qty;
+                msg += `- ${p.name} (x${qty})\n`; sub += p.price * qty;
                 if (id == 1) tp += (qty * 1); if (id == 2) tp += (qty * 3); if (id == 3) tp += (qty * 6);
             }
-            let sf = (tp > 0 && tp < 6) ? 35 : 0;
-            msg += `📦 ค่าส่ง: ${sf}\n💰 รวม: ${(sub+sf).toLocaleString()} บาท\n👤 ${name}\n📞 ${phone}\n📍 ${address}`;
+            let sf = (tp > 0 && tp < 6) ? 35 : 0; msg += `📦 ค่าส่ง: ${sf} บาท\n💰 รวม: ${(sub + sf).toLocaleString()} บาท\n👤 ${name}\n📞 ${phone}\n📍 ${address}`;
             window.location.href = `https://line.me/R/oaMessage/${LINE_ID}/?${encodeURIComponent(msg)}`;
         }
 
         function openDetail(id) {
-            const p = products.find(prod => prod.id === id);
-            if (!p) return;
+            const p = products.find(prod => prod.id === id); if (!p) return;
             document.getElementById('detail-name').innerText = p.name;
             document.getElementById('detail-price').innerText = `฿${p.price.toLocaleString()}`;
             document.getElementById('detail-desc').innerText = p.desc;
-            const slider = document.getElementById('detail-slider');
-            const dots = document.getElementById('slider-dots');
+            const slider = document.getElementById('detail-slider'), dots = document.getElementById('slider-dots');
             slider.innerHTML = ''; dots.innerHTML = '';
             p.images.forEach((img, i) => {
                 slider.innerHTML += `<div class="slide-item"><img src="${img}" class="w-full h-full object-cover"></div>`;
