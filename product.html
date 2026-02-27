@@ -80,11 +80,14 @@
                 dots.querySelectorAll('div').forEach((dot, i) => dot.className = i === idx ? "w-4 h-1.5 rounded-full bg-[#ee4d2d] transition-all" : "w-1.5 h-1.5 rounded-full bg-gray-300");
             };
 
+            // แก้ไขเฉพาะส่วนปุ่ม add-btn ในไฟล์ product.html
             document.getElementById('add-btn').onclick = () => {
                 let cart = JSON.parse(localStorage.getItem('cart') || '{}');
-                cart[p.id] = (cart[p.id] || 0) + 1;
+                cart[productId] = (cart[productId] || 0) + 1; // ใช้ productId จาก URL
                 localStorage.setItem('cart', JSON.stringify(cart));
-                alert('เพิ่มลงตะกร้าแล้ว!');
+    
+                // ย้อนกลับหน้าหลักทันที
+                window.location.href = 'index.html';
             };
         }
         loadProduct();
