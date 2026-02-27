@@ -103,12 +103,19 @@
             });
         }
 
+        // เพิ่มฟังก์ชันนี้ไว้ในส่วนสคริปต์ของ index.html
         function updateCartBadge() {
             const cart = JSON.parse(localStorage.getItem('cart') || '{}');
             const count = Object.values(cart).reduce((a, b) => a + b, 0);
             const badge = document.getElementById('cart-badge');
-            badge.innerText = count; badge.classList.toggle('hidden', count === 0);
+            if (badge) {
+                badge.innerText = count; 
+                badge.classList.toggle('hidden', count === 0);
+            }
         }
+
+// เรียกใช้ฟังก์ชันทันทีที่โหลดหน้าเว็บ
+window.onload = updateCartBadge;
 
         document.getElementById('search-input').addEventListener('input', (e) => { searchTerm = e.target.value; renderProducts(); });
         loadData();
