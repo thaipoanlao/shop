@@ -148,37 +148,46 @@
             ]
         };
 
-        // --- ระบบดึงข้อมูลจาก Google Sheets ---
-        const SHEET_URL = "https://docs.google.com/spreadsheets/d/1vRa5jSPp8xIyhJfaq_rwMEWzPCUpjDnUfOnk476Ce80gfcUUdxCVVIsW3YYmFZe4hsKsB6PdCyNESBq/export?format=csv";
+        // เปลี่ยน URL เป็นตัวใหม่ที่แนะนำ (Export Link)
+const SHEET_URL = "https://docs.google.com/spreadsheets/d/1vRa5jSPp8xIyhJfaq_rwMEWzPCUpjDnUfOnk476Ce80gfcUUdxCVVIsW3YYmFZe4hsKsB6PdCyNESBq/export?format=csv";
 
-        async function loadProductsFromSheet() {
-            try {
-                const response = await fetch(SHEET_URL);
-                const data = await response.text();
-                const rows = data.split("\n").slice(1); 
-                
-                products = rows.filter(row => row.trim() !== "").map(row => {
-                    // ใช้ Regex เพื่อแยกคอมม่าที่ไม่ได้อยู่ในเครื่องหมายคำพูด
-                    const parts = row.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || row.split(",");
-                    const cleanParts = parts.map(p => p.replace(/^"|"$/g, '').trim());
+async function loadProductsFromSheet() {
+    try {
+        console.log("กำลังโหลดข้อมูลจาก Google Sheets...");
+        const response = await fetch(SHEET_URL);
+        if (!response.ok) throw new Error("ไม่สามารถเข้าถึงไฟล์ได้");
+        
+        const data = await response.text();
+        const rows = data.split("\n").slice(1); // ตัดหัวตารางออก
+        
+        products = rows.filter(row => row.trim() !== "").map(row => {
+            // โค้ดสำหรับแยก CSV ที่มีเครื่องหมายคำพูดครอบข้อความ
+            const regex = /(".*?"|[^",\s]+)(?=\s*,|\s*$)/g;
+            const parts = row.match(regex);
+            
+            if (!parts || parts.length < 7) return null; // ตรวจสอบความสมบูรณ์ของข้อมูล
+            
+            const clean = parts.map(p => p.replace(/^"|"$/g, '').trim());
 
-                    return {
-                        id: parseInt(cleanParts[0]),
-                        name: cleanParts[1],
-                        price: parseFloat(cleanParts[2]),
-                        category: cleanParts[3],
-                        subCategory: cleanParts[4],
-                        desc: cleanParts[5].replace(/\\n/g, '\n'), 
-                        images: cleanParts[6].split("|") 
-                    };
-                });
-                
-                renderSubNav();
-                renderProducts();
-            } catch (error) {
-                console.error("โหลดข้อมูลสินค้าไม่สำเร็จ:", error);
-            }
-        }
+            return {
+                id: parseInt(clean[0]),
+                name: clean[1],
+                price: parseFloat(clean[2]),
+                category: clean[3],
+                subCategory: clean[4],
+                desc: clean[5].replace(/\\n/g, '\n'), // รองรับการขึ้นบรรทัดใหม่
+                images: clean[6].split("|") // ใช้เครื่องหมาย | คั่นรูปใน Sheet
+            };
+        }).filter(p => p !== null);
+        
+        console.log("โหลดสำเร็จ:", products.length, "รายการ");
+        renderSubNav();
+        renderProducts();
+    } catch (error) {
+        console.error("เกิดข้อผิดพลาด:", error);
+        alert("โหลดข้อมูลสินค้าไม่สำเร็จ กรุณาตรวจสอบ Console (F12)");
+    }
+}
 
         // --- ระบบกรองและแสดงผล ---
         function filterMainCategory(category) {
