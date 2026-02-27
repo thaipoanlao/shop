@@ -125,138 +125,40 @@
             ]
         };
 
-        const products = [
-    { 
-        id: 1, 
-        name: "เต็มเป 150g 1 ชิ้น (ไม่รวมค่าส่ง 35บาท)", 
-        price: 30, 
-        category: "product", 
-        subCategory: "tempeh",
-        desc: "เต็มเปสด คุณภาพดี โปรตีนสูง\n- ขนาด 150 กรัม\n- ผลิตสดใหม่ทุกรอบ\n- เหมาะสำหรับคนรักสุขภาพ",
-        images: [
-            "https://down-th.img.susercontent.com/file/th-11134207-81ztl-mkchmisxx9mof2.webp",
-            "https://down-th.img.susercontent.com/file/th-11134207-81ztm-mkciu9hikooy94.webp",
-            "https://down-th.img.susercontent.com/file/th-11134207-81ztj-mkciu43b7ll27c.webp",
-            "https://down-th.img.susercontent.com/file/th-11134207-81ztq-mkciu431yozrc9.webp",
-            "https://down-th.img.susercontent.com/file/61823352815de821bf36c26b1be938b2.webp",
-            "https://down-th.img.susercontent.com/file/16c6f53167b1728d6ba267aca0e4524b.webp",
-            "https://down-th.img.susercontent.com/file/0d2eccae5f041100bc1c7b8542a4ee90.webp",
-            "https://down-th.img.susercontent.com/file/f924a136855df71741f9238e884a9485.webp",
-            "https://down-th.img.susercontent.com/file/8c26101788eb20ea6b752d7c44afb3bd.webp"
-        ]
-    },
-    { 
-        id: 2, 
-        name: "เต็มเป 150g 3 ชิ้น (ไม่รวมค่าส่ง 35บาท)", 
-        price: 100, 
-        category: "product", 
-        subCategory: "tempeh",
-        desc: "ชุดสุดคุ้ม! เต็มเป 3 ชิ้น\n- ไม่รวมค่าส่ง 35 บาท\n- เก็บในตู้เย็นได้นาน 7-10 วัน\n- ทานง่าย ได้ประโยชน์เต็มคำ",
-        images: [
-            "https://down-th.img.susercontent.com/file/th-11134207-81ztl-mkchmisxx9mof2.webp",
-            "https://down-th.img.susercontent.com/file/th-11134207-81ztm-mkciu9hikooy94.webp",
-            "https://down-th.img.susercontent.com/file/th-11134207-81ztj-mkciu43b7ll27c.webp",
-            "https://down-th.img.susercontent.com/file/th-11134207-81ztq-mkciu431yozrc9.webp",
-            "https://down-th.img.susercontent.com/file/61823352815de821bf36c26b1be938b2.webp",
-            "https://down-th.img.susercontent.com/file/16c6f53167b1728d6ba267aca0e4524b.webp",
-            "https://down-th.img.susercontent.com/file/0d2eccae5f041100bc1c7b8542a4ee90.webp",
-            "https://down-th.img.susercontent.com/file/f924a136855df71741f9238e884a9485.webp",
-            "https://down-th.img.susercontent.com/file/8c26101788eb20ea6b752d7c44afb3bd.webp"
-        ]
-    },
-    { 
-        id: 3, 
-        name: "(ส่งฟรี) เต็มเป 150g 6 ชิ้น", 
-        price: 200, 
-        category: "product", 
-        subCategory: "tempeh",
-        desc: "ชุดสุดคุ้ม! เต็มเป 6 ชิ้น\n- ฟรีค่าจัดส่งทั่วประเทศ\n- เก็บในตู้เย็นได้นาน 7-10 วัน\n- ทานง่าย ได้ประโยชน์เต็มคำ",
-        images: [
-            "https://down-th.img.susercontent.com/file/th-11134207-81ztl-mkchmisxx9mof2.webp",
-            "https://down-th.img.susercontent.com/file/th-11134207-81ztm-mkciu9hikooy94.webp",
-            "https://down-th.img.susercontent.com/file/th-11134207-81ztj-mkciu43b7ll27c.webp",
-            "https://down-th.img.susercontent.com/file/th-11134207-81ztq-mkciu431yozrc9.webp",
-            "https://down-th.img.susercontent.com/file/61823352815de821bf36c26b1be938b2.webp",
-            "https://down-th.img.susercontent.com/file/16c6f53167b1728d6ba267aca0e4524b.webp",
-            "https://down-th.img.susercontent.com/file/0d2eccae5f041100bc1c7b8542a4ee90.webp",
-            "https://down-th.img.susercontent.com/file/f924a136855df71741f9238e884a9485.webp",
-            "https://down-th.img.susercontent.com/file/8c26101788eb20ea6b752d7c44afb3bd.webp"
-        ]
-    },
-    { 
-        id: 4, 
-        name: "ดร.เจล Shizen (ส่งฟรี)", 
-        price: 990, 
-        category: "product", 
-        subCategory: "supplement",
-        desc: "เสริมภูมิคุ้มกันให้กับร่างกาย\n- ฟรีค่าจัดส่งทั่วประเทศ\n✅ คนที่มีปัญหาแพ้อากาศเรื้อรัง หรือไซนัสอักเสบ\n✅ คนที่ป่วยบ่อย อ่อนเพลียง่าย",
-        images: [
-            "https://down-th.img.susercontent.com/file/50301f77ab8eeb6bb0ec57c1af6fd926.webp",
-            "https://down-th.img.susercontent.com/file/292d72f5c737d48318691051f56dfe6a.webp",
-            "https://down-th.img.susercontent.com/file/6838685cebf919d220267ff1615541cd.webp",
-            "https://down-th.img.susercontent.com/file/57b69e747530f1b4c77dc179433646e9.webp",
-            "https://down-th.img.susercontent.com/file/7a6c9f9b349652b5583eba375ce30799.webp"
-        ]
-    },
-    { 
-        id: 5, 
-        name: "ดร.เจล HoneyMoon (ส่งฟรี)", 
-        price: 390, 
-        category: "product", 
-        subCategory: "cosmetic",
-        desc: "อ่อนโยนต่อผิวแพ้ง่าย\n- ขึ้นเครื่องบินได้\n- เจลล้างหน้า Honeymoon สูตรล้างออก\n- ถูกและดีระดับตีแบรนด์แพง",
-        images: [
-            "https://down-th.img.susercontent.com/file/th-11134207-23030-nicqy0z9y4nvbe.webp",
-            "https://down-th.img.susercontent.com/file/9da078eed4cee2a9efea7b9e818c87cf.webp",
-            "https://down-th.img.susercontent.com/file/a158ae0ed8e1757b39fc27349f5120f7.webp",
-            "https://down-th.img.susercontent.com/file/th-11134207-7qul5-ljs9bklbrktide.webp",
-            "https://down-th.img.susercontent.com/file/th-11134207-7qukx-ljs9bklbszdy2c.webp",
-            "https://down-th.img.susercontent.com/file/th-11134207-7qul5-ljs9bklbudyec4.webp"
-        ]
-    },
-    { 
-        id: 6, 
-        name: "เรียนทำคลิปกับสาวแว่น Basic Package", 
-        price: 999, 
-        category: "service", 
-        subCategory: "saowaen",
-        desc: "คอร์สเรียนตัดต่อเบื้องต้น\n- สอนการใช้ CapCut\n- การวางโครงเรื่องคลิปสั้น\n- เทคนิคการพากย์เสียง",
-        images: [
-            "https://scontent.fvte2-3.fna.fbcdn.net/v/t39.30808-6/557785407_808226971602744_4195778330217928308_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=sqEVyWkWMlQQ7kNvwG07eJs&_nc_oc=AdmKzz9cXZ2aQdlMTlMZUcBYbBx1qJ4t1kUXdl9POZeWyK6WmlPmsj3JrI1L4OVoGq8&_nc_zt=23&_nc_ht=scontent.fvte2-3.fna&_nc_gid=4S0_metwrwRu_c7l7tOXSg&oh=00_Afs9FUNEa--_HOHMFTK0RjUVsT5iOGD5Ad5mcLl-3SQ0iQ&oe=699A6D8B",
-            "https://raw.githubusercontent.com/thaipoanlao/shop/refs/heads/main/photo/waen.jpg",
-            "https://raw.githubusercontent.com/thaipoanlao/shop/refs/heads/main/photo/fam.jpg",
-            "https://raw.githubusercontent.com/thaipoanlao/shop/refs/heads/main/photo/pon.jpg"
-        ]
-    },
-    { 
-        id: 7, 
-        name: "เรียนทำคลิปกับสาวแว่น Standard Package", 
-        price: 3490, 
-        category: "service", 
-        subCategory: "saowaen",
-        desc: "ทุกอย่างใน Basic Package\n- ตอบคำถามส่วนตัวทาง LineOA\n- เมื่อรายได้ครบ 80$ ให้คำปรึกษากรอกข้อมูลภาษี",
-        images: [
-            "https://scontent.fvte2-3.fna.fbcdn.net/v/t39.30808-6/557785407_808226971602744_4195778330217928308_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=sqEVyWkWMlQQ7kNvwG07eJs&_nc_oc=AdmKzz9cXZ2aQdlMTlMZUcBYbBx1qJ4t1kUXdl9POZeWyK6WmlPmsj3JrI1L4OVoGq8&_nc_zt=23&_nc_ht=scontent.fvte2-3.fna&_nc_gid=4S0_metwrwRu_c7l7tOXSg&oh=00_Afs9FUNEa--_HOHMFTK0RjUVsT5iOGD5Ad5mcLl-3SQ0iQ&oe=699A6D8B",
-            "https://raw.githubusercontent.com/thaipoanlao/shop/refs/heads/main/photo/waen.jpg",
-            "https://raw.githubusercontent.com/thaipoanlao/shop/refs/heads/main/photo/fam.jpg",
-            "https://raw.githubusercontent.com/thaipoanlao/shop/refs/heads/main/photo/pon.jpg"
-        ]         
-    },
-    { 
-        id: 8, 
-        name: "เรียนทำคลิปกับสาวแว่น Premium Package", 
-        price: 6490, 
-        category: "service", 
-        subCategory: "saowaen",
-        desc: "ทุกอย่างใน Standard Package\n- ตอบคำถามส่วนตัวทางโทรศัพท์\n- เรียนส่วนตัว 1 ครั้งไม่เกิน ครึ่งวัน",
-        images: [
-            "https://scontent.fvte2-3.fna.fbcdn.net/v/t39.30808-6/557785407_808226971602744_4195778330217928308_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=sqEVyWkWMlQQ7kNvwG07eJs&_nc_oc=AdmKzz9cXZ2aQdlMTlMZUcBYbBx1qJ4t1kUXdl9POZeWyK6WmlPmsj3JrI1L4OVoGq8&_nc_zt=23&_nc_ht=scontent.fvte2-3.fna&_nc_gid=4S0_metwrwRu_c7l7tOXSg&oh=00_Afs9FUNEa--_HOHMFTK0RjUVsT5iOGD5Ad5mcLl-3SQ0iQ&oe=699A6D8B",
-            "https://raw.githubusercontent.com/thaipoanlao/shop/refs/heads/main/photo/waen.jpg",
-            "https://raw.githubusercontent.com/thaipoanlao/shop/refs/heads/main/photo/fam.jpg",
-            "https://raw.githubusercontent.com/thaipoanlao/shop/refs/heads/main/photo/pon.jpg"
-        ]
+        // เปลี่ยนจากประกาศตัวแปรเฉยๆ เป็นประกาศเป็นอาเรย์ว่างไว้ก่อน
+let products = []; 
+
+// ลิงก์ CSV จาก Google Sheets ของคุณ
+const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRa5jSPp8xIyhJfaq_rwMEWzPCUpjDnUfOnk476Ce80gfcUUdxCVVIsW3YYmFZe4hsKsB6PdCyNESBq/pub?output=csv";
+
+async function loadProductsFromSheet() {
+    try {
+        const response = await fetch(SHEET_URL);
+        const data = await response.text();
+        
+        // แปลง CSV เป็น Array (แบบง่าย)
+        const rows = data.split("\n").slice(1); // ตัดหัวตารางออก
+        products = rows.map(row => {
+            const [id, name, price, category, subCategory, desc, images] = row.split(",");
+            return {
+                id: parseInt(id),
+                name: name.trim(),
+                price: parseFloat(price),
+                category: category.trim(),
+                subCategory: subCategory.trim(),
+                desc: desc.trim().replace(/\\n/g, '\n'), // รองรับการขึ้นบรรทัดใหม่
+                images: images.trim().split("|") // ใช้ | คั่นรูปใน Sheet เพื่อความง่าย
+            };
+        });
+        
+        renderProducts(); // เมื่อโหลดเสร็จให้วาดสินค้าขึ้นหน้าจอ
+    } catch (error) {
+        console.error("โหลดข้อมูลสินค้าไม่สำเร็จ:", error);
     }
-];
+}
+
+// เรียกใช้งานตอนเปิดเว็บ
+loadProductsFromSheet();
 
         function filterMainCategory(category) {
             currentMainTab = category;
