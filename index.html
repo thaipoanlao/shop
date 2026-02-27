@@ -155,17 +155,22 @@ async function loadProductsFromSheet() {
     try {
         console.log("กำลังเชื่อมต่อ Google Sheets...");
         const response = await fetch(SHEET_URL);
-        if (!response.ok) throw new Error("ไม่สามารถดึงข้อมูลจากลิงก์ที่ให้มาได้ (404)");
+        if (!response.ok) throw new Error("404 ไม่พบไฟล์");
         
         const data = await response.text();
-        // แยกแถวโดยรองรับทั้ง \n และ \r\n
+        // แยกแถวข้อมูล (รองรับทั้ง Windows และ Mac/Linux)
         const rows = data.split(/\r?\n/).slice(1); 
         
         products = rows.filter(row => row.trim() !== "").map(row => {
-            // ใช้เทคนิคแยกคอมม่าที่ฉลาดขึ้น (รองรับคอมม่าในเครื่องหมายคำพูด)
-            const parts = row.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
+            /** * ✨ แก้ไขจุดนี้: Regex ใหม่สำหรับแยกคอมม่า 
+             * รองรับข้อความที่มีช่องว่าง และข้อความที่อยู่ในเครื่องหมายคำพูด "..."
+             */
+            const regex = /(".*?"|[^,]+)(?=\s*,|\s*$)/g;
+            const parts = row.match(regex);
+            
             if (!parts || parts.length < 7) return null;
 
+            // ลบเครื่องหมายคำพูดที่ครอบข้อความออก และตัดช่องว่างส่วนเกิน
             const clean = parts.map(p => p.replace(/^"|"$/g, '').trim());
 
             return {
@@ -174,11 +179,19 @@ async function loadProductsFromSheet() {
                 price: parseFloat(clean[2]),
                 category: clean[3],
                 subCategory: clean[4],
-                desc: clean[5].replace(/\\n/g, '\n'), // รองรับการขึ้นบรรทัดใหม่
-                images: clean[6].split("|") // ใช้เครื่องหมาย | คั่นรูปใน Sheet
+                // แก้ไขการแสดงผลขึ้นบรรทัดใหม่
+                desc: clean[5].replace(/\\n/g, '\n'), 
+                images: clean[6].split("|") 
             };
-        }).filter(p => p !== null && !isNaN(p.id)); // กรองเอาเฉพาะข้อมูลที่สมบูรณ์เท่านั้น
+        }).filter(p => p !== null && !isNaN(p.id));
 
+        console.log("โหลดสำเร็จ:", products.length, "รายการ");
+        renderSubNav();
+        renderProducts();
+    } catch (error) {
+        console.error("Error:", error);
+    }
+}
         console.log("โหลดสินค้าสำเร็จ:", products.length, "รายการ");
         
         // เมื่อข้อมูลมาแล้ว ให้วาดหน้าเว็บใหม่
@@ -368,8 +381,9 @@ async function loadProductsFromSheet() {
 
             document.getElementById('detail-name').innerText = p.name;
             document.getElementById('detail-price').innerText = `฿${p.price.toLocaleString()}`;
-            document.getElementById('detail-desc').innerText = p.desc;
-
+            // ในฟังก์ชัน openDetail ตรวจสอบบรรทัดนี้:
+            document.getElementById('detail-desc').innerHTML = `<p class="whitespace-pre-line">${p.desc}</p>`;
+            
             const slider = document.getElementById('detail-slider');
             const dots = document.getElementById('slider-dots');
             slider.innerHTML = '';
