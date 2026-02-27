@@ -41,11 +41,11 @@
 
             <div class="flex flex-col gap-3 pt-2">
                 <button onclick="checkoutWithBeam()" class="w-full bg-blue-600 text-white font-bold py-4 rounded-2xl flex justify-center items-center gap-3 shadow-lg shadow-blue-100 active:scale-95 transition">
-                    <i class="fas fa-credit-card text-xl"></i> ชำระเงินออนไลน์ (QR / บัตร)
+                    <i class="fas fa-credit-card text-xl"></i> ชำระเงินออนไลน์ (QR Payment)
                 </button>
 
-                <button onclick="checkoutViaLine()" class="w-full bg-white text-gray-500 font-medium py-3 rounded-xl flex justify-center items-center gap-2 border border-gray-100 active:scale-95 transition">
-                    <i class="fab fa-line text-green-500 text-xl"></i> สั่งซื้อผ่าน LINE
+                <button onclick="checkoutViaLine()" class="w-full bg-[#06C755]/10 text-[#06C755] font-semibold py-3 rounded-xl flex justify-center items-center gap-2 border border-[#06C755]/20 active:scale-95 transition">
+                    <i class="fab fa-line text-2xl"></i> สั่งซื้อผ่าน LINE
                 </button>
             </div>
         </div>
@@ -59,13 +59,12 @@
                 <img id="qr-image" src="" alt="PromptPay QR" class="w-full rounded-xl">
             </div>
             <p class="text-sm text-gray-500 mb-6 font-light">กรุณาแคปหน้าจอเพื่อนำไปสแกนในแอปธนาคารของท่าน</p>
-            <button onclick="closeQR()" class="w-full py-4 bg-gray-100 text-gray-600 font-bold rounded-2xl active:scale-95 transition">
-                ปิดหน้าต่าง
-            </button>
+            <button onclick="closeQR()" class="w-full py-4 bg-gray-100 text-gray-600 font-bold rounded-2xl active:scale-95 transition">ปิดหน้าต่าง</button>
         </div>
     </div>
 
     <script>
+        // ... (Script ส่วนเดิมที่ดึงข้อมูล Google Sheet และคำนวณราคา เหมือนเดิมทุกประการ) ...
         const LINE_ID = "@888fsncq";
         const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRa5jSPp8xIyhJfaq_rwMEWzPCUpjDnUfOnk476Ce80gfcUUdxCVVIsW3YYmFZe4hsKsB6PdCyNESBq/pub?output=csv";
         let products = [];
@@ -95,7 +94,6 @@
                 });
 
                 let html = '', subTotal = 0, tempehPieces = 0;
-                
                 for (const [id, qty] of Object.entries(cart)) {
                     const p = products.find(prod => prod.id == id);
                     if (p) {
@@ -103,21 +101,14 @@
                         if (id == "1") tempehPieces += (qty * 1);
                         if (id == "2") tempehPieces += (qty * 3);
                         if (id == "3") tempehPieces += (qty * 6);
-
-                        html += `
-                            <div class="bg-white p-4 rounded-2xl flex items-center gap-4 shadow-sm border border-gray-50">
+                        html += `<div class="bg-white p-4 rounded-2xl flex items-center gap-4 shadow-sm border border-gray-50">
                                 <img src="${p.images[0]}" class="w-16 h-16 object-cover rounded-xl">
-                                <div class="flex-1">
-                                    <div class="text-sm font-medium text-gray-800 line-clamp-1">${p.name}</div>
-                                    <div class="text-[#ee4d2d] font-bold">฿${p.price.toLocaleString()}</div>
-                                </div>
+                                <div class="flex-1"><div class="text-sm font-medium text-gray-800 line-clamp-1">${p.name}</div><div class="text-[#ee4d2d] font-bold">฿${p.price.toLocaleString()}</div></div>
                                 <div class="flex items-center gap-3 bg-gray-50 rounded-full px-2 py-1">
                                     <button onclick="changeQty('${id}', -1)" class="w-7 h-7 flex items-center justify-center bg-white rounded-full shadow-sm text-gray-400"><i class="fas fa-minus text-xs"></i></button>
                                     <span class="text-sm font-bold text-gray-700 min-w-[20px] text-center">${qty}</span>
                                     <button onclick="changeQty('${id}', 1)" class="w-7 h-7 flex items-center justify-center bg-white rounded-full shadow-sm text-shopee-primary"><i class="fas fa-plus text-xs"></i></button>
-                                </div>
-                            </div>
-                        `;
+                                </div></div>`;
                     }
                 }
 
@@ -125,17 +116,14 @@
                 if (shipping > 0) {
                     html += `<div class="bg-orange-50 p-4 rounded-2xl flex justify-between items-center text-orange-600">
                         <div class="flex items-center gap-2"><i class="fas fa-truck"></i> <span class="text-xs font-bold">ค่าจัดส่ง (เต็มเป < 6 ชิ้น)</span></div>
-                        <span class="font-bold text-sm">฿${shipping}</span>
-                    </div>`;
+                        <span class="font-bold text-sm">฿${shipping}</span></div>`;
                 }
 
                 finalAmount = subTotal + shipping;
                 document.getElementById('cart-list').innerHTML = html;
                 document.getElementById('cart-total').innerText = '฿' + finalAmount.toLocaleString();
                 document.getElementById('checkout-section').classList.remove('hidden');
-            } catch (e) {
-                console.error(e);
-            }
+            } catch (e) { console.error(e); }
         }
 
         function changeQty(id, delta) {
@@ -146,72 +134,53 @@
             loadCart();
         }
 
-        // --- ระบบชำระเงิน Beam Checkout ---
         async function checkoutWithBeam() {
             const name = document.getElementById('customer-name').value;
             const phone = document.getElementById('customer-phone').value;
             if (!name || !phone) return alert('กรุณากรอกชื่อและเบอร์โทรสำหรับจัดส่ง');
-
             const cart = JSON.parse(localStorage.getItem('cart') || '{}');
             let tempehPieces = 0;
             const items = Object.entries(cart).map(([id, qty]) => {
                 const p = products.find(prod => prod.id == id);
-                if (id == "1") tempehPieces += (qty * 1);
-                if (id == "2") tempehPieces += (qty * 3);
-                if (id == "3") tempehPieces += (qty * 6);
+                if (id == "1") tempehPieces += (qty * 1); if (id == "2") tempehPieces += (qty * 3); if (id == "3") tempehPieces += (qty * 6);
                 return { name: p.name, quantity: qty, price: p.price * 100 };
             });
-
             let shippingFee = (tempehPieces > 0 && tempehPieces < 6) ? 35 : 0;
             if (shippingFee > 0) items.push({ name: "ค่าจัดส่งสินค้า", quantity: 1, price: 3500 });
-
             const totalInSatang = items.reduce((sum, i) => sum + (i.price * i.quantity), 0);
-
             try {
                 const res = await fetch('/api/checkout', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        amount: totalInSatang,
-                        currency: "THB",
-                        referenceId: "ORDER-" + Date.now(),
-                        items: items,
-                        paymentMethod: { 
-                            paymentMethodType: "QR_PROMPT_PAY", 
-                            qrPromptPay: { expiryTime: new Date(Date.now() + 3600000).toISOString() } 
-                        }
+                        amount: totalInSatang, currency: "THB", referenceId: "ORDER-" + Date.now(), items: items,
+                        paymentMethod: { paymentMethodType: "QR_PROMPT_PAY", qrPromptPay: { expiryTime: new Date(Date.now() + 3600000).toISOString() } }
                     })
                 });
                 const result = await res.json();
                 if (result.actionRequired === "ENCODED_IMAGE") {
                     document.getElementById('qr-image').src = "data:image/png;base64," + result.encodedImage.imageBase64Encoded;
                     document.getElementById('qr-modal').classList.remove('hidden');
-                } else if (result.actionRequired === "REDIRECT") {
-                    window.location.href = result.redirect.redirectUrl;
-                }
+                } else if (result.actionRequired === "REDIRECT") { window.location.href = result.redirect.redirectUrl; }
             } catch (e) { alert("เชื่อมต่อระบบชำระเงินไม่สำเร็จ"); }
         }
 
         function closeQR() { document.getElementById('qr-modal').classList.add('hidden'); }
 
         function checkoutViaLine() {
-            const name = document.getElementById('customer-name').value;
-            const phone = document.getElementById('customer-phone').value;
-            const address = document.getElementById('customer-address').value;
+            const name = document.getElementById('customer-name').value, phone = document.getElementById('customer-phone').value, address = document.getElementById('customer-address').value;
             if (!name || !phone) return alert('กรุณากรอกชื่อและเบอร์โทร');
-
             const cart = JSON.parse(localStorage.getItem('cart') || '{}');
             let msg = `🛒 *สั่งซื้อสินค้า*\n----------------\n`, sub = 0, tp = 0;
             for (const [id, qty] of Object.entries(cart)) {
                 const p = products.find(prod => prod.id == id);
-                msg += `- ${p.name} (x${qty})\n`; sub += p.price * qty;
-                if (id == "1") tp += (qty * 1); if (id == "2") tp += (qty * 3); if (id == "3") tp += (qty * 6);
+                if(p){ msg += `- ${p.name} (x${qty})\n`; sub += p.price * qty;
+                if (id == "1") tp += (qty * 1); if (id == "2") tp += (qty * 3); if (id == "3") tp += (qty * 6); }
             }
             let sf = (tp > 0 && tp < 6) ? 35 : 0;
             msg += `----------------\n📦 ค่าส่ง: ${sf} บาท\n💰 รวมสุทธิ: ${(sub + sf).toLocaleString()} บาท\n👤 ${name}\n📞 ${phone}\n📍 ${address}`;
             window.location.href = `https://line.me/R/oaMessage/${LINE_ID}/?${encodeURIComponent(msg)}`;
         }
-
         loadCart();
     </script>
 </body>
