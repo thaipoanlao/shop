@@ -32,7 +32,7 @@
         .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
         .hide-scroll::-webkit-scrollbar { display: none; }
         
-        /* Notch & Safari Support */
+        /* Notch & Safari Support for Main UI */
         header { 
             padding-top: calc(10px + var(--sat)) !important; 
             height: calc(64px + var(--sat)) !important;
@@ -45,9 +45,9 @@
         .slider-container { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; }
         .slide-item { flex: 0 0 100%; scroll-snap-align: start; aspect-ratio: 1 / 1; }
         
-        /* Modal Safari Fix */
+        /* Modal Safari Notch Fix: Add protective bar at top */
         #detail-modal > div:last-child {
-            margin-top: calc(20px + var(--sat));
+            padding-top: var(--sat); /* เพิ่มแถบป้องกัน Notch */
             border-top-left-radius: 2rem;
             border-top-right-radius: 2rem;
         }
@@ -85,11 +85,13 @@
 
     <div id="detail-modal" class="fixed inset-0 z-[100] hidden">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeDetail()"></div>
-        <div class="absolute bottom-0 left-0 w-full bg-white max-h-[94vh] flex flex-col max-w-lg mx-auto right-0 overflow-hidden pb-[var(--sab)] shadow-2xl">
+        <div class="absolute bottom-0 left-0 w-full bg-white max-h-[96vh] flex flex-col max-w-lg mx-auto right-0 overflow-hidden pb-[var(--sab)] shadow-2xl">
             
-            <button onclick="closeDetail()" class="absolute top-4 right-4 z-[110] bg-black/60 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg active:scale-90 transition-all border border-white/20">
-                <i class="fas fa-times text-2xl"></i>
-            </button>
+            <div class="w-full bg-white flex justify-end p-4 border-b border-gray-100 shadow-sm">
+                <button onclick="closeDetail()" class="z-[110] bg-black/10 text-gray-500 w-11 h-11 rounded-full flex items-center justify-center shadow-inner active:scale-90 transition-all border border-gray-100">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
 
             <div class="overflow-y-auto hide-scroll flex-1">
                 <div class="relative">
