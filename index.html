@@ -148,25 +148,24 @@
             ]
         };
 
-        // เปลี่ยน URL เป็นตัวใหม่ที่แนะนำ (Export Link)
-const SHEET_URL = "https://docs.google.com/spreadsheets/d/1vRa5jSPp8xIyhJfaq_rwMEWzPCUpjDnUfOnk476Ce80gfcUUdxCVVIsW3YYmFZe4hsKsB6PdCyNESBq/export?format=csv";
+        // ใช้ลิงก์รูปแบบ /pub?output=csv เพราะคุณมี Token 2PACX อยู่แล้ว
+const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRa5jSPp8xIyhJfaq_rwMEWzPCUpjDnUfOnk476Ce80gfcUUdxCVVIsW3YYmFZe4hsKsB6PdCyNESBq/pub?output=csv";
 
 async function loadProductsFromSheet() {
     try {
-        console.log("กำลังโหลดข้อมูลจาก Google Sheets...");
+        console.log("กำลังเชื่อมต่อ Google Sheets...");
         const response = await fetch(SHEET_URL);
-        if (!response.ok) throw new Error("ไม่สามารถเข้าถึงไฟล์ได้");
+        if (!response.ok) throw new Error("ไม่สามารถดึงข้อมูลจากลิงก์ที่ให้มาได้ (404)");
         
         const data = await response.text();
-        const rows = data.split("\n").slice(1); // ตัดหัวตารางออก
+        // แยกแถวโดยรองรับทั้ง \n และ \r\n
+        const rows = data.split(/\r?\n/).slice(1); 
         
         products = rows.filter(row => row.trim() !== "").map(row => {
-            // โค้ดสำหรับแยก CSV ที่มีเครื่องหมายคำพูดครอบข้อความ
-            const regex = /(".*?"|[^",\s]+)(?=\s*,|\s*$)/g;
-            const parts = row.match(regex);
-            
-            if (!parts || parts.length < 7) return null; // ตรวจสอบความสมบูรณ์ของข้อมูล
-            
+            // ใช้เทคนิคแยกคอมม่าที่ฉลาดขึ้น (รองรับคอมม่าในเครื่องหมายคำพูด)
+            const parts = row.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
+            if (!parts || parts.length < 7) return null;
+
             const clean = parts.map(p => p.replace(/^"|"$/g, '').trim());
 
             return {
@@ -178,14 +177,21 @@ async function loadProductsFromSheet() {
                 desc: clean[5].replace(/\\n/g, '\n'), // รองรับการขึ้นบรรทัดใหม่
                 images: clean[6].split("|") // ใช้เครื่องหมาย | คั่นรูปใน Sheet
             };
-        }).filter(p => p !== null);
+        }).filter(p => p !== null && !isNaN(p.id)); // กรองเอาเฉพาะข้อมูลที่สมบูรณ์เท่านั้น
+
+        console.log("โหลดสินค้าสำเร็จ:", products.length, "รายการ");
         
-        console.log("โหลดสำเร็จ:", products.length, "รายการ");
+        // เมื่อข้อมูลมาแล้ว ให้วาดหน้าเว็บใหม่
         renderSubNav();
         renderProducts();
     } catch (error) {
         console.error("เกิดข้อผิดพลาด:", error);
-        alert("โหลดข้อมูลสินค้าไม่สำเร็จ กรุณาตรวจสอบ Console (F12)");
+        // หากโหลดไม่ได้ ให้ใช้ข้อมูลสำรองหรือแจ้งเตือน
+        document.getElementById('product-list').innerHTML = `
+            <div class="col-span-2 text-center py-20 text-red-500">
+                <i class="fas fa-exclamation-triangle text-4xl mb-4"></i><br>
+                โหลดข้อมูลไม่สำเร็จ กรุณาตรวจสอบการ Publish ของ Google Sheets
+            </div>`;
     }
 }
 
