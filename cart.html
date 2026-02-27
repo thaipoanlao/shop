@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>ตะกร้าสินค้า</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root { --sat: env(safe-area-inset-top); --sab: env(safe-area-inset-bottom); }
+        body { background-color: #f5f5f5; padding-top: calc(60px + var(--sat)); padding-bottom: calc(20px + var(--sab)); }
+    </style>
+</head>
+<body>
+    <header class="fixed top-0 left-0 w-full bg-white z-50 border-b flex items-center px-4" style="height: calc(60px + var(--sat)); padding-top: var(--sat);">
+        <button onclick="location.href='index.html'" class="w-10 h-10 flex items-center justify-center bg-gray-100 rounded-full"><i class="fas fa-chevron-left"></i></button>
+        <h1 class="ml-4 font-bold text-gray-800">ตะกร้าสินค้า</h1>
+    </header>
+
+    <main class="container mx-auto max-w-lg p-4">
+        <div id="cart-list" class="space-y-3 mb-6">
+            </div>
+
+        <div class="bg-white rounded-2xl p-6 shadow-sm space-y-4">
+            <div class="flex justify-between items-end border-b pb-4">
+                <span class="text-gray-500">ยอดรวมทั้งหมด</span>
+                <span id="cart-total" class="text-3xl font-bold text-[#ee4d2d]">฿0</span>
+            </div>
+            
+            <div class="space-y-3">
+                <input type="text" id="customer-name" placeholder="ชื่อผู้รับ" class="w-full border rounded-xl px-4 py-3 outline-none">
+                <input type="tel" id="customer-phone" placeholder="เบอร์โทร" class="w-full border rounded-xl px-4 py-3 outline-none">
+                <textarea id="customer-address" rows="2" placeholder="ที่อยู่จัดส่ง" class="w-full border rounded-xl px-4 py-3 outline-none resize-none"></textarea>
+            </div>
+
+            <button onclick="checkoutViaLine()" class="w-full bg-[#25d366] text-white font-bold py-4 rounded-xl flex justify-center items-center gap-2 shadow-lg active:scale-95 transition">
+                <i class="fab fa-line text-2xl"></i> สั่งซื้อผ่าน LINE
+            </button>
+        </div>
+    </main>
+
+    <script>
+        const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRa5jSPp8xIyhJfaq_rwMEWzPCUpjDnUfOnk476Ce80gfcUUdxCVVIsW3YYmFZe4hsKsB6PdCyNESBq/pub?output=csv";
+        
+        async function loadCart() {
+            const cart = JSON.parse(localStorage.getItem('cart') || '{}');
+            if (Object.keys(cart).length === 0) {
+                document.getElementById('cart-list').innerHTML = '<div class="text-center py-20 text-gray-400">ไม่มีสินค้าในตะกร้า</div>';
+                return;
+            }
+
+            const res = await fetch(SHEET_URL);
+            const data = await res.text();
+            const rows = data.split(/\r?\n/).slice(1);
+            const products = rows.filter(r => r.trim() !== "").map(r => {
+                const parts = r.match(/(".*?"|[^,]+)/g);
+                const clean = parts.map(p => p.replace(/^"|"$/g, '').trim());
+                return { id: clean[0], name: clean[1], price: parseFloat(clean[2]), images: clean[6].split("|") };
+            });
+
+            let html = '', subTotal = 0, tempehPieces = 0;
+            
+            for (const [id, qty] of Object.entries(cart)) {
+                const p = products.find(prod => prod.id == id);
+                if (p) {
+                    subTotal += p.price * qty;
+                    // Logic ค่าส่งเต็มเป
+                    if (id == "1") tempehPieces += (qty * 1);
+                    if (id == "2") tempehPieces += (qty * 3);
+                    if (id == "3") tempehPieces += (qty * 6);
+
+                    html += `
+                        <div class="bg-white p-3 rounded-xl flex items-center gap-4 shadow-sm">
+                            <img src="${p.images[0]}" class="w-16 h-16 object-cover rounded-lg">
+                            <div class="flex-1">
+                                <div class="text-sm font-medium line-clamp-1">${p.name}</div>
+                                <div class="text-[#ee4d2d] font-bold">฿${p.price.toLocaleString()}</div>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <button onclick="changeQty('${id}', -1)" class="w-8 h-8 bg-gray-100 rounded-full">-</button>
+                                <span class="w-4 text-center font-bold">${qty}</span>
+                                <button onclick="changeQty('${id}', 1)" class="w-8 h-8 bg-gray-100 rounded-full">+</button>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+
+            let shipping = (tempehPieces > 0 && tempehPieces < 6) ? 35 : 0;
+            if (shipping > 0) {
+                html += `<div class="bg-orange-50 p-3 rounded-xl flex justify-between text-orange-600 text-sm font-bold">
+                    <span>🚚 ค่าจัดส่ง (ยอดเต็มเป < 6 ชิ้น)</span>
+                    <span>฿${shipping}</span>
+                </div>`;
+            }
+
+            document.getElementById('cart-list').innerHTML = html;
+            document.getElementById('cart-total').innerText = '฿' + (subTotal + shipping).toLocaleString();
+        }
+
+        function changeQty(id, delta) {
+            let cart = JSON.parse(localStorage.getItem('cart') || '{}');
+            cart[id] = (cart[id] || 0) + delta;
+            if (cart[id] <= 0) delete cart[id];
+            localStorage.setItem('cart', JSON.stringify(cart));
+            loadCart();
+        }
+
+        function checkoutViaLine() {
+            const name = document.getElementById('customer-name').value;
+            const phone = document.getElementById('customer-phone').value;
+            const address = document.getElementById('customer-address').value;
+            if (!name || !phone) return alert('กรุณากรอกข้อมูลให้ครบถ้วน');
+
+            // Logic ส่ง LINE Message (เหมือนเดิม)
+            alert('กำลังส่งข้อมูลไปที่ LINE...');
+            // window.location.href = ...;
+        }
+
+        loadCart();
+    </script>
+</body>
+</html>
