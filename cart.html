@@ -33,22 +33,21 @@
             </div>
             
             <div class="space-y-3">
-                <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">ข้อมูลจัดส่ง</p>
-                <input type="text" id="customer-name" placeholder="ชื่อผู้รับ" class="w-full border border-gray-100 bg-gray-50 rounded-xl px-4 py-3 outline-none focus:border-[#ee4d2d] transition-all">
-                <input type="tel" id="customer-phone" placeholder="เบอร์โทรศัพท์" class="w-full border border-gray-100 bg-gray-50 rounded-xl px-4 py-3 outline-none focus:border-[#ee4d2d] transition-all">
-                <textarea id="customer-address" rows="2" placeholder="ที่อยู่สำหรับจัดส่งสินค้า" class="w-full border border-gray-100 bg-gray-50 rounded-xl px-4 py-3 outline-none focus:border-[#ee4d2d] transition-all resize-none"></textarea>
+                <input type="text" id="customer-name" placeholder="ชื่อผู้รับ" class="w-full border border-gray-100 bg-gray-50 rounded-xl px-4 py-3 outline-none focus:border-[#ee4d2d]">
+                <input type="tel" id="customer-phone" placeholder="เบอร์โทรศัพท์" class="w-full border border-gray-100 bg-gray-50 rounded-xl px-4 py-3 outline-none focus:border-[#ee4d2d]">
+                <textarea id="customer-address" rows="2" placeholder="ที่อยู่จัดส่ง" class="w-full border border-gray-100 bg-gray-50 rounded-xl px-4 py-3 outline-none focus:border-[#ee4d2d] resize-none"></textarea>
             </div>
 
             <div class="bg-blue-50/50 rounded-2xl p-4 flex items-center gap-3 border border-blue-100">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/5/56/Flag_of_Laos.svg" class="w-6 shadow-sm rounded-sm">
                 <div class="text-[10px] text-blue-700 leading-tight">
                     <p class="font-bold">ສະແກນຈ່າຍດ້ວຍແອັບທະນາຄານລາວໄດ້</p>
-                    <p>รองรับการสแกนจ่ายผ่าน BCEL One และแอปธนาคารลาวทุกแห่ง</p>
+                    <p>รองรับการสแกนจ่ายผ่านแอปธนาคารลาวทุกแห่ง</p>
                 </div>
             </div>
 
             <div class="flex flex-col gap-3 pt-2">
-                <button onclick="checkoutWithBeam()" class="w-full bg-blue-600 text-white font-bold py-4 rounded-2xl flex justify-center items-center gap-3 shadow-lg shadow-blue-100 active:scale-95 transition">
+                <button onclick="checkoutWithBeam()" class="w-full bg-blue-600 text-white font-bold py-4 rounded-2xl flex justify-center items-center gap-3 shadow-lg active:scale-95 transition">
                     <i class="fas fa-credit-card text-xl"></i> ชำระเงินออนไลน์ (QR Payment)
                 </button>
                 <button onclick="checkoutViaLine()" class="w-full bg-[#06C755]/10 text-[#06C755] font-semibold py-3 rounded-xl flex justify-center items-center gap-2 border border-[#06C755]/20 active:scale-95 transition">
@@ -58,19 +57,6 @@
         </div>
     </main>
 
-    <div id="qr-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4">
-        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeQR()"></div>
-        <div class="bg-white rounded-3xl p-8 max-w-xs w-full relative z-[110] text-center shadow-2xl">
-            <h3 class="text-xl font-bold text-gray-800 mb-2">สแกนชำระเงิน</h3>
-            <p class="text-[10px] text-blue-600 font-bold mb-4 italic uppercase tracking-widest">🇱🇦 Support LaoQR / BCEL One</p>
-            <div class="bg-gray-100 p-2 rounded-2xl mb-4">
-                <img id="qr-image" src="" alt="PromptPay QR" class="w-full rounded-xl">
-            </div>
-            <p class="text-xs text-gray-500 mb-6 font-light">กรุณาแคปหน้าจอเพื่อนำไปสแกนในแอปธนาคารของท่าน<br><span class="text-blue-500 font-medium">ສະແກນດ້ວຍແອັບທະນາຄານລາວໄດ້ເລີຍ</span></p>
-            <button onclick="closeQR()" class="w-full py-4 bg-gray-100 text-gray-600 font-bold rounded-2xl active:scale-95 transition">ปิดหน้าต่าง</button>
-        </div>
-    </div>
-
     <script>
         const LINE_ID = "@888fsncq";
         const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRa5jSPp8xIyhJfaq_rwMEWzPCUpjDnUfOnk476Ce80gfcUUdxCVVIsW3YYmFZe4hsKsB6PdCyNESBq/pub?output=csv";
@@ -79,7 +65,7 @@
         async function loadCart() {
             const cart = JSON.parse(localStorage.getItem('cart') || '{}');
             if (Object.keys(cart).length === 0) {
-                document.getElementById('cart-list').innerHTML = `<div class="text-center py-20 text-gray-400"><i class="fas fa-shopping-basket text-5xl mb-4 opacity-20"></i><p>ยังไม่มีสินค้าในตะกร้า</p></div>`;
+                document.getElementById('cart-list').innerHTML = `<div class="text-center py-20 text-gray-400"><p>ไม่มีสินค้าในตะกร้า</p></div>`;
                 document.getElementById('checkout-section').classList.add('hidden');
                 return;
             }
@@ -100,7 +86,7 @@
                     if (p) {
                         let itemTotal = 0, quantity = parseInt(qty);
                         
-                        // ✨ Logic คำนวณราคาโปรโมชั่นเต็มเป (ID: 1)
+                        // ✨ ส่วนคำนวณราคาโปรโมชั่น (3 ชิ้น 100 / 6 ชิ้น 200)
                         if (id === "1") {
                             if (quantity === 3) itemTotal = 100;
                             else if (quantity === 6) itemTotal = 200;
@@ -124,24 +110,24 @@
                                 </div>
                                 <div class="flex items-center gap-3 bg-gray-50 rounded-full px-2 py-1">
                                     <button onclick="changeQty('${id}', -1)" class="w-7 h-7 flex items-center justify-center bg-white rounded-full shadow-sm text-gray-400"><i class="fas fa-minus text-xs"></i></button>
-                                    <span class="text-sm font-bold text-gray-700 min-w-[20px] text-center">${quantity}</span>
+                                    <span class="text-sm font-bold text-gray-700 text-center min-w-[20px]">${quantity}</span>
                                     <button onclick="changeQty('${id}', 1)" class="w-7 h-7 flex items-center justify-center bg-white rounded-full shadow-sm text-[#ee4d2d]"><i class="fas fa-plus text-xs"></i></button>
                                 </div>
                             </div>`;
                     }
                 }
 
-                // ✨ Logic คำนวณค่าจัดส่ง: สั่งครบ 6 ชิ้นส่งฟรี
+                // ✨ ส่วนแสดงค่าส่งและโปรโมชั่นส่งฟรี
                 let shipping = (tempehPieces > 0 && tempehPieces < 6) ? 35 : 0;
                 if (tempehPieces >= 6) {
-                    html += `<div class="bg-green-50 p-4 rounded-2xl flex justify-between items-center text-green-600 border border-green-100">
-                        <div class="flex items-center gap-2 font-bold text-xs"><i class="fas fa-shipping-fast"></i> โปรโมชั่นสั่งครบ 6 ชิ้น: ส่งฟรี!</div>
-                        <span class="font-bold text-sm">฿0</span>
+                    html += `<div class="bg-green-50 p-4 rounded-2xl flex justify-between items-center text-green-600 border border-green-100 font-bold text-xs">
+                        <span><i class="fas fa-shipping-fast"></i> โปรโมชั่นสั่งครบ 6 ชิ้น: ส่งฟรี!</span>
+                        <span>฿0</span>
                     </div>`;
                 } else if (shipping > 0) {
-                    html += `<div class="bg-blue-50 p-4 rounded-2xl flex justify-between items-center text-blue-600 border border-blue-100">
-                        <div class="flex items-center gap-2 font-bold text-xs"><i class="fas fa-truck"></i> ค่าจัดส่ง (อีก ${6-tempehPieces} ชิ้นส่งฟรี)</div>
-                        <span class="font-bold text-sm">฿${shipping}</span>
+                    html += `<div class="bg-blue-50 p-4 rounded-2xl flex justify-between items-center text-blue-600 border border-blue-100 font-bold text-xs">
+                        <span><i class="fas fa-truck"></i> ค่าจัดส่ง (อีก ${6-tempehPieces} ชิ้นส่งฟรี)</span>
+                        <span>฿${shipping}</span>
                     </div>`;
                 }
 
@@ -160,19 +146,12 @@
             loadCart();
         }
 
-        async function checkoutWithBeam() {
-            // Logic สำหรับเรียก API BeamCheckout ...
-            document.getElementById('qr-modal').classList.remove('hidden');
-        }
-
-        function closeQR() { document.getElementById('qr-modal').classList.add('hidden'); }
-
+        async function checkoutWithBeam() { /* API Logic */ }
         function checkoutViaLine() {
             const name = document.getElementById('customer-name').value;
             const phone = document.getElementById('customer-phone').value;
             const address = document.getElementById('customer-address').value;
             if (!name || !phone) return alert('กรุณากรอกข้อมูลให้ครบถ้วน');
-            
             const cart = JSON.parse(localStorage.getItem('cart') || '{}');
             let msg = `🛒 *สั่งซื้อสินค้า*\n----------------\n`, sub = 0, tp = 0;
             for (const [id, qty] of Object.entries(cart)) {
