@@ -18,6 +18,10 @@
         #sub-nav { top: calc(109px + var(--sat)) !important; }
         main { margin-top: calc(160px + var(--sat)) !important; }
         .hide-scroll::-webkit-scrollbar { display: none; }
+        
+        /* Skeleton Animation */
+        .skeleton { background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: loading 1.5s infinite; }
+        @keyframes loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
     </style>
 </head>
 <body>
@@ -46,29 +50,57 @@
     </div>
 
     <main class="container mx-auto max-w-lg px-2 py-4">
-        <div id="product-list" class="grid grid-cols-2 gap-2"></div>
+        <div id="product-list" class="grid grid-cols-2 gap-2">
+            <div class="bg-white rounded-xl overflow-hidden h-64 skeleton"></div>
+            <div class="bg-white rounded-xl overflow-hidden h-64 skeleton"></div>
+            <div class="bg-white rounded-xl overflow-hidden h-64 skeleton"></div>
+            <div class="bg-white rounded-xl overflow-hidden h-64 skeleton"></div>
+        </div>
     </main>
 
     <script>
         let currentMainTab = 'product', currentSubTab = 'all', searchTerm = '', products = [];
         const subCategories = {
-            product: [{ id: 'all', name: 'ทั้งหมด' }, { id: 'tempeh', name: 'เต็มเป' }, { id: 'supplement', name: 'อาหารเสริม' }, { id: 'cosmetic', name: 'เครื่องสำอาง' }, { id: 'other', name: 'อื่นๆ' }],
-            service: [{ id: 'all', name: 'ทั้งหมด' }, { id: 'saowaen', name: 'สาวแว่น' }, { id: 'porbaan', name: 'พ่อบ้าน' }]
+            product: [
+                { id: 'all', name: 'ทั้งหมด' }, 
+                { id: 'tempeh', name: 'เต็มเป' }, 
+                { id: 'supplement', name: 'อาหารเสริม' }, 
+                { id: 'cosmetic', name: 'เครื่องสำอาง' },
+                { id: 'other', name: 'อื่นๆ' }
+            ],
+            service: [{ id: 'all', name: 'ทั้งหมด' }, { id: 'saowaen', name: 'สาวแว่น' }]
         };
 
         const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRa5jSPp8xIyhJfaq_rwMEWzPCUpjDnUfOnk476Ce80gfcUUdxCVVIsW3YYmFZe4hsKsB6PdCyNESBq/pub?output=csv";
 
         async function loadData() {
-            const res = await fetch(SHEET_URL);
-            const data = await res.text();
-            const rows = data.split(/\r?\n/).slice(1);
-            products = rows.filter(r => r.trim() !== "").map(r => {
-                const parts = r.match(/(".*?"|[^,]+)(?=\s*,|\s*$)/g);
-                const clean = parts.map(p => p.replace(/^"|"$/g, '').trim());
-                return { id: parseInt(clean[0]), name: clean[1], price: parseFloat(clean[2]), category: clean[3], subCategory: clean[4], desc: clean[5], images: clean[6].split("|") };
-            });
-            renderSubNav(); renderProducts();
-            updateCartBadge();
+            try {
+                // เพิ่ม Cache Busting เพื่อให้ดึงข้อมูลใหม่เสมอแต่ไม่โหลดซ้ำซ้อน
+                const res = await fetch(`${SHEET_URL}&t=${new Date().getTime()}`);
+                const data = await res.text();
+                const rows = data.split(/\r?\n/).slice(1);
+                products = rows.filter(r => r.trim() !== "").map(r => {
+                    const parts = r.match(/(".*?"|[^,]+)(?=\s*,|\s*$)/g);
+                    if (!parts) return null;
+                    const clean = parts.map(p => p.replace(/^"|"$/g, '').trim());
+                    return { 
+                        id: parseInt(clean[0]), 
+                        name: clean[1], 
+                        price: parseFloat(clean[2]), 
+                        category: clean[3], 
+                        subCategory: clean[4], 
+                        desc: clean[5], 
+                        images: clean[6] ? clean[6].split("|") : [] 
+                    };
+                }).filter(p => p !== null);
+                
+                renderSubNav(); 
+                renderProducts();
+                updateCartBadge();
+            } catch (e) {
+                console.error("Error loading data:", e);
+                document.getElementById('product-list').innerHTML = `<div class="col-span-2 text-center py-20 text-red-500">โหลดข้อมูลไม่สำเร็จ</div>`;
+            }
         }
 
         function filterMainCategory(c) {
@@ -82,8 +114,8 @@
             const container = document.getElementById('sub-category-container');
             container.innerHTML = '';
             subCategories[currentMainTab].forEach(sub => {
-                const active = sub.id === currentSubTab ? "bg-shopee-primary text-white" : "bg-white text-gray-600 border border-gray-200";
-                container.innerHTML += `<button onclick="filterSubCategory('${sub.id}')" class="sub-tab-btn whitespace-nowrap px-4 py-2 rounded-full shadow-sm ${active}">${sub.name}</button>`;
+                const active = sub.id === currentSubTab ? "bg-shopee-primary text-white shadow-md" : "bg-white text-gray-600 border border-gray-200";
+                container.innerHTML += `<button onclick="filterSubCategory('${sub.id}')" class="sub-tab-btn whitespace-nowrap px-4 py-2 rounded-full transition-all ${active}">${sub.name}</button>`;
             });
         }
 
@@ -93,30 +125,40 @@
             const list = document.getElementById('product-list');
             list.innerHTML = '';
             const filtered = products.filter(p => p.category === currentMainTab && (currentSubTab === 'all' || p.subCategory === currentSubTab) && p.name.toLowerCase().includes(searchTerm.toLowerCase()));
+            
+            if (filtered.length === 0) {
+                list.innerHTML = `<div class="col-span-2 text-center py-20 text-gray-400">ไม่พบสินค้าในหมวดนี้</div>`;
+                return;
+            }
+
             filtered.forEach(p => {
-                list.innerHTML += `<div class="bg-white rounded-xl shadow-sm overflow-hidden flex flex-col cursor-pointer active:scale-95" onclick="location.href='product.html?id=${p.id}'">
-                    <div class="relative pt-[100%] bg-gray-100"><img src="${p.images[0]}" class="absolute top-0 left-0 w-full h-full object-cover"></div>
+                list.innerHTML += `
+                <div class="bg-white rounded-xl shadow-sm overflow-hidden flex flex-col cursor-pointer active:scale-95 transition-transform" onclick="location.href='product.html?id=${p.id}'">
+                    <div class="relative pt-[100%] bg-gray-100">
+                        <img src="${p.images[0] || ''}" 
+                             loading="lazy"
+                             class="absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-300"
+                             onload="this.style.opacity=1" style="opacity:0">
+                    </div>
                     <div class="p-3 flex-1 flex flex-col">
                         <h3 class="text-xs font-medium text-gray-800 line-clamp-2 min-h-[2.5em]">${p.name}</h3>
-                        <div class="mt-2 flex justify-between items-center"><span class="text-shopee-primary font-bold text-sm">฿${p.price.toLocaleString()}</span><div class="w-6 h-6 rounded-full border border-shopee-primary text-shopee-primary flex items-center justify-center text-[10px]"><i class="fas fa-plus"></i></div></div>
-                    </div></div>`;
+                        <div class="mt-2 flex justify-between items-center">
+                            <span class="text-shopee-primary font-bold text-sm">฿${p.price.toLocaleString()}</span>
+                            <div class="w-6 h-6 rounded-full border border-shopee-primary text-shopee-primary flex items-center justify-center text-[10px]"><i class="fas fa-plus"></i></div>
+                        </div>
+                    </div>
+                </div>`;
             });
         }
 
-        // เพิ่มฟังก์ชันนี้ไว้ในส่วนสคริปต์ของ index.html
         function updateCartBadge() {
             const cart = JSON.parse(localStorage.getItem('cart') || '{}');
             const count = Object.values(cart).reduce((a, b) => a + b, 0);
             const badge = document.getElementById('cart-badge');
-            if (badge) {
-                badge.innerText = count; 
-                badge.classList.toggle('hidden', count === 0);
-            }
+            if (badge) { badge.innerText = count; badge.classList.toggle('hidden', count === 0); }
         }
 
-// เรียกใช้ฟังก์ชันทันทีที่โหลดหน้าเว็บ
-window.onload = updateCartBadge;
-
+        window.onload = updateCartBadge;
         document.getElementById('search-input').addEventListener('input', (e) => { searchTerm = e.target.value; renderProducts(); });
         loadData();
     </script>
