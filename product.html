@@ -1,152 +1,29 @@
-<!DOCTYPE html>
-<html lang="th">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>รายละเอียดสินค้า</title>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: { sans: ['Kanit', 'sans-serif'] },
-                    colors: { shopee: { primary: '#ee4d2d' } }
-                }
-            }
-        }
-    </script>
-    <style>
-        :root { 
-            --sat: env(safe-area-inset-top); 
-            --sab: env(safe-area-inset-bottom); 
-        }
-        body { background-color: #ffffff; -webkit-tap-highlight-color: transparent; }
-        .sticky-header { height: calc(54px + var(--sat)); padding-top: var(--sat); }
-        .slider-container { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; }
-        .slide-item { flex: 0 0 100%; scroll-snap-align: start; aspect-ratio: 1/1; }
-        .hide-scroll::-webkit-scrollbar { display: none; }
-        .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
-    </style>
-</head>
-<body class="pb-40"> <div class="fixed top-0 left-0 w-full bg-white/90 backdrop-blur-md z-50 flex items-center px-4 border-b sticky-header">
-        <button onclick="history.back()" class="w-10 h-10 flex items-center justify-center text-gray-700 bg-gray-100 rounded-full active:scale-90 transition">
-            <i class="fas fa-chevron-left text-lg"></i>
-        </button>
-        <span class="ml-4 font-bold text-gray-800 line-clamp-1">รายละเอียดสินค้า</span>
-    </div>
+// --- ส่วนที่แก้ไขใน loadProduct ของ product.html ---
 
-    <div id="product-detail" class="mt-[calc(54px+var(--sat))]">
-        <div class="flex flex-col items-center justify-center h-64 text-gray-300">
-            <i class="fas fa-circle-notch fa-spin text-3xl mb-4 text-shopee-primary"></i>
-            <p class="text-xs font-medium">กำลังโหลดข้อมูลสินค้า...</p>
-        </div>
-    </div>
+if (p.salepage) {
+    // 1. เพิ่มคลาส hidden เพื่อซ่อนเนื้อหาไว้ก่อน
+    contentHTML += `
+        <div id="salepage-section" class="hidden px-6 pb-16 overflow-hidden pt-4 transition-all duration-500">
+            ${p.salepage}
+        </div>`;
+    
+    container.innerHTML = contentHTML;
 
-    <div class="fixed bottom-0 left-0 w-full bg-white border-t p-4 z-50 shadow-[0_-5px_15px_rgba(0,0,0,0.05)]" style="padding-bottom: calc(16px + var(--sab));">
-        <div class="max-w-lg mx-auto flex flex-col gap-2.5">
-            <button id="more-detail-btn" class="hidden w-full bg-orange-50 text-orange-600 font-bold py-3.5 rounded-2xl active:scale-95 transition-all flex justify-center items-center gap-2 border border-orange-200">
-                <i class="fas fa-file-alt"></i> รายละเอียดเพิ่มเติม
-            </button>
-            
-            <button id="add-btn" class="w-full bg-[#ee4d2d] text-white font-bold py-4 rounded-2xl shadow-lg active:scale-95 transition-all flex justify-center items-center gap-2">
-                <i class="fas fa-cart-plus text-xl"></i> เพิ่มลงตะกร้า
-            </button>
-        </div>
-    </div>
+    const moreBtn = document.getElementById('more-detail-btn');
+    const salepageSection = document.getElementById('salepage-section');
 
-    <script>
-        const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRa5jSPp8xIyhJfaq_rwMEWzPCUpjDnUfOnk476Ce80gfcUUdxCVVIsW3YYmFZe4hsKsB6PdCyNESBq/pub?output=csv";
-        const urlParams = new URLSearchParams(window.location.search);
-        const productId = urlParams.get('id');
-
-        async function loadProduct() {
-            try {
-                const res = await fetch(`${SHEET_URL}&t=${new Date().getTime()}`);
-                const data = await res.text();
-                const rows = data.split(/\r?\n/).slice(1);
-                
-                const products = rows.filter(r => r.trim() !== "").map(r => {
-                    const parts = r.match(/(".*?"|[^,]+)(?=\s*,|\s*$)/g);
-                    if (!parts) return null;
-                    const clean = parts.map(p => p.replace(/^"|"$/g, '').trim());
-                    return { 
-                        id: parseInt(clean[0]), 
-                        name: clean[1], 
-                        price: parseFloat(clean[2]), 
-                        category: clean[3],
-                        subCategory: clean[4],
-                        desc: clean[5], 
-                        images: clean[6] ? clean[6].split("|") : [],
-                        salepage: clean[7] ? clean[7].replace(/\\n/g, '\n') : "" 
-                    };
-                }).filter(p => p !== null);
-
-                const p = products.find(prod => prod.id == productId);
-                if (!p) return location.href = 'index.html';
-
-                document.title = p.name;
-                const container = document.getElementById('product-detail');
-                
-                let sliderHTML = `<div class="relative"><div id="slider" class="slider-container hide-scroll">`;
-                p.images.forEach(img => { 
-                    sliderHTML += `<div class="slide-item"><img src="${img}" class="w-full h-full object-cover"></div>`; 
-                });
-                sliderHTML += `</div><div id="dots" class="absolute bottom-4 w-full flex justify-center gap-1.5"></div></div>`;
-
-                let contentHTML = `
-                    ${sliderHTML}
-                    <div class="p-6">
-                        <div class="text-4xl font-extrabold text-[#ee4d2d] mb-2 tracking-tight">฿${p.price.toLocaleString()}</div>
-                        <h1 class="text-xl font-semibold text-gray-800 mb-6 leading-snug">${p.name}</h1>
-                        <div class="bg-gray-50 p-5 rounded-2xl border border-gray-100 mb-4">
-                            <p class="text-gray-600 leading-relaxed whitespace-pre-line text-sm">${p.desc.replace(/\\n/g, '\n')}</p>
-                        </div>
-                    </div>
-                `;
-
-                // ✨ แก้ไขบั๊กเส้นขีด: นำ border-t และ mt-4 ออก
-                if (p.salepage) {
-                    contentHTML += `
-                        <div id="salepage-section" class="px-6 pb-16 overflow-hidden pt-4">
-                            ${p.salepage}
-                        </div>`;
-                    
-                    const moreBtn = document.getElementById('more-detail-btn');
-                    moreBtn.classList.remove('hidden');
-                    moreBtn.onclick = () => {
-                        document.getElementById('salepage-section').scrollIntoView({ behavior: 'smooth' });
-                    };
-                }
-
-                container.innerHTML = contentHTML;
-
-                const slider = document.getElementById('slider');
-                const dots = document.getElementById('dots');
-                p.images.forEach((_, i) => { dots.innerHTML += `<div class="w-1.5 h-1.5 rounded-full bg-gray-300 transition-all duration-300"></div>`; });
-                if (p.images.length > 0) {
-                    slider.onscroll = () => {
-                        const idx = Math.round(slider.scrollLeft / slider.offsetWidth);
-                        dots.querySelectorAll('div').forEach((dot, i) => {
-                            dot.className = i === idx ? "w-4 h-1.5 rounded-full bg-shopee-primary transition-all duration-300" : "w-1.5 h-1.5 rounded-full bg-gray-300 transition-all duration-300";
-                        });
-                    };
-                }
-
-                document.getElementById('add-btn').onclick = () => {
-                    let cart = JSON.parse(localStorage.getItem('cart') || '{}');
-                    cart[p.id] = (cart[p.id] || 0) + 1;
-                    localStorage.setItem('cart', JSON.stringify(cart));
-                    window.location.href = 'index.html';
-                };
-
-            } catch (e) {
-                console.error("Error:", e);
-                document.getElementById('product-detail').innerHTML = `<p class="p-10 text-center">ไม่พบข้อมูลสินค้า</p>`;
-            }
-        }
-        loadProduct();
-    </script>
-</body>
-</html>
+    moreBtn.classList.remove('hidden');
+    moreBtn.onclick = () => {
+        // 2. เมื่อกดปุ่ม ให้เอา hidden ออก และเลื่อนหน้าจอลงไป
+        salepageSection.classList.remove('hidden');
+        
+        // รอสักครู่เพื่อให้เบราว์เซอร์ Render เนื้อหาก่อนค่อย Scroll
+        setTimeout(() => {
+            salepageSection.scrollIntoView({ behavior: 'smooth' });
+            // เปลี่ยนชื่อปุ่มเป็น "ซ่อนรายละเอียด" (ตัวเลือกเสริม)
+            // moreBtn.innerHTML = '<i class="fas fa-chevron-up"></i> ซ่อนรายละเอียด';
+        }, 100);
+    };
+} else {
+    container.innerHTML = contentHTML;
+}
