@@ -3,157 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>เต็มเป | เทมเป้สดไซส์จัมโบ้ 150g - โปรตีนสะอาดเพื่อสุขภาพ</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;800&display=swap" rel="stylesheet">
+    <title>เต็มเป | เทมเป้สดพร้อมบ่ม ไซส์จัมโบ้ 150g</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Kanit', 'sans-serif'] },
+                    colors: { shopee: { primary: '#ee4d2d' } }
+                }
+            }
+        }
+    </script>
     <style>
-        body { font-family: 'Kanit', sans-serif; background-color: #ffffff; }
-        .bg-gradient-hero { background: linear-gradient(180deg, #f0fdf4 0%, #ffffff 100%); }
+        :root { --sat: env(safe-area-inset-top); --sab: env(safe-area-inset-bottom); }
+        body { background-color: #fdfdfd; -webkit-tap-highlight-color: transparent; }
+        .hero-bg { background: linear-gradient(180deg, #ecfdf5 0%, #ffffff 100%); }
     </style>
 </head>
-<body class="text-gray-800 antialiased">
+<body class="pb-20">
 
-    <nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
-        <div class="max-w-4xl mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="text-2xl font-extrabold tracking-tighter italic text-green-700">TEMPE <span class="text-gray-900">MASTER</span></div>
-            <a href="#pricing" class="bg-green-600 text-white px-5 py-2 rounded-full font-bold text-sm hover:bg-green-700 transition shadow-lg shadow-green-200">สั่งซื้อเลย</a>
-        </div>
-    </nav>
-
-    <header class="bg-gradient-hero pt-12 pb-20 px-6 text-center">
-        <div class="inline-block bg-green-100 text-green-700 px-4 py-1 rounded-full text-xs font-bold mb-6 tracking-widest uppercase">🥜 SUPERFOOD FOR YOUR HEALTH</div>
-        <h1 class="text-5xl md:text-7xl font-extrabold text-gray-900 mb-6 leading-tight">
-            เต็มเป (Tempe)<br>
-            <span class="text-green-600 italic">ไซส์จัมโบ้ 150g</span>
-        </h1>
-        <p class="text-xl md:text-2xl text-gray-600 mb-10 max-w-2xl mx-auto font-light">
-            ใหญ่กว่า! คุ้มกว่า! อร่อย หอม มัน เนื้อแน่น <br class="hidden md:block">
-            <span class="font-bold text-orange-600">"จนลืมไปเลยว่ากำลังทานถั่ว"</span>
-        </p>
-        <div class="relative max-w-sm mx-auto">
-            <img src="https://raw.githubusercontent.com/thaipoanlao/shop/refs/heads/main/photo/01/1.avif" alt="เต็มเป" class="w-full rounded-[3rem] shadow-2xl transform rotate-2 hover:rotate-0 transition duration-500">
-            <div class="absolute -bottom-6 -right-6 bg-white p-4 rounded-2xl shadow-xl border border-gray-100 hidden md:block">
-                <p class="text-sm font-bold text-gray-400 uppercase tracking-tighter text-left">ความคุ้มค่า</p>
-                <p class="text-2xl font-black text-green-600">+50% MORE</p>
-            </div>
-        </div>
-    </header>
-
-    <section class="py-20 px-6 max-w-3xl mx-auto">
-        <h2 class="text-3xl font-extrabold mb-10">คุณกำลังพยายามดูแลสุขภาพ <br><span class="text-green-600 underline underline-offset-8">แต่เจอปัญหาเหล่านี้ใช่ไหม?</span></h2>
-        <div class="space-y-6 text-lg text-gray-600 mb-16">
-            <div class="flex items-start gap-4">
-                <span class="text-red-500 font-bold text-2xl">✗</span>
-                <p>อยากทานโปรตีนพืช แต่เจอเทมเป้ที่ <b>"เหม็นหืน"</b> และ <b>"รสขม"</b> จนทานไม่ได้</p>
-            </div>
-            <div class="flex items-start gap-4">
-                <span class="text-red-500 font-bold text-2xl">✗</span>
-                <p>ซื้อตามท้องตลาด มักได้ห่อเล็ก <b>ไม่อิ่ม</b> และ <b>ราคาแพง</b> เมื่อเทียบกับปริมาณ</p>
-            </div>
-            <div class="flex items-start gap-4">
-                <span class="text-red-500 font-bold text-2xl">✗</span>
-                <p>กลัวซื้อไปแล้วบ่มไม่ขึ้น ทำเสีย แล้วต้อง <b>"ทิ้งเงินฟรี"</b></p>
-            </div>
-        </div>
-
-        <div class="bg-gray-900 text-white p-10 rounded-[3rem] shadow-2xl">
-            <h3 class="text-2xl font-bold mb-6 text-green-400">ทำไมต้อง "เต็มเป" ร้านเรา?</h3>
-            <div class="space-y-6">
-                <div class="flex items-center gap-4">
-                    <i class="fas fa-check-circle text-green-500 text-xl"></i>
-                    <p><b>ไซส์จัมโบ้ 150g:</b> ให้ปริมาณเยอะกว่าท้องตลาดถึง 50% อิ่มคุ้มในห่อเดียว</p>
-                </div>
-                <div class="flex items-center gap-4">
-                    <i class="fas fa-check-circle text-green-500 text-xl"></i>
-                    <p><b>สดใหม่พร้อมบ่ม:</b> เชื้อเดินไว ขาวฟูสวย เนื้อสัมผัสแน่นคล้ายเนื้อสัตว์</p>
-                </div>
-                <div class="flex items-center gap-4">
-                    <i class="fas fa-check-circle text-green-500 text-xl"></i>
-                    <p><b>ประกันเคลม 100%:</b> ทำเสียเราส่งห่อใหม่ให้ฟรีทันที ไม่ต้องกังวลเรื่องบ่มไม่ขึ้น!</p>
-                </div>
-            </div>
-        </div>
+    <section class="hero-bg px-6 pt-[calc(20px+var(--sat))] pb-10 text-center">
+        <div class="inline-block bg-green-100 text-green-700 px-4 py-1 rounded-full text-xs font-bold mb-4">🥜 SUPERFOOD FOR YOUR HEALTH</div>
+        <h1 class="text-4xl font-extrabold text-gray-900 mb-2 leading-tight">เต็มเป (Tempe)</h1>
+        <p class="text-lg font-bold text-orange-600 mb-4 italic">🛑 ใหญ่กว่า! คุ้มกว่า! ไซส์จัมโบ้ 150g</p>
+        <img src="https://raw.githubusercontent.com/thaipoanlao/shop/refs/heads/main/photo/01/1.avif" class="w-full max-w-xs mx-auto rounded-3xl shadow-2xl mb-6">
     </section>
 
-    <section class="py-20 bg-gray-50 px-6">
-        <div class="max-w-4xl mx-auto">
-            <div class="text-center mb-12">
-                <h2 class="text-4xl font-black italic mb-2 tracking-tighter">CUSTOMER VOICE</h2>
-                <p class="text-gray-400 uppercase tracking-widest text-xs">รีวิวจากลูกค้าที่ทานจริง</p>
-            </div>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
-                <img src="https://raw.githubusercontent.com/thaipoanlao/shop/refs/heads/main/photo/01/9.avif" class="aspect-square rounded-2xl object-cover shadow-md">
-                <img src="https://raw.githubusercontent.com/thaipoanlao/shop/refs/heads/main/photo/01/6.avif" class="aspect-square rounded-2xl object-cover shadow-md">
-                <img src="https://raw.githubusercontent.com/thaipoanlao/shop/refs/heads/main/photo/01/7.avif" class="aspect-square rounded-2xl object-cover shadow-md">
-                <img src="https://raw.githubusercontent.com/thaipoanlao/shop/refs/heads/main/photo/01/8.avif" class="aspect-square rounded-2xl object-cover shadow-md">
-            </div>
-            <div class="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-sm text-center">
-                <div class="text-yellow-400 mb-4"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                <p class="text-xl italic text-gray-700 leading-relaxed">"ได้รับของแล้วค่ะ เชื้อเดินไวมาก ขาวฟูสวยเต็มแผ่น รสชาติดีมากค่ะ ไม่เหม็นเลย"</p>
-            </div>
-        </div>
-    </section>
-
-    <section id="pricing" class="py-24 px-6 max-w-4xl mx-auto">
-        <div class="text-center mb-16">
-            <h2 class="text-4xl font-extrabold mb-4 italic">เลือกแพ็กเกจที่ต้องการ</h2>
-            <p class="text-gray-500 uppercase tracking-widest text-xs">ยิ่งซื้อเยอะ ยิ่งคุ้ม</p>
-        </div>
+    <main class="max-w-lg mx-auto px-6 space-y-12">
         
-        <div class="grid md:grid-cols-3 gap-6">
-            <button onclick="buyNow(1)" class="group bg-white border-2 border-gray-100 p-8 rounded-[2.5rem] text-center hover:border-black transition-all active:scale-95 shadow-sm">
-                <p class="font-bold text-gray-400 mb-2">เริ่มต้นลองชิม</p>
-                <p class="text-xl font-extrabold mb-4">🔥 1 ห่อ (150g)</p>
-                <p class="text-4xl font-black mb-6">฿35</p>
-                <div class="w-full py-3 bg-gray-100 rounded-2xl font-bold group-hover:bg-black group-hover:text-white transition">เลือกแพ็กเกจนี้</div>
-            </button>
-
-            <button onclick="buyNow(3)" class="group bg-white border-2 border-green-500 p-8 rounded-[2.5rem] text-center relative hover:scale-105 transition-all active:scale-95 shadow-xl shadow-green-100">
-                <span class="absolute -top-4 left-1/2 -translate-x-1/2 bg-green-500 text-white text-xs px-4 py-1 rounded-full font-bold shadow-lg">แนะนำสำหรับมือใหม่ ✨</span>
-                <p class="font-bold text-green-600 mb-2">เซ็ตสุดคุ้ม</p>
-                <p class="text-xl font-extrabold mb-4">✨ 3 ห่อ (450g)</p>
-                <p class="text-5xl font-black text-green-700 mb-6">฿100</p>
-                <div class="w-full py-4 bg-green-600 text-white rounded-2xl font-bold shadow-lg">จองเซ็ตยอดนิยม</div>
-            </button>
-
-            <button onclick="buyNow(6)" class="group bg-gray-900 border-2 border-gray-900 p-8 rounded-[2.5rem] text-center text-white relative hover:scale-105 transition-all active:scale-95 shadow-2xl">
-                <span class="absolute -top-4 left-1/2 -translate-x-1/2 bg-orange-500 text-white text-xs px-4 py-1 rounded-full font-bold shadow-lg">🔥 ส่งฟรีทั่วไทย</span>
-                <p class="font-bold text-gray-400 mb-2">สต็อกแน่นๆ</p>
-                <p class="text-xl font-extrabold mb-4">💎 6 ห่อ</p>
-                <p class="text-5xl font-black mb-6">฿200</p>
-                <div class="w-full py-4 bg-orange-500 text-white rounded-2xl font-bold shadow-lg">สั่งแบบส่งฟรี</div>
-            </button>
-        </div>
-
-        <div class="mt-16 bg-blue-50 p-8 rounded-[2.5rem] border border-blue-100 flex flex-col md:flex-row items-center gap-8">
-            <div class="text-4xl">❄️</div>
-            <div class="text-left">
-                <h4 class="font-bold text-blue-900 mb-2 text-lg">การเก็บรักษาง่ายๆ ไม่ยุ่งยาก</h4>
-                <div class="grid md:grid-cols-2 gap-4 text-sm text-blue-800">
-                    <p><b>ยังไม่บ่ม:</b> เก็บเข้าฟรีซทำสต็อกได้นานหลายเดือน</p>
-                    <p><b>บ่มจนขาวแล้ว:</b> ช่องธรรมดา 1-3 วัน / ช่องฟรีซ 1 เดือน</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="max-w-2xl mx-auto px-6 py-20 text-center">
-        <div class="bg-red-50 p-8 rounded-[2.5rem] border border-red-100">
-            <h2 class="text-xl font-bold text-red-700 mb-4 tracking-tighter">ประกาศสำคัญเพื่อความเข้าใจที่ตรงกัน</h2>
-            <p class="text-sm text-red-600 leading-relaxed">
-                เนื่องจากเป็นสินค้าประเภทอาหารสดที่ต้องใช้เวลาบ่ม <br class="hidden md:block">
-                ทางร้าน <b>งดรับชำระเงินปลายทาง (No COD)</b> ทุกกรณีครับ <br>
-                เพื่อให้มั่นใจว่าคุณจะได้รับสินค้าที่สดใหม่ที่สุดส่งตรงถึงหน้าบ้าน
+        <section class="space-y-4">
+            <h2 class="text-2xl font-bold text-gray-800 border-l-4 border-green-500 pl-3">เต็มเป คืออะไร?</h2>
+            <p class="text-gray-600 leading-relaxed text-sm">
+                <b>เต็มเป (Tempeh)</b> คือโปรตีนสะอาดจากพืชที่เกิดจากการนำถั่วเหลืองไปต้มสุกแล้วหมักด้วยเชื้อราดี รสชาติจะมีความหอม มัน และเนื้อสัมผัสแน่นคล้ายเนื้อสัตว์
             </p>
-            <p class="mt-4 text-xs font-bold text-red-400 uppercase tracking-widest">ขอบพระคุณลูกค้าที่เข้าใจครับ 🙏</p>
-        </div>
-    </section>
+        </section>
 
-    <footer class="py-12 border-t border-gray-100 text-center">
-        <div class="text-xl font-black italic text-gray-300 mb-4">TEMPE MASTER</div>
-        <p class="text-xs text-gray-400">© 2026 TEMPE MASTER. All rights reserved.</p>
-    </footer>
+        <section class="space-y-6">
+            <div class="text-center">
+                <h2 class="text-2xl font-bold text-gray-800">รีวิวจากลูกค้าที่ทานจริง</h2>
+                <p class="text-[10px] text-gray-400 mt-1 uppercase tracking-widest">Customer Voice</p>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <div class="aspect-square rounded-2xl overflow-hidden shadow-sm"><img src="https://raw.githubusercontent.com/thaipoanlao/shop/refs/heads/main/photo/01/9.avif"></div>
+                <div class="aspect-square rounded-2xl overflow-hidden shadow-sm"><img src="https://raw.githubusercontent.com/thaipoanlao/shop/refs/heads/main/photo/01/6.avif"></div>
+                <div class="aspect-square rounded-2xl overflow-hidden shadow-sm"><img src="https://raw.githubusercontent.com/thaipoanlao/shop/refs/heads/main/photo/01/7.avif"></div>
+                <div class="aspect-square rounded-2xl overflow-hidden shadow-sm"><img src="https://raw.githubusercontent.com/thaipoanlao/shop/refs/heads/main/photo/01/8.avif"></div>
+            </div>
+            <div class="bg-white p-5 rounded-3xl border border-gray-100 shadow-sm italic text-gray-600 text-xs text-center space-y-2">
+                <p>"ได้รับของแล้วค่ะ เชื้อเดินไวมาก ขาวฟูสวยเต็มแผ่น รสชาติดีมากค่ะ ไม่เหม็นเลย"</p>
+                <div class="text-yellow-400 text-[10px]"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+            </div>
+        </section>
+
+        <section class="bg-gray-900 text-white p-8 rounded-[40px] space-y-6">
+            <h2 class="text-xl font-bold text-center">ทำไมต้อง "เต็มเป" ร้านเรา?</h2>
+            <div class="space-y-4">
+                <div class="flex items-start gap-3"><i class="fas fa-check-circle text-green-400 mt-1"></i><p class="text-sm"><b>ไซส์จัมโบ้ 150g:</b> ให้เยอะกว่าท้องตลาดถึง 50%</p></div>
+                <div class="flex items-start gap-3"><i class="fas fa-check-circle text-green-400 mt-1"></i><p class="text-sm"><b>ประกันเคลม 100%:</b> ทำเสียเราส่งห่อใหม่ให้ฟรีทันที</p></div>
+            </div>
+        </section>
+
+        <section id="pricing" class="space-y-6">
+            <h2 class="text-2xl font-bold text-center">เลือกแพ็กเกจที่ต้องการ</h2>
+            <div class="space-y-4">
+                <button onclick="buyNow(1)" class="w-full bg-white border-2 border-gray-100 p-5 rounded-3xl flex justify-between items-center active:scale-95 transition-all shadow-sm">
+                    <div class="text-left"><p class="font-bold text-lg">🔥 1 ห่อ (150g)</p></div>
+                    <p class="text-2xl font-bold text-gray-800">฿35</p>
+                </button>
+                <button onclick="buyNow(3)" class="w-full bg-white border-2 border-green-500 p-5 rounded-3xl flex justify-between items-center active:scale-95 transition-all shadow-md relative">
+                    <span class="absolute -top-3 left-6 bg-green-500 text-white text-[10px] px-3 py-1 rounded-full font-bold">ยอดนิยม ✨</span>
+                    <div class="text-left"><p class="font-bold text-lg text-green-700">✨ 3 ห่อ (450g)</p></div>
+                    <p class="text-3xl font-bold text-green-700">฿100</p>
+                </button>
+                <button onclick="buyNow(6)" class="w-full bg-green-600 p-6 rounded-3xl flex justify-between items-center active:scale-95 transition-all shadow-xl text-white relative">
+                    <span class="absolute -top-3 right-6 bg-orange-500 text-white text-[10px] px-3 py-1 rounded-full font-bold">🚚 ส่งฟรีทั่วไทย</span>
+                    <div class="text-left"><p class="font-bold text-xl">💎 6 ห่อ 200.-</p></div>
+                    <i class="fas fa-shopping-cart text-2xl opacity-50"></i>
+                </button>
+            </div>
+        </section>
+
+        <section class="bg-blue-50 p-6 rounded-3xl space-y-4 text-sm text-gray-700">
+            <h3 class="font-bold text-blue-800 flex items-center gap-2"><i class="fas fa-snowflake"></i> การเก็บรักษา</h3>
+            <p><b>ยังไม่บ่ม:</b> เก็บเข้าฟรีซทำสต็อกได้หลายเดือน</p>
+            <p><b>บ่มจนขาวแล้ว:</b> ช่องธรรมดา 1-3 วัน / ช่องฟรีซ 1 เดือน</p>
+        </section>
+
+        <section class="bg-red-50 p-5 rounded-3xl border border-red-100 mb-20 text-center">
+            <p class="text-[11px] text-red-700">งดรับชำระเงินปลายทาง (No COD) ทุกกรณี ขอบพระคุณค่ะ 🙏</p>
+        </section>
+
+    </main>
 
     <script>
         function buyNow(qty) {
@@ -161,7 +104,6 @@
             let cart = {};
             cart[productId] = qty;
             localStorage.setItem('cart', JSON.stringify(cart));
-            // นำทางไปยังหน้าตะกร้าสินค้าของคุณ
             window.location.href = 'cart.html';
         }
     </script>
