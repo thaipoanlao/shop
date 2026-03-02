@@ -23,22 +23,11 @@
             --sab: env(safe-area-inset-bottom); 
         }
         body { background-color: #ffffff; -webkit-tap-highlight-color: transparent; }
-        
-        /* Header Support for Safari Notch */
-        .sticky-header {
-            height: calc(54px + var(--sat));
-            padding-top: var(--sat);
-        }
-
-        /* Image Slider */
+        .sticky-header { height: calc(54px + var(--sat)); padding-top: var(--sat); }
         .slider-container { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; }
         .slide-item { flex: 0 0 100%; scroll-snap-align: start; aspect-ratio: 1/1; }
         .hide-scroll::-webkit-scrollbar { display: none; }
         .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
-        
-        /* Loading Animation */
-        .loading-pulse { animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
     </style>
 </head>
 <body class="pb-24">
@@ -58,8 +47,12 @@
     </div>
 
     <div class="fixed bottom-0 left-0 w-full bg-white border-t p-4 z-50 shadow-[0_-5px_15px_rgba(0,0,0,0.05)]" style="padding-bottom: calc(16px + var(--sab));">
-        <div class="max-w-lg mx-auto">
-            <button id="add-btn" class="w-full bg-[#ee4d2d] text-white font-bold py-4 rounded-2xl shadow-lg active:scale-95 transition-all flex justify-center items-center gap-2">
+        <div class="max-w-lg mx-auto flex gap-3">
+            <button id="more-detail-btn" class="hidden flex-1 bg-gray-100 text-gray-600 font-bold py-4 rounded-2xl active:scale-95 transition-all flex justify-center items-center gap-2 border border-gray-200">
+                <i class="fas fa-info-circle"></i> ข้อมูลเพิ่มเติม
+            </button>
+            
+            <button id="add-btn" class="flex-[2] bg-[#ee4d2d] text-white font-bold py-4 rounded-2xl shadow-lg active:scale-95 transition-all flex justify-center items-center gap-2">
                 <i class="fas fa-cart-plus text-xl"></i> เพิ่มลงตะกร้า
             </button>
         </div>
@@ -77,11 +70,9 @@
                 const rows = data.split(/\r?\n/).slice(1);
                 
                 const products = rows.filter(r => r.trim() !== "").map(r => {
-                    // Regex รองรับ 8 คอลัมน์ (รวม SalePage)
                     const parts = r.match(/(".*?"|[^,]+)(?=\s*,|\s*$)/g);
                     if (!parts) return null;
                     const clean = parts.map(p => p.replace(/^"|"$/g, '').trim());
-                    
                     return { 
                         id: parseInt(clean[0]), 
                         name: clean[1], 
@@ -90,7 +81,6 @@
                         subCategory: clean[4],
                         desc: clean[5], 
                         images: clean[6] ? clean[6].split("|") : [],
-                        // คอลัมน์ที่ 8 สำหรับ SalePage HTML
                         salepage: clean[7] ? clean[7].replace(/\\n/g, '\n') : "" 
                     };
                 }).filter(p => p !== null);
@@ -98,45 +88,46 @@
                 const p = products.find(prod => prod.id == productId);
                 if (!p) return location.href = 'index.html';
 
-                // อัปเดต Title ของเบราว์เซอร์
                 document.title = p.name;
-
                 const container = document.getElementById('product-detail');
                 
-                // สร้าง HTML สำหรับ Slider
                 let sliderHTML = `<div class="relative"><div id="slider" class="slider-container hide-scroll">`;
                 p.images.forEach(img => { 
                     sliderHTML += `<div class="slide-item"><img src="${img}" class="w-full h-full object-cover"></div>`; 
                 });
                 sliderHTML += `</div><div id="dots" class="absolute bottom-4 w-full flex justify-center gap-1.5"></div></div>`;
 
-                // แสดงผลข้อมูลพื้นฐาน
                 let contentHTML = `
                     ${sliderHTML}
                     <div class="p-6">
                         <div class="text-4xl font-extrabold text-[#ee4d2d] mb-2 tracking-tight">฿${p.price.toLocaleString()}</div>
                         <h1 class="text-xl font-semibold text-gray-800 mb-6 leading-snug">${p.name}</h1>
                         <div class="bg-gray-50 p-5 rounded-2xl border border-gray-100 mb-8">
-                            <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">รายละเอียดสินค้า</p>
                             <p class="text-gray-600 leading-relaxed whitespace-pre-line text-sm">${p.desc.replace(/\\n/g, '\n')}</p>
                         </div>
                     </div>
                 `;
 
-                // ✨ ถ้ามีข้อมูล SalePage ในคอลัมน์ 8 ให้แสดงผลต่อท้าย
+                // ✨ ถ้ามีข้อมูล SalePage ให้แสดงผลและเปิดปุ่ม "ข้อมูลเพิ่มเติม"
                 if (p.salepage) {
-                    contentHTML += `<div class="px-6 pb-12 overflow-hidden">${p.salepage}</div>`;
+                    contentHTML += `
+                        <div id="salepage-section" class="px-6 pb-12 overflow-hidden border-t pt-8 mt-4">
+                            ${p.salepage}
+                        </div>`;
+                    
+                    const moreBtn = document.getElementById('more-detail-btn');
+                    moreBtn.classList.remove('hidden');
+                    moreBtn.onclick = () => {
+                        document.getElementById('salepage-section').scrollIntoView({ behavior: 'smooth' });
+                    };
                 }
 
                 container.innerHTML = contentHTML;
 
-                // ระบบ Dots ของ Slider
+                // Setup Slider Dots
                 const slider = document.getElementById('slider');
                 const dots = document.getElementById('dots');
-                p.images.forEach((_, i) => { 
-                    dots.innerHTML += `<div class="w-1.5 h-1.5 rounded-full bg-gray-300 transition-all duration-300"></div>`; 
-                });
-                
+                p.images.forEach((_, i) => { dots.innerHTML += `<div class="w-1.5 h-1.5 rounded-full bg-gray-300 transition-all duration-300"></div>`; });
                 if (p.images.length > 0) {
                     slider.onscroll = () => {
                         const idx = Math.round(slider.scrollLeft / slider.offsetWidth);
@@ -146,28 +137,19 @@
                     };
                 }
 
-                // ระบบเพิ่มลงตะกร้าและกลับหน้าหลัก
+                // Add to Cart Logic
                 document.getElementById('add-btn').onclick = () => {
                     let cart = JSON.parse(localStorage.getItem('cart') || '{}');
                     cart[p.id] = (cart[p.id] || 0) + 1;
                     localStorage.setItem('cart', JSON.stringify(cart));
-                    
-                    // กลับสู่หน้าหลักทันทีเพื่อให้ลูกค้าเลือกต่อ
                     window.location.href = 'index.html';
                 };
 
             } catch (e) {
                 console.error("Error:", e);
-                document.getElementById('product-detail').innerHTML = `
-                    <div class="p-10 text-center text-red-500">
-                        <i class="fas fa-exclamation-triangle text-3xl mb-4"></i>
-                        <p>เกิดข้อผิดพลาดในการโหลดข้อมูล</p>
-                        <button onclick="location.reload()" class="mt-4 text-sm font-bold text-gray-600 underline">ลองใหม่อีกครั้ง</button>
-                    </div>`;
+                document.getElementById('product-detail').innerHTML = `<p class="p-10 text-center">โหลดข้อมูลไม่สำเร็จ</p>`;
             }
         }
-
-        // เริ่มโหลดข้อมูล
         loadProduct();
     </script>
 </body>
