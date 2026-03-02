@@ -22,7 +22,7 @@
         body { background-color: #fdfdfd; -webkit-tap-highlight-color: transparent; scroll-behavior: smooth; }
         .hero-bg { background: linear-gradient(180deg, #ecfdf5 0%, #ffffff 100%); }
         
-        /* สไตล์สำหรับ Slider รีวิว */
+        /* Slider Styles */
         .review-slider { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; }
         .review-slide { flex: 0 0 100%; scroll-snap-align: start; padding: 0 24px; }
         .hide-scroll::-webkit-scrollbar { display: none; }
@@ -32,75 +32,74 @@
 <body class="pb-20">
 
     <button onclick="document.getElementById('pricing').scrollIntoView({ behavior: 'smooth' })" 
-        class="fixed top-6 right-4 z-[100] bg-orange-500 text-white w-14 h-14 rounded-full shadow-xl shadow-orange-200 active:scale-90 transition-all border-2 border-white flex items-center justify-center">
-        <i class="fas fa-shopping-cart text-xl"></i>
+        class="fixed top-6 right-4 z-[100] bg-orange-500 text-white w-12 h-12 rounded-full shadow-lg shadow-orange-200 active:scale-90 transition-all border-2 border-white flex items-center justify-center">
+        <i class="fas fa-shopping-cart text-lg"></i>
     </button>
 
-    <section class="hero-bg px-6 pt-[calc(20px+var(--sat))] pb-10 text-center text-gray-900">
-        <div class="inline-block bg-green-100 text-green-700 px-4 py-1 rounded-full text-xs font-bold mb-4 uppercase tracking-wider">Superfood Choice</div>
-        <h1 class="text-4xl font-extrabold mb-2 leading-tight">เต็มเป (Tempe)</h1>
+    <section class="hero-bg px-6 pt-[calc(20px+var(--sat))] pb-10 text-center">
+        <div class="inline-block bg-green-100 text-green-700 px-4 py-1 rounded-full text-xs font-bold mb-4 uppercase">Premium Tempeh</div>
+        <h1 class="text-4xl font-extrabold text-gray-900 mb-2 leading-tight">เต็มเป (Tempe)</h1>
         <p class="text-lg font-bold text-orange-600 mb-4 italic">🛑 ใหญ่กว่า! คุ้มกว่า! ไซส์จัมโบ้ 150g</p>
         <img src="https://down-th.img.susercontent.com/file/th-11134207-81ztl-mkchmisxx9mof2.webp" class="w-full max-w-xs mx-auto rounded-[40px] shadow-2xl mb-6">
     </section>
 
     <main class="max-w-lg mx-auto space-y-12">
         
-        <section class="px-6 space-y-6">
-            <h2 class="text-xl font-bold text-gray-800 text-center">คุณกำลังเจอปัญหาเหล่านี้ใช่ไหม?</h2>
+        <section class="px-6 space-y-6 text-center">
+            <h2 class="text-xl font-bold text-gray-800">คุณกำลังเจอปัญหาเหล่านี้ใช่ไหม?</h2>
             <div class="space-y-3">
-                <div class="flex items-start gap-4 bg-red-50 p-4 rounded-3xl border border-red-100">
+                <div class="flex items-start gap-4 bg-red-50 p-4 rounded-3xl border border-red-100 text-left">
                     <i class="fas fa-times-circle text-red-500 mt-1"></i>
-                    <p class="text-sm text-red-800"><b>ชิ้นเล็กจิ๋ว:</b> ท้องตลาดขายแค่ 100g กินไม่อิ่ม ไม่พอดีมื้อ</p>
+                    <p class="text-sm text-red-800"><b>ชิ้นเล็กจิ๋ว:</b> ร้านอื่นขายแค่ 100g กินไม่อิ่ม ไม่พอดีมื้อ</p>
                 </div>
-                <div class="flex items-start gap-4 bg-red-50 p-4 rounded-3xl border border-red-100">
+                <div class="flex items-start gap-4 bg-red-50 p-4 rounded-3xl border border-red-100 text-left">
                     <i class="fas fa-times-circle text-red-500 mt-1"></i>
-                    <p class="text-sm text-red-800"><b>กลิ่นฉุนเหม็นเน่า:</b> ขนส่งไกล เชื้อหมักเกินจนเสียรสชาติ</p>
+                    <p class="text-sm text-red-800"><b>กลิ่นแอมโมเนียฉุน:</b> ขนส่งไกล เชื้อหมักเกินจนเหม็นเน่า</p>
                 </div>
             </div>
-            <p class="text-center font-bold text-green-600 italic">"เต็มเป" แก้จบทุกปัญหา สดใหม่ อิ่มคุ้ม!</p>
         </section>
 
         <section class="space-y-6">
-            <h2 class="text-2xl font-bold text-gray-800 text-center">รีวิวขาวฟูจากลูกค้า</h2>
+            <h2 class="text-2xl font-bold text-gray-800 text-center">รีวิวความสำเร็จจากลูกค้า</h2>
             <div class="review-slider hide-scroll" id="reviewSlider">
                 <div class="review-slide">
                     <div class="aspect-square rounded-[32px] overflow-hidden shadow-lg border-4 border-white">
-                        <img src="https://down-th.img.susercontent.com/file/th-11134207-81ztm-mkciu9hikooy94.webp" class="w-full h-full object-cover">
+                        <img src="https://raw.githubusercontent.com/thaipoanlao/shop/refs/heads/main/photo/01/9.avif" class="w-full h-full object-cover">
                     </div>
                 </div>
                 <div class="review-slide">
                     <div class="aspect-square rounded-[32px] overflow-hidden shadow-lg border-4 border-white">
-                        <img src="https://down-th.img.susercontent.com/file/th-11134207-81ztj-mkciu43b7ll27c.webp" class="w-full h-full object-cover">
+                        <img src="https://raw.githubusercontent.com/thaipoanlao/shop/refs/heads/main/photo/01/6.avif" class="w-full h-full object-cover">
                     </div>
                 </div>
                 <div class="review-slide">
                     <div class="aspect-square rounded-[32px] overflow-hidden shadow-lg border-4 border-white">
-                        <img src="https://down-th.img.susercontent.com/file/th-11134207-81ztq-mkciu431yozrc9.webp" class="w-full h-full object-cover">
+                        <img src="https://raw.githubusercontent.com/thaipoanlao/shop/refs/heads/main/photo/01/7.avif" class="w-full h-full object-cover">
                     </div>
                 </div>
                 <div class="review-slide">
                     <div class="aspect-square rounded-[32px] overflow-hidden shadow-lg border-4 border-white">
-                        <img src="https://down-th.img.susercontent.com/file/61823352815de821bf36c26b1be938b2.webp" class="w-full h-full object-cover">
+                        <img src="https://raw.githubusercontent.com/thaipoanlao/shop/refs/heads/main/photo/01/8.avif" class="w-full h-full object-cover">
                     </div>
                 </div>
             </div>
             <div class="flex justify-center gap-2" id="sliderDots">
-                <div class="w-6 h-1.5 rounded-full bg-green-500"></div>
-                <div class="w-1.5 h-1.5 rounded-full bg-gray-200"></div>
-                <div class="w-1.5 h-1.5 rounded-full bg-gray-200"></div>
-                <div class="w-1.5 h-1.5 rounded-full bg-gray-200"></div>
+                <div class="w-6 h-1.5 rounded-full bg-green-500 transition-all"></div>
+                <div class="w-1.5 h-1.5 rounded-full bg-gray-200 transition-all"></div>
+                <div class="w-1.5 h-1.5 rounded-full bg-gray-200 transition-all"></div>
+                <div class="w-1.5 h-1.5 rounded-full bg-gray-200 transition-all"></div>
             </div>
         </section>
 
         <section id="pricing" class="px-6 space-y-6 pt-10">
-            <h2 class="text-2xl font-bold text-center uppercase tracking-tight">เลือกแพ็กเกจที่คุณต้องการ</h2>
+            <h2 class="text-2xl font-bold text-center uppercase tracking-tight">เลือกแพ็กเกจที่ต้องการ</h2>
             <div class="space-y-4">
                 <button onclick="buyNow(1)" class="w-full bg-white border-2 border-gray-100 p-5 rounded-3xl flex justify-between items-center active:scale-95 transition-all shadow-sm">
                     <div class="text-left"><p class="font-bold text-lg">🔥 1 ห่อ (150g)</p></div>
                     <p class="text-2xl font-bold text-gray-800">฿38</p>
                 </button>
                 <button onclick="buyNow(3)" class="w-full bg-white border-2 border-green-500 p-5 rounded-3xl flex justify-between items-center active:scale-95 transition-all shadow-md relative">
-                    <span class="absolute -top-3 left-6 bg-green-500 text-white text-[10px] px-3 py-1 rounded-full font-bold uppercase tracking-widest">Best Seller</span>
+                    <span class="absolute -top-3 left-6 bg-green-500 text-white text-[10px] px-3 py-1 rounded-full font-bold uppercase tracking-widest">Best Value</span>
                     <div class="text-left"><p class="font-bold text-lg text-green-700">✨ 3 ห่อ (450g)</p></div>
                     <p class="text-3xl font-bold text-green-700">฿100</p>
                 </button>
@@ -112,32 +111,36 @@
             </div>
         </section>
 
-        <section class="px-6 space-y-6 pb-10">
+        <section class="px-6 space-y-6">
             <h2 class="text-2xl font-bold text-gray-800 border-l-4 border-orange-500 pl-3">คำถามที่พบบ่อย (FAQ)</h2>
             <div class="space-y-4 text-sm">
                 <div class="bg-white p-5 rounded-3xl border border-gray-50 shadow-sm">
                     <p class="font-bold text-gray-800 mb-2">Q: มือใหม่จะบ่มเสียไหม?</p>
-                    <p class="text-gray-500">A: ไม่เสียแน่นอนครับ เรามีวิดีโอสอนและกลุ่มลับคอยปรึกษา ถ้าเสียเราเคลมให้ฟรี!</p>
+                    <p class="text-gray-500 leading-relaxed">A: ไม่เสียแน่นอนครับ เรามีวิดีโอสอนและกลุ่มลับคอยปรึกษา ถ้าเสียเราเคลมให้ฟรี!</p>
                 </div>
                 <div class="bg-white p-5 rounded-3xl border border-gray-50 shadow-sm">
                     <p class="font-bold text-gray-800 mb-2">Q: เก็บได้นานแค่ไหน?</p>
-                    <p class="text-gray-500">A: ยังไม่บ่มแช่ฟรีซได้ 2-3 เดือน บ่มแล้วแช่ธรรมดาได้ 1-3 วันครับ</p>
+                    <p class="text-gray-500 leading-relaxed">A: ยังไม่บ่มแช่ฟรีซได้ 2-3 เดือน บ่มแล้วแช่ธรรมดาได้ 1-3 วันครับ</p>
+                </div>
+                <div class="bg-white p-5 rounded-3xl border border-gray-50 shadow-sm">
+                    <p class="font-bold text-gray-800 mb-2 text-red-600">Q: ทำไมงดรับชำระเงินปลายทาง (COD)?</p>
+                    <p class="text-gray-500 leading-relaxed text-xs">A: เนื่องจากสินค้าเป็นอาหารสดที่คลุกเชื้อใหม่ตามออเดอร์ หากลูกค้าปฏิเสธการรับ สินค้าที่ตีกลับจะเน่าเสียทันที ทำให้ร้านค้าเสียหายครับ ขอบพระคุณที่เข้าใจครับ</p>
                 </div>
             </div>
         </section>
 
-        <section class="mx-6 bg-blue-50 p-6 rounded-[32px] flex items-center gap-4 border border-blue-100">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/5/56/Flag_of_Laos.svg" class="w-8 shadow-sm rounded-sm">
-            <div class="text-xs text-blue-800 leading-tight font-medium">
+        <section class="mx-6 bg-blue-50 p-6 rounded-[32px] flex items-center gap-4 border border-blue-100 pb-10">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/5/56/Flag_of_Laos.svg" class="w-8 shadow-sm">
+            <div class="text-xs text-blue-800 font-medium">
                 <p>ສະແກນຈ່າຍດ້ວຍແອັບທະນາຄານລາວໄດ້</p>
-                <p class="opacity-70 mt-1 uppercase tracking-tighter">Support BCEL One / LaoQR</p>
+                <p class="opacity-70 mt-1 uppercase tracking-tighter italic">Support BCEL One / LaoQR</p>
             </div>
         </section>
 
     </main>
 
     <script>
-        // ระบบ Update Dots ของ Slider รีวิว
+        // Update Dots Animation
         const slider = document.getElementById('reviewSlider');
         const dots = document.getElementById('sliderDots').children;
         slider.onscroll = () => {
