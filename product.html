@@ -164,7 +164,9 @@
                     localStorage.setItem('cart', JSON.stringify(cart));
                     window.location.href = 'index.html';
                 };
-
+                // เพิ่มบรรทัดนี้ลงไปในฟังก์ชัน loadProduct() เพื่อดูข้อมูลใน Console
+                console.log("Product Data:", p);
+                console.log("SalePage Content:", p.salepage);
             } catch (e) {
                 console.error("Error:", e);
                 document.getElementById('product-detail').innerHTML = `<p class="p-10 text-center">ไม่พบข้อมูลสินค้า</p>`;
