@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-area=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>ไทยปนลาว สาวแว่น | ตะกร้าสินค้า</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -64,8 +64,8 @@
             <p class="text-[10px] text-blue-600 font-bold mb-4 italic uppercase tracking-widest italic">🇱🇦 Support LaoQR / BCEL One</p>
             
             <div class="bg-gray-50 border border-gray-100 p-4 rounded-2xl mb-4 space-y-3">
-                <div class="bg-white border border-gray-100 inline-block px-3 py-1.5 rounded-lg shadow-sm">
-                    <img src="https://raw.githubusercontent.com/thaipoanlao/shop/refs/heads/main/photo/promptpay-logo.png" alt="PromptPay" class="h-6" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/c/c5/PromptPay-logo.png'">
+                <div class="bg-white border border-gray-100 w-full px-4 py-2 rounded-lg shadow-sm flex items-center justify-center">
+                    <img src="https://raw.githubusercontent.com/thaipoanlao/shop/refs/heads/main/photo/promptpay-logo.png" alt="PromptPay" class="h-8" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/c/c5/PromptPay-logo.png'">
                 </div>
                 <div class="relative min-h-[200px] flex items-center justify-center bg-white rounded-xl overflow-hidden shadow-inner">
                     <img id="qr-image" src="" alt="PromptPay QR" class="w-full rounded-xl">
@@ -119,7 +119,7 @@
                         }
                         subTotal += itemTotal;
                         const dName = (id === "1" || id === "2" || id === "3") ? p.name.replace(/150g\s?/, "").trim() : p.name;
-                        html += `<div class="bg-white p-4 rounded-2xl flex items-center gap-4 shadow-sm border border-gray-50"><img src="${p.images[0]}" class="w-16 h-16 object-cover rounded-xl"><div class="flex-1 min-w-0"><div class="text-sm font-bold text-gray-800 truncate">${dName}</div><div class="text-[#ee4d2d] font-bold">฿${itemTotal.toLocaleString()}</div></div><div class="flex items-center gap-3 bg-gray-50 rounded-full px-2 py-1"><button onclick="changeQty('${id}', -1)" class="w-7 h-7 flex items-center justify-center bg-white rounded-full shadow-sm text-gray-400"><i class="fas fa-minus text-[10px]"></i></button><span class="text-sm font-bold text-gray-700 text-center min-w-[20px]">${quantity}</span><button onclick="changeQty('${id}', 1)" class="w-7 h-7 flex items-center justify-center bg-white rounded-full shadow-sm text-[#ee4d2d]"><i class="fas fa-plus text-[10px]"></i></button></div></div>`;
+                        html += `<div class="bg-white p-4 rounded-2xl flex items-center gap-4 shadow-sm border border-gray-50"><img src="${p.images[0]}" class="w-16 h-16 object-cover rounded-xl shadow-inner bg-gray-50"><div class="flex-1 min-w-0"><div class="text-sm font-bold text-gray-800 truncate">${dName}</div><div class="text-[#ee4d2d] font-bold">฿${itemTotal.toLocaleString()}</div></div><div class="flex items-center gap-3 bg-gray-50 rounded-full px-2 py-1"><button onclick="changeQty('${id}', -1)" class="w-7 h-7 flex items-center justify-center bg-white rounded-full shadow-sm text-gray-400"><i class="fas fa-minus text-[10px]"></i></button><span class="text-sm font-bold text-gray-700 text-center min-w-[20px]">${quantity}</span><button onclick="changeQty('${id}', 1)" class="w-7 h-7 flex items-center justify-center bg-white rounded-full shadow-sm text-[#ee4d2d]"><i class="fas fa-plus text-[10px]"></i></button></div></div>`;
                     }
                 }
                 let shipping = (tempehPieces > 0 && tempehPieces < 6) ? 35 : 0;
@@ -160,7 +160,7 @@
             }
 
             try {
-                // 🚀 ยิง API POST เพื่อขอ QR ของจริงจาก Beam
+                // 🚀 ✨ กู้คืนระบบเชื่อมต่อ API ของจริงกลับมา เพื่อขอ QR ของจริงจาก Beam
                 const res = await fetch('/api/checkout', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -177,7 +177,7 @@
                     qrImage.src = "data:image/png;base64," + result.encodedImage.imageBase64Encoded;
                     qrLoader.classList.add('hidden');
                 } else {
-                    alert("สร้าง QR ไม่สำเร็จ กรุณาลองใหม่");
+                    alert("สร้าง QR ไม่สำเร็จ กรุณาลองใหม่ผ่าน LINE");
                     closeQR();
                 }
             } catch (e) {
