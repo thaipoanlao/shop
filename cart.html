@@ -156,19 +156,71 @@
         async function checkoutWithBeam() {
             const name = document.getElementById('customer-name').value;
             const phone = document.getElementById('customer-phone').value;
+            const address = document.getElementById('customer-address').value;
+            
             if (!name || !phone) return alert('กรุณากรอกชื่อและเบอร์โทรศัพท์');
         
-            // ✨ ส่วนแก้ไข: สร้าง QR Code จากยอดเงินจริง (ตัวอย่างใช้ QR Server)
-            const qrContainer = document.getElementById('qr-image');
-            
-            // สร้างลิงก์ QR (ในที่นี้ใช้ API สร้าง QR เบื้องต้นเพื่อให้รูปแสดงผลก่อน)
-            // สำหรับการใช้ Beam จริงๆ จะต้องเรียกผ่าน /api/checkout ที่คุณตั้งค่าไว้ใน Vercel ครับ
-            qrContainer.src = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=PROMPTPAY_PAYMENT_TO_${finalAmount}`;
-            
-            // แสดงหน้าต่างสแกน
-            document.getElementById('qr-modal').classList.remove('hidden');
+            // เตรียมข้อมูลสินค้าเพื่อส่งให้ Beam (คำนวณราคาโปรโมชั่นให้ตรง)
+            const cart = JSON.parse(localStorage.getItem('cart') || '{}');
+            const items = [];
+            let tempehPieces = 0;
+        
+            for (const [id, qty] of Object.entries(cart)) {
+                const p = products.find(prod => prod.id == id);
+                if (p) {
+                    let price = p.price;
+                    if (id === "1") {
+                        if (qty == 3) price = 100 / 3;
+                        else if (qty == 6) price = 200 / 6;
+                        tempehPieces += (qty * 1);
+                    } else if (id === "2") tempehPieces += (qty * 3);
+                    else if (id === "3") tempehPieces += (qty * 6);
+                    
+                    items.push({
+                        name: (id === "1" || id === "2" || id === "3") ? p.name.replace(/150g\s?/, "").trim() : p.name,
+                        quantity: parseInt(qty),
+                        price: Math.round(price * 100) // หน่วยเป็นสตางค์
+                    });
+                }
+            }
+        
+            // คิดค่าส่ง
+            let shippingFee = (tempehPieces > 0 && tempehPieces < 6) ? 35 : 0;
+            if (shippingFee > 0) {
+                items.push({ name: "ค่าจัดส่ง", quantity: 1, price: 3500 });
+            }
+        
+            try {
+                // 🚀 ส่งข้อมูลไปที่ API หลังบ้านของคุณ
+                const res = await fetch('/api/checkout', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        amount: Math.round(finalAmount * 100), // ยอดรวมหน่วยสตางค์
+                        currency: "THB",
+                        referenceId: "ORDER-" + Date.now(),
+                        items: items,
+                        paymentMethod: {
+                            paymentMethodType: "QR_PROMPT_PAY",
+                            qrPromptPay: { expiryTime: new Date(Date.now() + 3600000).toISOString() }
+                        }
+                    })
+                });
+        
+                const result = await res.json();
+        
+                // 🖼️ ถ้าระบบส่งรูป QR แบบ Base64 กลับมา ให้แสดงผล
+                if (result.actionRequired === "ENCODED_IMAGE") {
+                    document.getElementById('qr-image').src = "data:image/png;base64," + result.encodedImage.imageBase64Encoded;
+                    document.getElementById('qr-modal').classList.remove('hidden');
+                } else {
+                    alert("ไม่สามารถสร้าง QR Code ได้ กรุณาลองใหม่อีกครั้ง");
+                }
+            } catch (e) {
+                console.error(e);
+                alert("ระบบชำระเงินขัดข้อง (ตรวจสอบการเชื่อมต่อ API)");
+            }
         }
-        // เพิ่มฟังก์ชันนี้เข้าไปด้วยครับ
         function closeQR() { 
             document.getElementById('qr-modal').classList.add('hidden'); 
         }
