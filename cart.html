@@ -67,3 +67,185 @@
                     <div class="relative min-h-[240px] p-4 flex items-center justify-center bg-white">
                         <img id="qr-image" src="" alt="PromptPay QR" class="w-full h-auto rounded-lg">
                         <div id="qr-loader" class="absolute inset-0 flex items-center justify-center bg-white/95">
+                            <i class="fas fa-spinner fa-spin text-blue-600 text-4xl"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <p class="text-[11px] text-gray-500 mb-6 font-light px-6 leading-relaxed">กรุณาสแกนเพื่อชำระเงิน<br><span class="text-blue-500 font-medium text-xs">ສະແກນດ້ວຍແອັບທະນາຄານລາວໄດ້ເລີຍ</span></p>
+            <div class="px-6 pb-6">
+                <button onclick="closeQR()" class="w-full py-4 bg-gray-100 text-gray-600 font-bold rounded-2xl active:scale-95 transition">ปิดหน้าต่าง</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const LINE_ID = "@888fsncq";
+        const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRa5jSPp8xIyhJfaq_rwMEWzPCUpjDnUfOnk476Ce80gfcUUdxCVVIsW3YYmFZe4hsKsB6PdCyNESBq/pub?output=csv";
+        let products = [], finalAmount = 0;
+
+        async function loadCart() {
+            const cart = JSON.parse(localStorage.getItem('cart') || '{}');
+            if (Object.keys(cart).length === 0) {
+                document.getElementById('cart-list').innerHTML = `<div class="text-center py-20 text-gray-400"><p>ไม่มีสินค้าในตะกร้า</p></div>`;
+                document.getElementById('checkout-section').classList.add('hidden');
+                return;
+            }
+            try {
+                const res = await fetch(`${SHEET_URL}&t=${Date.now()}`);
+                const data = await res.text();
+                const rows = data.split(/\r?\n/).slice(1);
+                products = rows.filter(r => r.trim() !== "").map(r => {
+                    const parts = r.match(/(".*?"|[^,]+)(?=\s*,|\s*$)/g);
+                    if (!parts) return null;
+                    const clean = parts.map(p => p.replace(/^"|"$/g, '').trim());
+                    return { id: clean[0], name: clean[1], price: parseFloat(clean[2]), images: clean[6].split("|") };
+                }).filter(p => p !== null);
+
+                let html = '', subTotal = 0, tempehPieces = 0;
+                for (const [id, qty] of Object.entries(cart)) {
+                    const p = products.find(prod => prod.id == id);
+                    if (p) {
+                        let itemTotal = 0, quantity = parseInt(qty);
+                        if (id === "1") {
+                            if (quantity === 3) itemTotal = 100;
+                            else if (quantity === 6) itemTotal = 200;
+                            else itemTotal = p.price * quantity;
+                            tempehPieces += quantity;
+                        } else {
+                            itemTotal = p.price * quantity;
+                            if (id === "2") tempehPieces += (quantity * 3);
+                            if (id === "3") tempehPieces += (quantity * 6);
+                        }
+                        subTotal += itemTotal;
+                        const dName = (id === "1" || id === "2" || id === "3") ? p.name.replace(/150g\s?/, "").trim() : p.name;
+                        html += `<div class="bg-white p-4 rounded-2xl flex items-center gap-4 shadow-sm border border-gray-50"><img src="${p.images[0]}" class="w-16 h-16 object-cover rounded-xl shadow-inner bg-gray-50"><div class="flex-1 min-w-0"><div class="text-sm font-bold text-gray-800 truncate">${dName}</div><div class="text-[#ee4d2d] font-bold">฿${itemTotal.toLocaleString()}</div></div><div class="flex items-center gap-3 bg-gray-50 rounded-full px-2 py-1"><button onclick="changeQty('${id}', -1)" class="w-7 h-7 flex items-center justify-center bg-white rounded-full shadow-sm text-gray-400"><i class="fas fa-minus text-[10px]"></i></button><span class="text-sm font-bold text-gray-700 text-center min-w-[20px]">${quantity}</span><button onclick="changeQty('${id}', 1)" class="w-7 h-7 flex items-center justify-center bg-white rounded-full shadow-sm text-[#ee4d2d]"><i class="fas fa-plus text-[10px]"></i></button></div></div>`;
+                    }
+                }
+                
+                // ✨ ระบบคำนวณค่าส่งในหน้าตะกร้า (กู้คืนสำเร็จ)
+                let shipping = (tempehPieces > 0 && tempehPieces < 6) ? 35 : 0;
+                if (tempehPieces >= 6) {
+                    html += `<div class="bg-green-50 p-4 rounded-2xl flex justify-between items-center text-green-600 border border-green-100 font-bold text-xs mt-3"><span><i class="fas fa-shipping-fast"></i> โปรโมชั่นสั่งครบ 6 ชิ้น: ส่งฟรี!</span><span>฿0</span></div>`;
+                } else if (shipping > 0) {
+                    html += `<div class="bg-blue-50 p-4 rounded-2xl flex justify-between items-center text-blue-600 border border-blue-100 font-bold text-xs mt-3"><span><i class="fas fa-truck"></i> ค่าจัดส่ง (อีก ${6-tempehPieces} ชิ้นส่งฟรี)</span><span>฿${shipping}</span></div>`;
+                }
+
+                finalAmount = subTotal + shipping;
+                document.getElementById('cart-list').innerHTML = html;
+                document.getElementById('cart-total').innerText = '฿' + finalAmount.toLocaleString();
+                document.getElementById('checkout-section').classList.remove('hidden');
+            } catch (e) { 
+                console.error(e);
+                document.getElementById('cart-list').innerHTML = `<div class="text-center py-20 text-red-400 font-bold">ไม่สามารถโหลดตะกร้าได้</div>`;
+            }
+        }
+
+        async function checkoutWithBeam() {
+            const name = document.getElementById('customer-name').value;
+            const phone = document.getElementById('customer-phone').value;
+            if (!name || !phone) return alert('กรุณากรอกชื่อและเบอร์โทรศัพท์ก่อนครับ');
+
+            document.getElementById('qr-modal').classList.remove('hidden');
+            const qrLoader = document.getElementById('qr-loader');
+            const qrImage = document.getElementById('qr-image');
+            qrImage.src = "";
+            qrLoader.classList.remove('hidden');
+
+            const cart = JSON.parse(localStorage.getItem('cart') || '{}');
+            const items = [];
+            let totalPieces = 0;
+            for (const [id, qty] of Object.entries(cart)) {
+                const p = products.find(prod => prod.id == id);
+                if (p) {
+                    let up = p.price;
+                    if (id == "1") { 
+                        if (qty == 3) up = 100/3; else if (qty == 6) up = 200/6; 
+                        totalPieces += (qty * 1);
+                    } else if (id == "2") { totalPieces += (qty * 3); }
+                    else if (id == "3") { totalPieces += (qty * 6); }
+                    
+                    items.push({ 
+                        name: p.name.replace(/150g\s?/, "").trim(), 
+                        quantity: parseInt(qty), 
+                        price: Math.round(Number(up).toFixed(2) * 100) 
+                    });
+                }
+            }
+
+            // ✨ ระบบค่าส่งในรายการ BeamCheckout
+            let sFee = (totalPieces > 0 && totalPieces < 6) ? 35 : 0;
+            if (sFee > 0) {
+                items.push({ name: "ค่าจัดส่ง", quantity: 1, price: 3500 });
+            }
+
+            try {
+                const res = await fetch('/api/checkout', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        amount: Math.round(Number(finalAmount).toFixed(2) * 100),
+                        currency: "THB",
+                        referenceId: "ORDER-" + Date.now(),
+                        items: items,
+                        paymentMethod: { 
+                            paymentMethodType: "QR_PROMPT_PAY",
+                            qrPromptPay: { expiryTime: new Date(Date.now() + 3600000).toISOString() }
+                        }
+                    })
+                });
+                const result = await res.json();
+                if (res.ok && result.actionRequired === "ENCODED_IMAGE") {
+                    qrImage.src = "data:image/png;base64," + result.encodedImage.imageBase64Encoded;
+                    qrLoader.classList.add('hidden');
+                } else {
+                    alert("สร้าง QR ไม่สำเร็จ: " + (result.message || "กรุณาลองใหม่"));
+                    closeQR();
+                }
+            } catch (e) {
+                alert("ระบบขัดข้อง: ตรวจสอบการเชื่อมต่ออินเทอร์เน็ต");
+                closeQR();
+            }
+        }
+
+        function closeQR() { document.getElementById('qr-modal').classList.add('hidden'); }
+        function changeQty(id, delta) {
+            let cart = JSON.parse(localStorage.getItem('cart') || '{}');
+            cart[id] = (parseInt(cart[id]) || 0) + delta;
+            if (cart[id] <= 0) delete cart[id];
+            localStorage.setItem('cart', JSON.stringify(cart));
+            loadCart();
+        }
+
+        function checkoutViaLine() {
+            const name = document.getElementById('customer-name').value;
+            const phone = document.getElementById('customer-phone').value;
+            const address = document.getElementById('customer-address').value;
+            if (!name || !phone) return alert('กรุณากรอกข้อมูลให้ครบถ้วน');
+            const cart = JSON.parse(localStorage.getItem('cart') || '{}');
+            let msg = `🛒 *สั่งซื้อ ไทยปนลาว สาวแว่น*\n----------------\n`, sub = 0, tp = 0;
+            for (const [id, qty] of Object.entries(cart)) {
+                const p = products.find(prod => prod.id == id);
+                let itemP = 0;
+                if (id == "1") {
+                    if (qty == 3) itemP = 100; else if (qty == 6) itemP = 200; else itemP = p.price * qty;
+                    tp += (qty * 1);
+                } else {
+                    itemP = p.price * qty;
+                    if (id == "2") tp += (qty * 3);
+                    if (id == "3") tp += (qty * 6);
+                }
+                const dName = (id === "1" || id === "2" || id === "3") ? p.name.replace(/150g\s?/, "").trim() : p.name;
+                msg += `- ${dName} (x${qty}): ${itemP}.- \n`;
+                sub += itemP;
+            }
+            let sf = (tp > 0 && tp < 6) ? 35 : 0;
+            msg += `----------------\n📦 ค่าส่ง: ${sf} บาท\n💰 รวมสุทธิ: ${(sub + sf).toLocaleString()} บาท\n👤 ${name}\n📞 ${phone}\n📍 ${address}`;
+            window.location.href = `https://line.me/R/oaMessage/${LINE_ID}/?${encodeURIComponent(msg)}`;
+        }
+
+        loadCart();
+    </script>
+</body>
+</html>
