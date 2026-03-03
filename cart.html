@@ -168,6 +168,10 @@
             // แสดงหน้าต่างสแกน
             document.getElementById('qr-modal').classList.remove('hidden');
         }
+        // เพิ่มฟังก์ชันนี้เข้าไปด้วยครับ
+        function closeQR() { 
+            document.getElementById('qr-modal').classList.add('hidden'); 
+        }
 
         function checkoutViaLine() {
             const name = document.getElementById('customer-name').value;
