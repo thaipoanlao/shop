@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-area=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>ไทยปนลาว สาวแว่น | ตะกร้าสินค้า</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -33,16 +33,16 @@
             </div>
             
             <div class="space-y-3">
-                <input type="text" id="customer-name" placeholder="ชื่อผู้รับ" class="w-full border border-gray-100 bg-gray-50 rounded-xl px-4 py-3 outline-none focus:border-[#ee4d2d] transition-all">
-                <input type="tel" id="customer-phone" placeholder="เบอร์โทรศัพท์" class="w-full border border-gray-100 bg-gray-50 rounded-xl px-4 py-3 outline-none focus:border-[#ee4d2d] transition-all">
-                <textarea id="customer-address" rows="2" placeholder="ที่อยู่สำหรับจัดส่ง" class="w-full border border-gray-100 bg-gray-50 rounded-xl px-4 py-3 outline-none focus:border-[#ee4d2d] transition-all resize-none"></textarea>
+                <input type="text" id="customer-name" placeholder="ชื่อผู้รับ" class="w-full border border-gray-100 bg-gray-50 rounded-xl px-4 py-3 outline-none focus:border-[#ee4d2d]">
+                <input type="tel" id="customer-phone" placeholder="เบอร์โทรศัพท์" class="w-full border border-gray-100 bg-gray-50 rounded-xl px-4 py-3 outline-none focus:border-[#ee4d2d]">
+                <textarea id="customer-address" rows="2" placeholder="ที่อยู่จัดส่ง" class="w-full border border-gray-100 bg-gray-50 rounded-xl px-4 py-3 outline-none focus:border-[#ee4d2d] resize-none"></textarea>
             </div>
 
             <div class="bg-blue-50/50 rounded-2xl p-4 flex items-center gap-3 border border-blue-100">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/5/56/Flag_of_Laos.svg" class="w-6 shadow-sm rounded-sm">
                 <div class="text-[10px] text-blue-700 leading-tight">
                     <p class="font-bold">ສະແກນຈ່າຍດ້ວຍແອັບທະນາຄານລາວໄດ້</p>
-                    <p>รองรับการสแกนจ่ายผ่าน BCEL One และแอปธนาคารลาวทุกแห่ง</p>
+                    <p>รองรับการสแกนจ่ายผ่านแอปธนาคารลาวทุกแห่ง</p>
                 </div>
             </div>
 
@@ -59,24 +59,31 @@
 
     <div id="qr-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeQR()"></div>
-        <div class="bg-white rounded-3xl p-8 max-w-xs w-full relative z-[110] text-center shadow-2xl">
-            <h3 class="text-xl font-bold text-gray-800 mb-2">สแกนชำระเงิน</h3>
-            <p class="text-[10px] text-blue-600 font-bold mb-4 italic uppercase tracking-widest italic">🇱🇦 Support LaoQR / BCEL One</p>
+        <div class="bg-white rounded-3xl max-w-xs w-full relative z-[110] text-center shadow-2xl overflow-hidden">
+            <div class="p-6 pb-2">
+                <h3 class="text-xl font-bold text-gray-800 mb-1">สแกนชำระเงิน</h3>
+                <p class="text-[10px] text-blue-600 font-bold italic uppercase tracking-widest italic">🇱🇦 Support LaoQR / BCEL One</p>
+            </div>
             
-            <div class="bg-gray-50 border border-gray-100 p-4 rounded-2xl mb-4 space-y-3">
-                <div class="bg-white border border-gray-100 w-full px-4 py-2 rounded-lg shadow-sm flex items-center justify-center">
-                    <img src="https://raw.githubusercontent.com/thaipoanlao/shop/refs/heads/main/photo/promptpay-logo.png" alt="PromptPay" class="h-8" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/c/c5/PromptPay-logo.png'">
-                </div>
-                <div class="relative min-h-[200px] flex items-center justify-center bg-white rounded-xl overflow-hidden shadow-inner">
-                    <img id="qr-image" src="" alt="PromptPay QR" class="w-full rounded-xl">
-                    <div id="qr-loader" class="absolute inset-0 flex items-center justify-center bg-white/90">
-                        <i class="fas fa-spinner fa-spin text-blue-600 text-2xl"></i>
+            <div class="px-6 mb-4">
+                <div class="bg-gray-50 border border-gray-100 rounded-2xl overflow-hidden">
+                    <div class="bg-white border-b border-gray-100 w-full py-4 flex justify-center items-center">
+                        <img src="https://raw.githubusercontent.com/thaipoanlao/shop/refs/heads/main/photo/promptpay-logo.png" alt="PromptPay" class="h-10 w-auto object-contain" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/c/c5/PromptPay-logo.png'">
+                    </div>
+                    <div class="relative min-h-[220px] p-4 flex items-center justify-center bg-white">
+                        <img id="qr-image" src="" alt="PromptPay QR" class="w-full h-auto rounded-lg">
+                        <div id="qr-loader" class="absolute inset-0 flex items-center justify-center bg-white/90">
+                            <i class="fas fa-spinner fa-spin text-blue-600 text-3xl"></i>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <p class="text-xs text-gray-500 mb-6 font-light italic">ສະແກນດ້ວຍແອັບທະນາຄານລາວໄດ້ເລີຍ</p>
-            <button onclick="closeQR()" class="w-full py-4 bg-gray-100 text-gray-600 font-bold rounded-2xl active:scale-95 transition">ปิดหน้าต่าง</button>
+            <p class="text-[11px] text-gray-500 mb-6 font-light px-6 leading-relaxed">กรุณาสแกนเพื่อชำระเงิน<br><span class="text-blue-500 font-medium">ສະແກນດ້ວຍແອັບທະນາຄານລາວໄດ້ເລີຍ</span></p>
+            
+            <div class="px-6 pb-6">
+                <button onclick="closeQR()" class="w-full py-4 bg-gray-100 text-gray-600 font-bold rounded-2xl active:scale-95 transition">ปิดหน้าต่าง</button>
+            </div>
         </div>
     </div>
 
@@ -119,7 +126,7 @@
                         }
                         subTotal += itemTotal;
                         const dName = (id === "1" || id === "2" || id === "3") ? p.name.replace(/150g\s?/, "").trim() : p.name;
-                        html += `<div class="bg-white p-4 rounded-2xl flex items-center gap-4 shadow-sm border border-gray-50"><img src="${p.images[0]}" class="w-16 h-16 object-cover rounded-xl shadow-inner bg-gray-50"><div class="flex-1 min-w-0"><div class="text-sm font-bold text-gray-800 truncate">${dName}</div><div class="text-[#ee4d2d] font-bold">฿${itemTotal.toLocaleString()}</div></div><div class="flex items-center gap-3 bg-gray-50 rounded-full px-2 py-1"><button onclick="changeQty('${id}', -1)" class="w-7 h-7 flex items-center justify-center bg-white rounded-full shadow-sm text-gray-400"><i class="fas fa-minus text-[10px]"></i></button><span class="text-sm font-bold text-gray-700 text-center min-w-[20px]">${quantity}</span><button onclick="changeQty('${id}', 1)" class="w-7 h-7 flex items-center justify-center bg-white rounded-full shadow-sm text-[#ee4d2d]"><i class="fas fa-plus text-[10px]"></i></button></div></div>`;
+                        html += `<div class="bg-white p-4 rounded-2xl flex items-center gap-4 shadow-sm border border-gray-50"><img src="${p.images[0]}" class="w-16 h-16 object-cover rounded-xl"><div class="flex-1 min-w-0"><div class="text-sm font-bold text-gray-800 truncate">${dName}</div><div class="text-[#ee4d2d] font-bold">฿${itemTotal.toLocaleString()}</div></div><div class="flex items-center gap-3 bg-gray-50 rounded-full px-2 py-1"><button onclick="changeQty('${id}', -1)" class="w-7 h-7 flex items-center justify-center bg-white rounded-full shadow-sm text-gray-400"><i class="fas fa-minus text-[10px]"></i></button><span class="text-sm font-bold text-gray-700 text-center min-w-[20px]">${quantity}</span><button onclick="changeQty('${id}', 1)" class="w-7 h-7 flex items-center justify-center bg-white rounded-full shadow-sm text-[#ee4d2d]"><i class="fas fa-plus text-[10px]"></i></button></div></div>`;
                     }
                 }
                 let shipping = (tempehPieces > 0 && tempehPieces < 6) ? 35 : 0;
@@ -138,7 +145,7 @@
             document.getElementById('qr-modal').classList.remove('hidden');
             const qrLoader = document.getElementById('qr-loader');
             const qrImage = document.getElementById('qr-image');
-            qrImage.src = ""; // ล้างรูปเก่า
+            qrImage.src = "";
             qrLoader.classList.remove('hidden');
 
             const cart = JSON.parse(localStorage.getItem('cart') || '{}');
@@ -146,21 +153,14 @@
             for (const [id, qty] of Object.entries(cart)) {
                 const p = products.find(prod => prod.id == id);
                 if (p) {
-                    let unitPrice = p.price;
-                    if (id === "1") {
-                        if (qty == 3) unitPrice = 100 / 3;
-                        else if (qty == 6) unitPrice = 200 / 6;
-                    }
-                    items.push({
-                        name: p.name.replace(/150g\s?/, "").trim(),
-                        quantity: parseInt(qty),
-                        price: Math.round(unitPrice * 100)
-                    });
+                    let up = p.price;
+                    if (id == "1") { if (qty == 3) up = 100/3; else if (qty == 6) up = 200/6; }
+                    items.push({ name: p.name.replace(/150g\s?/, "").trim(), quantity: parseInt(qty), price: Math.round(up * 100) });
                 }
             }
 
             try {
-                // 🚀 ✨ กู้คืนระบบเชื่อมต่อ API ของจริงกลับมา เพื่อขอ QR ของจริงจาก Beam
+                // 🚀 ✨ แก้ไขจุดเชื่อมต่อ: ใช้เส้นทางสัมพัทธ์ที่ถูกต้องสำหรับการเรียก API
                 const res = await fetch('/api/checkout', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -172,22 +172,28 @@
                         paymentMethod: { paymentMethodType: "QR_PROMPT_PAY" }
                     })
                 });
+
+                if (!res.ok) {
+                    const errorText = await res.text();
+                    throw new Error(errorText || "API Error");
+                }
+
                 const result = await res.json();
                 if (result.actionRequired === "ENCODED_IMAGE") {
                     qrImage.src = "data:image/png;base64," + result.encodedImage.imageBase64Encoded;
                     qrLoader.classList.add('hidden');
                 } else {
-                    alert("สร้าง QR ไม่สำเร็จ กรุณาลองใหม่ผ่าน LINE");
+                    alert("สร้าง QR ไม่สำเร็จ (Beam Checkout Error)");
                     closeQR();
                 }
             } catch (e) {
-                alert("ระบบขัดข้อง โปรดติดต่อแอดมิน");
+                console.error("Connection Error:", e);
+                alert("ระบบขัดข้อง: ไม่สามารถเชื่อมต่อกับ BeamCheckout ได้ (โปรดตรวจสอบ Vercel Logs)");
                 closeQR();
             }
         }
 
         function closeQR() { document.getElementById('qr-modal').classList.add('hidden'); }
-
         function changeQty(id, delta) {
             let cart = JSON.parse(localStorage.getItem('cart') || '{}');
             cart[id] = (parseInt(cart[id]) || 0) + delta;
@@ -202,7 +208,7 @@
             const address = document.getElementById('customer-address').value;
             if (!name || !phone) return alert('กรุณากรอกข้อมูลให้ครบถ้วน');
             const cart = JSON.parse(localStorage.getItem('cart') || '{}');
-            let msg = `🛒 *สั่งซื้อสินค้า ไทยปนลาว สาวแว่น*\n----------------\n`, sub = 0, tp = 0;
+            let msg = `🛒 *สั่งซื้อ ไทยปนลาว สาวแว่น*\n----------------\n`, sub = 0, tp = 0;
             for (const [id, qty] of Object.entries(cart)) {
                 const p = products.find(prod => prod.id == id);
                 let itemP = 0;
