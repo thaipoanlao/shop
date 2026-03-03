@@ -153,8 +153,21 @@
             loadCart();
         }
 
-        async function checkoutWithBeam() { document.getElementById('qr-modal').classList.remove('hidden'); }
-        function closeQR() { document.getElementById('qr-modal').classList.add('hidden'); }
+        async function checkoutWithBeam() {
+            const name = document.getElementById('customer-name').value;
+            const phone = document.getElementById('customer-phone').value;
+            if (!name || !phone) return alert('กรุณากรอกชื่อและเบอร์โทรศัพท์');
+        
+            // ✨ ส่วนแก้ไข: สร้าง QR Code จากยอดเงินจริง (ตัวอย่างใช้ QR Server)
+            const qrContainer = document.getElementById('qr-image');
+            
+            // สร้างลิงก์ QR (ในที่นี้ใช้ API สร้าง QR เบื้องต้นเพื่อให้รูปแสดงผลก่อน)
+            // สำหรับการใช้ Beam จริงๆ จะต้องเรียกผ่าน /api/checkout ที่คุณตั้งค่าไว้ใน Vercel ครับ
+            qrContainer.src = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=PROMPTPAY_PAYMENT_TO_${finalAmount}`;
+            
+            // แสดงหน้าต่างสแกน
+            document.getElementById('qr-modal').classList.remove('hidden');
+        }
 
         function checkoutViaLine() {
             const name = document.getElementById('customer-name').value;
