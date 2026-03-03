@@ -33,9 +33,9 @@
             </div>
             
             <div class="space-y-3">
-                <input type="text" id="customer-name" placeholder="ชื่อผู้รับ" class="w-full border border-gray-100 bg-gray-50 rounded-xl px-4 py-3 outline-none focus:border-[#ee4d2d]">
-                <input type="tel" id="customer-phone" placeholder="เบอร์โทรศัพท์" class="w-full border border-gray-100 bg-gray-50 rounded-xl px-4 py-3 outline-none focus:border-[#ee4d2d]">
-                <textarea id="customer-address" rows="2" placeholder="ที่อยู่จัดส่ง" class="w-full border border-gray-100 bg-gray-50 rounded-xl px-4 py-3 outline-none focus:border-[#ee4d2d] resize-none"></textarea>
+                <input type="text" id="customer-name" placeholder="ชื่อผู้รับ" class="w-full border border-gray-100 bg-gray-50 rounded-xl px-4 py-3 outline-none focus:border-[#ee4d2d] transition-all">
+                <input type="tel" id="customer-phone" placeholder="เบอร์โทรศัพท์" class="w-full border border-gray-100 bg-gray-50 rounded-xl px-4 py-3 outline-none focus:border-[#ee4d2d] transition-all">
+                <textarea id="customer-address" rows="2" placeholder="ที่อยู่จัดส่ง" class="w-full border border-gray-100 bg-gray-50 rounded-xl px-4 py-3 outline-none focus:border-[#ee4d2d] transition-all resize-none"></textarea>
             </div>
 
             <div class="flex flex-col gap-3 pt-2">
@@ -59,7 +59,7 @@
             
             <div class="px-6 mb-4">
                 <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
-                    <div class="bg-[#003459] w-full py-3 flex justify-center items-center">
+                    <div class="bg-[#003459] w-full py-4 flex justify-center items-center">
                         <img src="https://raw.githubusercontent.com/thaipoanlao/shop/refs/heads/main/photo/promptpay-logo.png" 
                              alt="PromptPay" 
                              class="h-10 w-auto brightness-0 invert" 
@@ -74,7 +74,7 @@
                 </div>
             </div>
 
-            <p class="text-[11px] text-gray-500 mb-6 font-light px-6 leading-relaxed">กรุณาสแกนเพื่อชำระเงิน<br><span class="text-blue-500 font-medium text-xs">ສະແກນດ້ວຍແອັບທະນາຄານລາວໄດ້ເລີຍ</span></p>
+            <p class="text-[11px] text-gray-500 mb-6 font-light px-6 leading-relaxed">กรุณาสแกนเพื่อชำระเงิน<br><span class="text-blue-500 font-medium">ສະແກນດ້ວຍແອັບທະນາຄານລາວໄດ້ເລີຍ</span></p>
             
             <div class="px-6 pb-6">
                 <button onclick="closeQR()" class="w-full py-4 bg-gray-100 text-gray-600 font-bold rounded-2xl active:scale-95 transition">ปิดหน้าต่าง</button>
@@ -150,7 +150,6 @@
                 if (p) {
                     let up = p.price;
                     if (id == "1") { if (qty == 3) up = 100/3; else if (qty == 6) up = 200/6; }
-                    // บังคับให้ราคาสินค้าเป็นทศนิยม 2 ตำแหน่งก่อนคูณ 100 เป็นสตางค์
                     items.push({ 
                         name: p.name.replace(/150g\s?/, "").trim(), 
                         quantity: parseInt(qty), 
@@ -160,34 +159,32 @@
             }
 
             try {
-                // ยอดรวมทั้งหมดหน่วยสตางค์ (บังคับปัดเศษให้แม่นยำที่สุด)
-                const totalAmountSatang = Math.round(Number(finalAmount).toFixed(2) * 100);
-
+                // ✨ แก้ไขจุดที่ทำให้เกิด Error 400: เพิ่มฟิลด์ qrPromptPay ใน paymentMethod
                 const res = await fetch('/api/checkout', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        amount: totalAmountSatang,
+                        amount: Math.round(Number(finalAmount).toFixed(2) * 100),
                         currency: "THB",
                         referenceId: "ORDER-" + Date.now(),
                         items: items,
-                        paymentMethod: { paymentMethodType: "QR_PROMPT_PAY" }
+                        paymentMethod: { 
+                            paymentMethodType: "QR_PROMPT_PAY",
+                            qrPromptPay: { expiryTime: new Date(Date.now() + 3600000).toISOString() } // เพิ่มจุดนี้
+                        }
                     })
                 });
 
                 const result = await res.json();
-                
                 if (res.ok && result.actionRequired === "ENCODED_IMAGE") {
                     qrImage.src = "data:image/png;base64," + result.encodedImage.imageBase64Encoded;
                     qrLoader.classList.add('hidden');
                 } else {
-                    // หาก BeamCheckout ส่ง Error กลับมา ให้แสดงข้อความจริงจาก API
-                    const errorMsg = result.message || "Beam Checkout ปฏิเสธการสร้าง QR (ตรวจสอบยอดเงิน)";
-                    alert("สร้าง QR ไม่สำเร็จ: " + errorMsg);
+                    alert("สร้าง QR ไม่สำเร็จ: " + (result.message || "กรุณาลองใหม่"));
                     closeQR();
                 }
             } catch (e) {
-                alert("ระบบขัดข้อง: ไม่สามารถติดต่อเซิร์ฟเวอร์ได้");
+                alert("ระบบขัดข้อง: ตรวจสอบการเชื่อมต่ออินเทอร์เน็ต");
                 closeQR();
             }
         }
