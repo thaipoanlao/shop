@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="เพลงของเฌอ">
+<title>🎵 เพลงของเฌอ</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    font-family: 'Sarabun', 'Nunito', sans-serif;
+    background: #FFF5EC;
+    min-height: 100vh;
+    padding: 0;
+    user-select: none;
+  }
+
+  .app {
+    max-width: 420px;
+    margin: 0 auto;
+    padding: 20px 16px 40px;
+    min-height: 100vh;
+  }
+
+  /* Header */
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .header-emoji { font-size: 28px; }
+  .header-title {
+    font-size: 22px;
+    font-weight: 800;
+    color: #C45000;
+    letter-spacing: -0.3px;
+  }
+
+  /* Now Playing Card */
+  .now-playing {
+    background: #fff;
+    border-radius: 24px;
+    border: 1.5px solid #FFD8B8;
+    padding: 24px 20px 20px;
+    margin-bottom: 20px;
+    text-align: center;
+    box-shadow: 0 2px 12px rgba(200,80,0,0.06);
+  }
+
+  .album-art {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: #FFD8B8;
+    margin: 0 auto 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 44px;
+    transition: transform 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .album-art.spinning {
+    animation: spin 4s linear infinite;
+  }
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .now-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #C45000;
+    margin-bottom: 3px;
+    min-height: 22px;
+    line-height: 1.3;
+    padding: 0 10px;
+  }
+  .now-status {
+    font-size: 13px;
+    color: #E8906A;
+    margin-bottom: 16px;
+    min-height: 18px;
+  }
+
+  /* Controls */
+  .controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+  }
+  .btn-ctrl {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    border: 1.5px solid #FFD8B8;
+    background: #FFF5EC;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .btn-ctrl:active { transform: scale(0.92); background: #FFD8B8; }
+  .btn-ctrl svg { width: 20px; height: 20px; fill: #C45000; }
+
+  .btn-play-main {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: #FF7A30;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    box-shadow: 0 4px 14px rgba(255,122,48,0.35);
+  }
+  .btn-play-main:active { transform: scale(0.93); box-shadow: 0 2px 8px rgba(255,122,48,0.3); }
+  .btn-play-main svg { width: 28px; height: 28px; fill: #fff; }
+
+  /* Progress bar */
+  .progress-wrap {
+    margin: 14px 0 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .time-label { font-size: 12px; color: #E8906A; font-weight: 600; min-width: 36px; }
+  .time-label.right { text-align: right; }
+  .progress-bar {
+    flex: 1;
+    height: 5px;
+    background: #FFD8B8;
+    border-radius: 99px;
+    overflow: hidden;
+    cursor: pointer;
+    position: relative;
+  }
+  .progress-fill {
+    height: 100%;
+    background: #FF7A30;
+    border-radius: 99px;
+    width: 0%;
+    transition: width 0.5s linear;
+  }
+
+  /* Section title */
+  .section-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: #C45000;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 12px;
+  }
+
+  /* Songs grid */
+  .songs-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .song-btn {
+    background: #fff;
+    border: 1.5px solid #FFD8B8;
+    border-radius: 18px;
+    padding: 16px 10px 14px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    position: relative;
+  }
+  .song-btn:active { transform: scale(0.96); }
+  .song-btn.active {
+    border: 2px solid #FF7A30;
+    background: #FFF0E6;
+    box-shadow: 0 2px 10px rgba(255,122,48,0.15);
+  }
+  .song-btn.active::after {
+    content: '';
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #FF7A30;
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.7); }
+  }
+
+  .song-emoji { font-size: 30px; margin-bottom: 8px; }
+  .song-name {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #C45000;
+    line-height: 1.35;
+    word-break: break-word;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .song-num {
+    font-size: 10px;
+    color: #E8906A;
+    margin-top: 2px;
+  }
+
+  /* Volume */
+  .vol-card {
+    background: #fff;
+    border: 1.5px solid #FFD8B8;
+    border-radius: 18px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .vol-icon { font-size: 18px; }
+  .vol-label { font-size: 13px; font-weight: 700; color: #C45000; white-space: nowrap; }
+  input[type=range] {
+    flex: 1;
+    -webkit-appearance: none;
+    height: 5px;
+    border-radius: 99px;
+    background: #FFD8B8;
+    outline: none;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #FF7A30;
+    cursor: pointer;
+    box-shadow: 0 1px 4px rgba(255,122,48,0.4);
+  }
+  .vol-val { font-size: 13px; font-weight: 700; color: #C45000; min-width: 32px; text-align: right; }
+
+  /* Hidden YouTube player */
+  #yt-player { position: absolute; width: 1px; height: 1px; top: -9999px; left: -9999px; pointer-events: none; }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div id="yt-player"></div>
+
+<div class="app">
+  <div class="header">
+    <span class="header-emoji">🎵</span>
+    <span class="header-title">เพลงของเฌอ</span>
+  </div>
+
+  <div class="now-playing">
+    <div class="album-art" id="album-art">🎶</div>
+    <div class="now-title" id="now-title">กดเพลงเพื่อเริ่มเล่น</div>
+    <div class="now-status" id="now-status">เลือกเพลงด้านล่างได้เลย</div>
+    <div class="controls">
+      <div class="btn-ctrl" id="btn-prev" onclick="prevSong()">
+        <svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg>
+      </div>
+      <div class="btn-play-main" id="btn-play" onclick="togglePlay()">
+        <svg id="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        <svg id="icon-pause" viewBox="0 0 24 24" style="display:none"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+      </div>
+      <div class="btn-ctrl" id="btn-next" onclick="nextSong()">
+        <svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zm2-8.14L11.03 12 8 14.14V9.86zM16 6h2v12h-2z"/></svg>
+      </div>
+    </div>
+    <div class="progress-wrap">
+      <span class="time-label" id="time-cur">0:00</span>
+      <div class="progress-bar" onclick="seekTo(event)">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+      <span class="time-label right" id="time-dur">0:00</span>
+    </div>
+  </div>
+
+  <div class="section-title">เลือกเพลง</div>
+  <div class="songs-grid" id="songs-grid">
+    </div>
+
+  <div class="vol-card">
+    <span class="vol-icon">🔊</span>
+    <span class="vol-label">เสียง</span>
+    <input type="range" min="0" max="100" value="80" id="vol-slider" oninput="setVolume(this.value)">
+    <span class="vol-val" id="vol-val">80</span>
+  </div>
+</div>
+
+<script>
+// กำหนดชื่อตั้งต้นเป็น เพลงที่ 1, 2... ชื่อจริงจะถูกดึงมาตอนเล่นอัตโนมัติ
+const SONGS = [
+  { id: '0Vsh5wqNKtg', emoji: '🎵', name: 'เพลงที่ 1' },
+  { id: 'xLzLnw7S05c', emoji: '🌟', name: 'เพลงที่ 2' },
+  { id: 'O7hFFxU56gE', emoji: '🐰', name: 'เพลงที่ 3' },
+  { id: '2ckUJZYg1Js', emoji: '🎪', name: 'เพลงที่ 4' },
+  { id: 'HXN2aQ1IZHQ', emoji: '🌈', name: 'เพลงที่ 5' },
+  { id: '1Mb92XPCGSo', emoji: '🎠', name: 'เพลงที่ 6' },
+  { id: 'YYJveqE92x8', emoji: '🦋', name: 'เพลงที่ 7' },
+  { id: 'fXF7l_RBqeE', emoji: '🎶', name: 'เพลงที่ 8' },
+  { id: 'ZcQa_AigIkY', emoji: '🌸', name: 'เพลงที่ 9' },
+  { id: 'f0j85R6b0a8', emoji: '🎀', name: 'เพลงที่ 10' },
+];
+
+let player = null;
+let currentIdx = -1;
+let isPlaying = false;
+let progressTimer = null;
+
+// Build song grid
+function buildGrid() {
+  const grid = document.getElementById('songs-grid');
+  grid.innerHTML = SONGS.map((s, i) => `
+    <div class="song-btn" id="song-${i}" onclick="playSong(${i})">
+      <div class="song-emoji">${s.emoji}</div>
+      <div class="song-name" id="name-${i}">${s.name}</div>
+      <div class="song-num">แทร็ก ${i + 1}</div>
+    </div>
+  `).join('');
+}
+
+// YouTube IFrame API
+window.onYouTubeIframeAPIReady = function () {
+  player = new YT.Player('yt-player', {
+    height: '1',
+    width: '1',
+    videoId: SONGS[0].id,
+    playerVars: {
+      autoplay: 0,
+      controls: 0,
+      disablekb: 1,
+      fs: 0,
+      iv_load_policy: 3,
+      modestbranding: 1,
+      rel: 0,
+    },
+    events: {
+      onReady: onPlayerReady,
+      onStateChange: onStateChange,
+    }
+  });
+};
+
+function onPlayerReady(e) {
+  player.setVolume(80);
+}
+
+function onStateChange(e) {
+  if (e.data === YT.PlayerState.PLAYING) {
+    setPlayingState(true);
+    // ดึงชื่อเพลงอัตโนมัติเมื่อเริ่มเล่นเพื่อป้องกันบั๊ก
+    const data = player.getVideoData();
+    if (data && data.title) {
+      document.getElementById('now-title').textContent = data.title;
+      if (currentIdx >= 0) {
+        SONGS[currentIdx].name = data.title;
+        const el = document.getElementById('name-' + currentIdx);
+        if (el) el.textContent = data.title;
+      }
+    }
+    startProgress();
+  } else if (e.data === YT.PlayerState.PAUSED) {
+    setPlayingState(false);
+    stopProgress();
+  } else if (e.data === YT.PlayerState.ENDED) {
+    setPlayingState(false);
+    stopProgress();
+    nextSong();
+  } else if (e.data === YT.PlayerState.BUFFERING) {
+    document.getElementById('now-status').textContent = 'กำลังโหลด...';
+  }
+}
+
+function playSong(idx) {
+  if (!player || !player.loadVideoById) return;
+  document.querySelectorAll('.song-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('song-' + idx).classList.add('active');
+  currentIdx = idx;
+  document.getElementById('album-art').textContent = SONGS[idx].emoji;
+  document.getElementById('now-title').textContent = SONGS[idx].name;
+  document.getElementById('now-status').textContent = 'กำลังโหลด...';
+  document.getElementById('progress-fill').style.width = '0%';
+  document.getElementById('time-cur').textContent = '0:00';
+  document.getElementById('time-dur').textContent = '0:00';
+  player.loadVideoById(SONGS[idx].id);
+}
+
+function togglePlay() {
+  if (!player || !player.getPlayerState) return;
+  if (currentIdx === -1) { playSong(0); return; }
+  const state = player.getPlayerState();
+  if (state === YT.PlayerState.PLAYING) {
+    player.pauseVideo();
+  } else {
+    player.playVideo();
+  }
+}
+
+function nextSong() {
+  if (SONGS.length === 0) return;
+  const next = (currentIdx + 1) % SONGS.length;
+  playSong(next);
+}
+
+function prevSong() {
+  if (SONGS.length === 0) return;
+  const prev = (currentIdx - 1 + SONGS.length) % SONGS.length;
+  playSong(prev);
+}
+
+function setVolume(val) {
+  document.getElementById('vol-val').textContent = val;
+  if (player && player.setVolume) player.setVolume(parseInt(val));
+}
+
+function setPlayingState(playing) {
+  isPlaying = playing;
+  document.getElementById('icon-play').style.display = playing ? 'none' : 'block';
+  document.getElementById('icon-pause').style.display = playing ? 'block' : 'none';
+  const art = document.getElementById('album-art');
+  if (playing) {
+    art.classList.add('spinning');
+    document.getElementById('now-status').textContent = 'กำลังเล่น ♪';
+  } else {
+    art.classList.remove('spinning');
+    if (document.getElementById('now-status').textContent !== 'กำลังโหลด...')
+      document.getElementById('now-status').textContent = 'หยุดชั่วคราว';
+  }
+}
+
+function startProgress() {
+  stopProgress();
+  progressTimer = setInterval(updateProgress, 500);
+}
+
+function stopProgress() {
+  if (progressTimer) { clearInterval(progressTimer); progressTimer = null; }
+}
+
+function updateProgress() {
+  if (!player || !player.getDuration) return;
+  const dur = player.getDuration() || 0;
+  const cur = player.getCurrentTime() || 0;
+  if (dur > 0) {
+    document.getElementById('progress-fill').style.width = ((cur / dur) * 100).toFixed(1) + '%';
+    document.getElementById('time-cur').textContent = fmtTime(cur);
+    document.getElementById('time-dur').textContent = fmtTime(dur);
+  }
+}
+
+function fmtTime(s) {
+  const m = Math.floor(s / 60);
+  const sec = Math.floor(s % 60);
+  return m + ':' + (sec < 10 ? '0' : '') + sec;
+}
+
+function seekTo(e) {
+  if (!player || !player.getDuration) return;
+  const bar = e.currentTarget;
+  const rect = bar.getBoundingClientRect();
+  const pct = (e.clientX - rect.left) / rect.width;
+  const dur = player.getDuration() || 0;
+  if (dur > 0) player.seekTo(pct * dur, true);
+}
+
+buildGrid();
+</script>
+<script src="https://www.youtube.com/iframe_api"></script>
+</body>
+</html>
